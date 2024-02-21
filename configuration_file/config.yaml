@@ -4,6 +4,15 @@
 
 ---
 
+regionalize:
+  datasets:
+    - name: carbon dioxide, captured at wood burning power plant 20 MW post, pipeline 200km, storage 1000m
+      reference product: carbon dioxide, captured at wood burning power plant 20 MW post, pipeline 200km, storage 1000m
+      exists in original database: True
+    - name: heat and power co-generation, natural gas, conventional power plant, 100MW electrical
+      reference product: electricity, high voltage
+      exists in original database: True
+
 production pathways:
   hydro_run_of_river:
     production volume:
@@ -451,6 +460,7 @@ production pathways:
       name: electricity production, at biomass-fired IGCC power plant, pre, pipeline 200km, storage 1000m
       reference product: electricity, high voltage
       exists in original database: True
+      regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|Biomass with CCS (BECCS)
 
@@ -461,6 +471,7 @@ production pathways:
       name: electricity production, at co-generation wood-fired power plant, post, pipeline 200km, storage 1000m
       reference product: electricity, high voltage
       exists in original database: True
+      regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|Industrial CHPs wood (CCS)
 
@@ -471,6 +482,7 @@ production pathways:
       name: electricity supply, high voltage, from vanadium-redox flow battery system
       reference product: electricity, high voltage
       exists in original database: True
+      regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Battery storage large size centralised
 
@@ -481,6 +493,7 @@ production pathways:
       name: electricity supply, high voltage, from vanadium-redox flow battery system
       reference product: electricity, high voltage
       exists in original database: True
+      regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Battery storage medium size centralised
 
@@ -491,6 +504,7 @@ production pathways:
       name: electricity supply, high voltage, from vanadium-redox flow battery system
       reference product: electricity, high voltage
       exists in original database: True
+      regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in industry
 
@@ -501,6 +515,7 @@ production pathways:
       name: electricity supply, high voltage, from vanadium-redox flow battery system
       reference product: electricity, high voltage
       exists in original database: True
+      regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in Services sector
 
@@ -531,6 +546,7 @@ production pathways:
       name: electricity production, compressed air energy storage
       reference product: electricity, high voltage
       exists in original database: True
+      regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|CAES
 
@@ -771,6 +787,10 @@ markets:
         product: electricity, high voltage
         location: CH
 
+      - name: market group for electricity, high voltage
+        product: electricity, high voltage
+        operator: contains
+
     replaces in:
       - location: CH
 
@@ -806,6 +826,10 @@ markets:
         product: electricity, medium voltage
         location: CH
 
+      - name: market group for electricity, medium voltage
+        product: electricity, medium voltage
+        operator: contains
+
     replaces in:
       - location: CH
 
@@ -840,6 +864,10 @@ markets:
       - name: market for electricity, low voltage
         product: electricity, low voltage
         location: CH
+
+      - name: market group for electricity, low voltage
+        product: electricity, low voltage
+        operator: contains
 
     replaces in:
       - location: CH
