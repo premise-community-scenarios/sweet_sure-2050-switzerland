@@ -20,6 +20,7 @@ production pathways:
     ecoinvent alias:
       name: electricity production, hydro, run-of-river
       reference product: electricity, high voltage
+      mask: renewable energy products
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Hydro|Hydro Run of River
@@ -31,6 +32,7 @@ production pathways:
       name: electricity production, hydro, reservoir, alpine region
       reference product: electricity, high voltage
       exists in original database: True
+      mask: renewable energy products
     efficiency:
       - variable: Efficiency of power plants (electric)|Hydro|Hydro Large
 
@@ -41,6 +43,7 @@ production pathways:
       name: electricity production, hydro, pumped storage
       reference product: electricity, high voltage
       exists in original database: True
+      mask: renewable energy products
     efficiency:
       - variable: Efficiency of power plants (electric)|Hydro|Pump storage
 
@@ -62,6 +65,7 @@ production pathways:
       name: electricity production, nuclear, pressure water reactor
       reference product: electricity, high voltage
       exists in original database: True
+      mask: heavy water moderated
 
   gas (CCGT):
     production volume:
@@ -192,6 +196,7 @@ production pathways:
       name: heat and power co-generation, biogas, gas engine
       reference product: electricity, high voltage
       exists in original database: True
+      mask: renewable energy products
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Services sectors CHPs (bio)gas
 
@@ -207,7 +212,7 @@ production pathways:
 
   gas (services CHP fuel cell):
     production volume:
-      variable: Electricity generation|Gas|Residential single family CHPs fuel cells gas
+      variable: Electricity generation|Gas|Fossil gases|Services sectors CHPs fuel cells (gas reformer)
     ecoinvent alias:
       name: heat and power co-generation, natural gas, 160kW electrical, Jakobsberg
       reference product: electricity, low voltage
@@ -284,7 +289,7 @@ production pathways:
   # since the burden is entirely allocated to the waste treatment process
   waste incineration, non-fossil:
     production volume:
-      variable: Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only)
+      variable: Electricity generation|Wastes|Renewable|Wastes Incineration (electric only)
     ecoinvent alias:
       name: electricity production, from biowaste, municipal incineration, energy allocation
       reference product: electricity, from biowaste, municipal incineration, energy allocation
@@ -294,7 +299,7 @@ production pathways:
 
   waste incineration, non-fossil (CHP):
     production volume:
-      variable: Electricity generation|Wastes|Non Renewable|CHP Wastes (for District Heating)
+      variable: Electricity generation|Wastes|Renewable|CHP Wastes (for District Heating)
     ecoinvent alias:
       name: electricity production, from biowaste, municipal incineration, energy allocation
       reference product: electricity, from biowaste, municipal incineration, energy allocation
@@ -304,7 +309,7 @@ production pathways:
 
   waste incineration, non-fossil (industrial):
     production volume:
-      variable: Electricity generation|Wastes|Non Renewable|Industrial CHPs wastes
+      variable: Electricity generation|Wastes|Renewable|Industrial CHPs wastes
     ecoinvent alias:
       name: electricity production, from biowaste, municipal incineration, energy allocation
       reference product: electricity, from biowaste, municipal incineration, energy allocation
@@ -317,7 +322,7 @@ production pathways:
   # hence, CCS or not, the electricity is free
   waste incineration, non-fossil (CCS):
     production volume:
-      variable: Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only) CCS
+      variable: Electricity generation|Wastes|Renewable|Wastes Incineration (electric only) CCS
     ecoinvent alias:
       name: electricity production, at co-generation biowaste-fired power plant, post, pipeline 200km, storage 1000m
       reference product: electricity, from biowaste, municipal incineration, energy allocation
@@ -327,7 +332,7 @@ production pathways:
 
   waste incineration, non-fossil (CHP, CCS):
     production volume:
-      variable: Electricity generation|Wastes|Non Renewable|CHP Wastes (for District Heating) CCS
+      variable: Electricity generation|Wastes|Renewable|CHP Wastes (for District Heating) CCS
     ecoinvent alias:
       name: electricity production, at co-generation biowaste-fired power plant, post, pipeline 200km, storage 1000m
       reference product: electricity, from biowaste, municipal incineration, energy allocation
@@ -337,7 +342,7 @@ production pathways:
 
   waste incineration, non-fossil (industrial, CCS):
     production volume:
-      variable: Electricity generation|Wastes|Non Renewable|Industrial CHPs wastes CCS
+      variable: Electricity generation|Wastes|Renewable|Industrial CHPs wastes CCS
     ecoinvent alias:
       name: electricity production, at co-generation biowaste-fired power plant, post, pipeline 200km, storage 1000m
       reference product: electricity, from biowaste, municipal incineration, energy allocation
@@ -352,6 +357,7 @@ production pathways:
       name: electricity production, photovoltaic, commercial
       reference product: electricity, low voltage
       exists in original database: True
+      mask: renewable energy products
 
   pv (industry):
     production volume:
@@ -360,6 +366,7 @@ production pathways:
       name: electricity production, photovoltaic, commercial
       reference product: electricity, low voltage
       exists in original database: True
+      mask: renewable energy products
 
   pv (services):
     production volume:
@@ -368,6 +375,7 @@ production pathways:
       name: electricity production, photovoltaic, commercial
       reference product: electricity, low voltage
       exists in original database: True
+      mask: renewable energy products
 
   pv residential (multi family):
     production volume:
@@ -376,6 +384,7 @@ production pathways:
       name: electricity production, photovoltaic, residential
       reference product: electricity, low voltage
       exists in original database: True
+      mask: renewable energy products
 
   pv residential (single family):
     production volume:
@@ -384,6 +393,7 @@ production pathways:
       name: electricity production, photovoltaic, residential
       reference product: electricity, low voltage
       exists in original database: True
+      mask: renewable energy products
 
   wind:
     production volume:
@@ -392,6 +402,7 @@ production pathways:
       name: electricity production, wind, 1-3MW turbine, onshore
       reference product: electricity, high voltage
       exists in original database: True
+      mask: renewable energy products
 
   geothermal:
     production volume:
@@ -437,9 +448,10 @@ production pathways:
     production volume:
       variable: Electricity generation|Wood|CHP Wood (for District Heating)
     ecoinvent alias:
-      name: heat and power co-generation, wood chips, 6667 kW
+      name: heat and power co-generation, wood chips, 6667 kW, state-of-the-art 2014
       reference product: electricity, high voltage
       exists in original database: True
+      mask: renewable energy products
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|CHP Wood (for District Heating)
 
@@ -450,6 +462,7 @@ production pathways:
       name: heat and power co-generation, wood chips, 2000 kW, state-of-the-art 2014
       reference product: electricity, high voltage
       exists in original database: True
+      mask: renewable energy products
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|Industrial CHPs wood
 
@@ -547,6 +560,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
       regionalize: True
+      mask: adiabatic
     efficiency:
       - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|CAES
 
@@ -611,6 +625,7 @@ production pathways:
       name: market for biomethane, high pressure
       reference product: biomethane, high pressure
       exists in original database: True
+      mask: vehicle grade
 
   biomethane (domestic):
     production volume:
@@ -619,6 +634,7 @@ production pathways:
       name: market for biomethane, high pressure
       reference product: biomethane, high pressure
       exists in original database: True
+      mask: vehicle grade
 
   synthetic natural gas (domestic):
     production volume:
@@ -638,6 +654,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
       regionalize: True
+      mask: aluminium industry
 
   oil (DH CHP):
     production volume:
@@ -647,6 +664,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
       regionalize: True
+      mask: aluminium industry
 
   oil (industry CHP):
     production volume:
@@ -655,6 +673,7 @@ production pathways:
       name: heat and power co-generation, oil
       reference product: electricity, high voltage
       exists in original database: True
+      mask: aluminium industry
 
   light fuel oil:
     production volume:
@@ -671,6 +690,7 @@ production pathways:
       name: petroleum refinery operation
       reference product: heavy fuel oil
       exists in original database: True
+      mask: heavy fuel oil production
 
   waste (waste):
     production volume:
