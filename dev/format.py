@@ -1,7 +1,7 @@
 import pandas as pd
 import copy
 import numpy as np
-df = pd.read_excel("STEM_to_Premise_SPS1.xlsx", sheet_name="SPS1")
+df = pd.read_excel("STEM_to_Premise_SPS1_22022024.xlsx", sheet_name="SPS1")
 
 # subtract export from imports
 export = df.loc[df["Variable"] == "Exports|Electricity"]
