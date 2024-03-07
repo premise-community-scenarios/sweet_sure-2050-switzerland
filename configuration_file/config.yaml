@@ -252,9 +252,7 @@ production pathways:
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
 
-  # electricity from waste incineration comes for free
-  # since the burden is entirely allocated to the waste treatment process
-  # hence, CCS or not, the electricity is free
+  # electricity from waste incineration
   waste incineration, fossil (CCS):
     production volume:
       variable: Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only) CCS
@@ -568,7 +566,7 @@ production pathways:
     production volume:
       variable: Imports|Electricity
     ecoinvent alias:
-      name: market group for electricity, high voltage
+      name: electricity import, from neighboring countries
       reference product: electricity, high voltage
       exists in original database: True
 
