@@ -19,7 +19,7 @@
         "SPS1": [
             {
                 "model": "image",
-                "pathway": "SSP2-Base"
+                "pathway": "SSP2-RCP26"
             }
         ]
     },

@@ -1,7 +1,10 @@
 import pandas as pd
 import copy
 import numpy as np
-df = pd.read_excel("STEM_to_Premise_SPS1_22022024.xlsx", sheet_name="SPS1")
+df = pd.read_excel("STEM_to_Premise_SPS1.xlsx", sheet_name="SPS1")
+
+iam_model = "image"
+iam_scenario = "SSP2-RCP26"
 
 # subtract export from imports
 export = df.loc[df["Variable"] == "Exports|Electricity"]
@@ -23,8 +26,8 @@ df = pd.concat([df, nuclear_pw, nuclear_bw], ignore_index=True)
 
 # change column "Model" to "model"
 df = df.rename(columns={"Model": "model"})
-df["model"] = "image"
-df["Pathway"] = "SSP2-Base"
+df["model"] = iam_model
+df["Pathway"] = iam_scenario
 
 # convert all non-numeric column names to lower case
 df.columns = [c if isinstance(c, int) else c.lower() for c in df.columns]
@@ -64,8 +67,8 @@ for var in vars:
         [
             df,
             pd.DataFrame(pd.Series({
-                "model": "image",
-                "pathway": "SSP2-Base",
+                "model": iam_model,
+                "pathway": iam_scenario,
                 "scenario": "SPS1",
                 "variables": var,
                 "region": "CH",

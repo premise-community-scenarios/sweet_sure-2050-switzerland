@@ -12,6 +12,9 @@ regionalize:
     - name: heat and power co-generation, natural gas, conventional power plant, 100MW electrical
       reference product: electricity, high voltage
       exists in original database: True
+    - name: electricity production, at co-generation wood-fired power plant, post, pipeline 200km, storage 1000m
+      reference product: electricity, high voltage
+      exists in original database: True
 
 production pathways:
   hydro_run_of_river:
@@ -76,6 +79,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Gas turbines combined cycle
+        absolute: True
 
   gas (OCGT):
     production volume:
@@ -86,6 +90,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Gas turbines open cycle
+        absolute: True
 
   gas (CCGT CCS):
     production volume:
@@ -97,6 +102,7 @@ production pathways:
       regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Gas turbines combined cycle CCS
+        absolute: True
 
   gas (CHP DH):
     production volume:
@@ -107,6 +113,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|CHP Gas (for District Heating)
+        absolute: True
 
   gas (fuel cell DH):
     production volume:
@@ -117,6 +124,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|CHP Fuel Cell Gas (for District Heating)
+        absolute: True
 
   gas (CHP industry):
     production volume:
@@ -127,6 +135,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Industrial CHPs gas
+        absolute: True
 
   gas (CHP CCS industry):
     production volume:
@@ -138,6 +147,7 @@ production pathways:
       regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Industrial CHPs gas (CCS)
+        absolute: True
 
   gas (CHP fuel cell reformer):
     production volume:
@@ -148,6 +158,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Industrial CHPs fuel cells (gas reformer)
+        absolute: True
 
   gas (CHP single family):
     production volume:
@@ -158,6 +169,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Residential single family CHPs gas
+        absolute: True
 
   gas (single family CHP fuel cell):
     production volume:
@@ -168,6 +180,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Residential single family CHPs fuel cells gas
+        absolute: True
 
   gas (multi family CHP):
     production volume:
@@ -178,6 +191,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Residential multi family CHPs gas
+        absolute: True
 
   gas (multi family CHP fuel cell):
     production volume:
@@ -188,6 +202,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Residential multi family CHPs fuel cells gas
+        absolute: True
 
   biogas (services CHP):
     production volume:
@@ -199,6 +214,7 @@ production pathways:
       mask: renewable energy products
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Services sectors CHPs (bio)gas
+        absolute: True
 
   gas (services CHP):
     production volume:
@@ -209,6 +225,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Services sectors CHPs gas
+        absolute: True
 
   gas (services CHP fuel cell):
     production volume:
@@ -219,6 +236,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Gas|Services sectors CHPs fuel cells (gas reformer)
+        absolute: True
 
   # electricity from waste incineration comes for free
   # since the burden is entirely allocated to the waste treatment process
@@ -231,6 +249,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+        absolute: True
 
   waste incineration, fossil (CHP):
     production volume:
@@ -241,6 +260,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating)
+        absolute: True
 
   waste incineration, fossil (industrial):
     production volume:
@@ -251,6 +271,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+        absolute: True
 
   # electricity from waste incineration
   waste incineration, fossil (CCS):
@@ -262,6 +283,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+        absolute: True
 
   waste incineration, fossil (CHP, CCS):
     production volume:
@@ -272,6 +294,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating)
+        absolute: True
 
   waste incineration, fossil (industrial, CCS):
     production volume:
@@ -282,6 +305,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+        absolute: True
 
   # electricity from waste incineration comes for free
   # since the burden is entirely allocated to the waste treatment process
@@ -294,6 +318,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+        absolute: True
 
   waste incineration, non-fossil (CHP):
     production volume:
@@ -304,6 +329,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating)
+        absolute: True
 
   waste incineration, non-fossil (industrial):
     production volume:
@@ -314,6 +340,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+        absolute: True
 
   # electricity from waste incineration comes for free
   # since the burden is entirely allocated to the waste treatment process
@@ -327,6 +354,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+        absolute: True
 
   waste incineration, non-fossil (CHP, CCS):
     production volume:
@@ -337,6 +365,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating)
+        absolute: True
 
   waste incineration, non-fossil (industrial, CCS):
     production volume:
@@ -347,6 +376,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+        absolute: True
 
   pv (large scale):
     production volume:
@@ -422,6 +452,7 @@ production pathways:
     efficiency:
       - variable: Efficiency of power plants (electric)|Hydrogen|CHP Fuel Cell Hydrogen (for District Heating)
 
+
   hydrogen fuel cell (industrial CHP):
     production volume:
       variable: Electricity generation|Hydrogen|Industrial CHPs fuel cells (hydrogen)
@@ -431,6 +462,7 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Hydrogen|Industrial CHPs fuel cells (hydrogen)
+
 
   hydrogen fuel cell (services CHP):
     production volume:
@@ -442,6 +474,7 @@ production pathways:
     efficiency:
       - variable: Efficiency of power plants (electric)|Hydrogen|Services sectors CHPs fuel cells (hydrogen)
 
+
   biomass (DH):
     production volume:
       variable: Electricity generation|Wood|CHP Wood (for District Heating)
@@ -452,6 +485,7 @@ production pathways:
       mask: renewable energy products
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|CHP Wood (for District Heating)
+        absolute: True
 
   biomass (CHP):
     production volume:
@@ -463,6 +497,7 @@ production pathways:
       mask: renewable energy products
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|Industrial CHPs wood
+        absolute: True
 
   biomass (CCS, BECCS):
     production volume:
@@ -474,6 +509,7 @@ production pathways:
       regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|Biomass with CCS (BECCS)
+        absolute: True
 
   biomass (CCS, industrial):
     production volume:
@@ -485,6 +521,7 @@ production pathways:
       regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|Industrial CHPs wood (CCS)
+        absolute: True
 
   battery (large):
     production volume:
@@ -588,6 +625,22 @@ production pathways:
       exists in original database: False
       new dataset: True
 
+  biogas, fermentation, sewage sludge (domestic):
+    production volume:
+      variable: Domestic biogas production|Manure|Fermentation
+    ecoinvent alias:
+      name: treatment of sewage sludge by anaerobic digestion
+      reference product: biogas
+      exists in original database: True
+
+  biogas, fermentation, biomass (domestic):
+    production volume:
+      variable: Domestic biogas production|Wastes|Renewable
+    ecoinvent alias:
+      name: treatment of biowaste by anaerobic digestion
+      reference product: biogas
+      exists in original database: True
+
 
   natural gas (import):
     production volume:
@@ -597,7 +650,6 @@ production pathways:
       reference product: natural gas, high pressure
       exists in original database: True
 
-
   lng (import):
     production volume:
       variable: Imports|Gas|Fossil gases|Liquified Natural Gas
@@ -605,7 +657,6 @@ production pathways:
       name: market for natural gas, liquefied
       reference product: natural gas, liquefied
       exists in original database: True
-
 
   synthetic natural gas (import):
     production volume:
@@ -627,7 +678,7 @@ production pathways:
 
   biomethane (domestic):
     production volume:
-      variable: Primary Energy Consumption|Gas|Synthetic gases|Biogases|Biogas
+      variable: Domestic biogas production
     ecoinvent alias:
       name: market for biomethane, high pressure
       reference product: biomethane, high pressure
@@ -636,7 +687,7 @@ production pathways:
 
   synthetic natural gas (domestic):
     production volume:
-      variable: Primary Energy Consumption|Gas|Synthetic gases|PtG|PtG gas
+      variable: Domestic PtG and PtL production|PtG|PtG gas
     ecoinvent alias:
       name: methane, from electrochemical methanation, with carbon from atmosphere
       reference product: methane, from electrochemical methanation
@@ -721,6 +772,133 @@ production pathways:
       name: market for wood chips, wet, measured as dry mass
       reference product: wood chips, wet, measured as dry mass
       exists in original database: True
+
+  biodiesel, wood, FT (domestic):
+    production volume:
+      variable: Domestic biodiesel production|Wood|Fischer Tropsch
+    ecoinvent alias:
+      name: diesel production, synthetic, Fischer Tropsch process, hydrogen from wood gasification, energy allocation
+      reference product: diesel, synthetic
+      exists in original database: True
+      regionalize: True
+
+  biodiesel, wood, FT w CCS (domestic):
+    production volume:
+      variable: Domestic biodiesel production|Wood|Fischer Tropsch CCS
+    ecoinvent alias:
+      name: diesel production, synthetic, Fischer Tropsch process, hydrogen from wood gasification, with CCS, energy allocation
+      reference product: diesel, synthetic
+      exists in original database: True
+      regionalize: True
+
+  biodiesel (domestic):
+    production volume:
+      variable: Domestic biodiesel production
+    ecoinvent alias:
+      name: market for biodiesel (SPS)
+      reference product: biodiesel
+      exists in original database: False
+      new dataset: True
+
+  biodiesel (import):
+    production volume:
+      variable: Imports|Oil|Synthetic liquids|Bioliquids|Biodiesel
+    ecoinvent alias:
+      name: biodiesel production, via transesterification, from used cooking oil, energy allocation
+      reference product: biodiesel, from cooking oil
+      exists in original database: False
+      new dataset: True
+
+  synthetic diesel (domestic):
+    production volume:
+      variable: Domestic PtG and PtL production|PtL|PtL Diesel
+    ecoinvent alias:
+      name: diesel production, synthetic, Fischer Tropsch process, hydrogen from electrolysis, energy allocation
+      reference product: diesel, synthetic
+      exists in original database: True
+      regionalize: True
+
+  synthetic diesel (import):
+    production volume:
+      variable: Imports|Oil|Synthetic liquids|PtL|PtL Diesel
+    ecoinvent alias:
+      name: diesel production, synthetic, Fischer Tropsch process, hydrogen from electrolysis, energy allocation
+      reference product: diesel, synthetic
+      exists in original database: True
+
+  fossil diesel (import):
+    production volume:
+      variable: Imports|Oil|Fossil liquids|Motor Diesel
+    ecoinvent alias:
+      name: market for diesel, low-sulfur
+      reference product: diesel, low-sulfur
+      exists in original database: True
+
+  fossil gasoline (import):
+    production volume:
+      variable: Imports|Oil|Fossil liquids|Motor Gasoline
+    ecoinvent alias:
+      name: petrol, low-sulfur, import from Europe
+      reference product: petrol, low-sulfur
+      exists in original database: True
+
+  bioethanol (import):
+    production volume:
+      variable: Imports|Oil|Synthetic liquids|Bioliquids|Ethanol
+    ecoinvent alias:
+      name: market for ethanol, without water, in 99.7% solution state, from ethylene
+      reference product: ethanol, without water, in 99.7% solution state, from ethylene
+      exists in original database: True
+  
+  synthetic gasoline (import):
+    production volume:
+      variable: Imports|Oil|Synthetic liquids|PtL|PtL Gasoline
+    ecoinvent alias:
+      name: gasoline production, from methanol, hydrogen from electrolysis, CO2 from DAC, energy allocation
+      reference product: gasoline, synthetic
+      exists in original database: True
+
+  bioethanol (domestic):
+    production volume:
+      variable: Heat from domestic biodiesel production|Wood|Ethanol reactor
+    ecoinvent alias:
+      name: ethanol production from wood
+      reference product: ethanol, without water, in 95% solution state, from fermentation
+      exists in original database: True
+
+  bioethanol, w CCS (domestic):
+    production volume:
+      variable: Heat from domestic biodiesel production|Wood|Ethanol reactor with CCS
+    ecoinvent alias:
+      name: ethanol production, via fermentation, from sugarbeet, with carbon capture and storage, energy allocation
+      reference product: ethanol, from sugarbeet
+      exists in original database: True
+      regional: True
+
+  kerosene (import):
+    production volume:
+      variable: Imports|Oil|Fossil liquids|Kerosene (excl. international aviation)
+    ecoinvent alias:
+      name: market for kerosene
+      reference product: kerosene
+      exists in original database: True
+
+  synthetic kerosene (import):
+    production volume:
+      variable: Imports|Oil|Synthetic liquids|PtL|PtL Kerosene
+    ecoinvent alias:
+      name: kerosene production, synthetic, Fischer Tropsch process, hydrogen from electrolysis, energy allocation
+      reference product: kerosene, synthetic
+      exists in original database: True
+
+  synthetic kerosene (domestic):
+    production volume:
+      variable: Domestic PtG and PtL production|PtL|PtL Kerosene
+    ecoinvent alias:
+      name: kerosene production, synthetic, Fischer Tropsch process, hydrogen from electrolysis, energy allocation
+      reference product: kerosene, synthetic
+      exists in original database: True
+      regionalize: True
 
 markets:
   - name: market for electricity, high voltage (SPS)
@@ -811,6 +989,9 @@ markets:
 
     replaces in:
       - location: CH
+        operator: equals
+        excludes:
+          name: electricity import, from neighboring countries
 
     except regions:
       - World
@@ -890,7 +1071,30 @@ markets:
     replaces in:
       - location: CH
 
-  - name: market for gas, for power generation (SPS)
+  - name: market for biogas, domestic (SPS)
+    reference product: biogas
+    unit: cubic meter
+    includes:
+      - biogas, fermentation, sewage sludge (domestic)
+      - biogas, biomass, sewage sludge (domestic)
+
+    replaces:
+      - name: market for biogas
+        product: biogas
+        location: CH
+
+    replaces in:
+      - location: CH
+
+    is fuel:
+      biogas, fermentation, sewage sludge (domestic):
+        Carbon dioxide, fossil: 0.0
+        Carbon dioxide, non-fossil: 1.96
+      biogas, biomass, sewage sludge (domestic):
+        Carbon dioxide, fossil: 0.0
+        Carbon dioxide, non-fossil: 1.96
+
+  - name: market for methane (SPS)
     reference product: gas
     unit: cubic meter
     includes:
@@ -1055,4 +1259,248 @@ markets:
     replaces in:
       - location: CH
 
+  - name: market for biodiesel (SPS)
+    reference product: biodiesel
+    unit: kilogram
+    includes:
+      - biodiesel, wood, FT (domestic)
+      - biodiesel, wood, FT w CCS (domestic)
 
+    replaces:
+      - name: market for biodiesel
+        product: biodiesel
+        location: CH
+
+    replaces in:
+      - location: CH
+
+  - name: market for diesel (SPS)
+    reference product: diesel
+    unit: kilogram
+    includes:
+      - biodiesel (domestic)
+      - biodiesel (import)
+      - synthetic diesel (domestic)
+      - synthetic diesel (import)
+      - fossil diesel (import)
+
+    replaces:
+      - name: market for diesel
+        product: diesel
+        location: CH
+        operator: contains
+
+    replaces in:
+      - location: CH
+
+    add:
+      - name: infrastructure construction, for regional distribution of oil product
+        reference product: infrastructure, for regional distribution of oil product
+        amount: 2.6e-10
+      - name: market for fly ash and scrubber sludge
+        reference product: fly ash and scrubber sludge
+        amount: -0.000168
+      - name: market for heat, central or small-scale, other than natural gas
+        reference product: heat, central or small-scale, other than natural gas
+        amount: -0.000584
+      - name: market for municipal solid waste
+        reference product: municipal solid waste
+        amount: -6.27e-06
+      - name: market for rainwater mineral oil storage
+        reference product: rainwater mineral oil storage
+        amount: -7.5e-05
+      - name: market for tap water
+        reference product: tap water
+        amount: 0.000689
+      - name: market for transport, freight train
+        reference product: transport, freight train
+        amount: 0.0336
+      - name: market for transport, freight, lorry, unspecified
+        reference product: transport, freight, lorry, unspecified
+        amount: 0.0326
+      - name: market for electricity, low voltage
+        reference product: electricity, low voltage
+        amount: 0.0067
+      - name: market for diesel
+        reference product: diesel
+        amount: 0.000551109935409916
+      - name: treatment of wastewater, average, wastewater treatment
+        reference product: wastewater, average
+        amount: -6.89e-07
+      - name: Water
+        categories: air
+        unit: cubic meter
+        amount: 1.0335e-07
+      - name: Water
+        categories: water
+        unit: cubic meter
+        amount: 5.8565e-07
+
+    is fuel:
+        biodiesel (domestic):
+            Carbon dioxide, fossil: 0.0
+            Carbon dioxide, non-fossil: 3.15
+        biodiesel (import):
+            Carbon dioxide, fossil: 0.0
+            Carbon dioxide, non-fossil: 3.15
+        synthetic diesel (domestic):
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 3.15
+        synthetic diesel (import):
+            Carbon dioxide, fossil: 0.0
+            Carbon dioxide, non-fossil: 3.15
+        fossil diesel (import):
+            Carbon dioxide, fossil: 3.15
+            Carbon dioxide, non-fossil: 0.0
+
+  - name: market for petrol (SPS)
+    reference product: petrol
+    unit: kilogram
+    includes:
+      - bioethanol (import)
+      - synthetic gasoline (import)
+      - fossil gasoline (import)
+      - bioethanol (domestic)
+      - bioethanol, w CCS (domestic)
+
+    replaces:
+        - name: market for petrol
+          product: petrol
+          location: CH
+          operator: contains
+
+    replaces in:
+      - location: CH
+
+    add:
+      - name: infrastructure construction, for regional distribution of oil product
+        reference product: infrastructure, for regional distribution of oil product
+        amount: 2.6e-10
+      - name: market for fly ash and scrubber sludge
+        reference product: fly ash and scrubber sludge
+        amount: -0.000168
+      - name: market for heat, central or small-scale, other than natural gas
+        reference product: heat, central or small-scale, other than natural gas
+        amount: -0.000584
+      - name: market for municipal solid waste
+        reference product: municipal solid waste
+        amount: -6.27e-06
+      - name: market for rainwater mineral oil storage
+        reference product: rainwater mineral oil storage
+        amount: -7.5e-05
+      - name: market for tap water
+        reference product: tap water
+        amount: 0.000689
+      - name: market for transport, freight train
+        reference product: transport, freight train
+        amount: 0.0336
+      - name: market for transport, freight, lorry, unspecified
+        reference product: transport, freight, lorry, unspecified
+        amount: 0.0326
+      - name: market for electricity, low voltage
+        reference product: electricity, low voltage
+        amount: 0.0067
+      - name: market for petrol
+        reference product: petrol
+        amount: 0.000551109935409916
+      - name: treatment of wastewater, average, wastewater treatment
+        reference product: wastewater, average
+        amount: -6.89e-07
+      - name: Water
+        categories: air
+        unit: cubic meter
+        amount: 1.0335e-07
+      - name: Water
+        categories: water
+        unit: cubic meter
+        amount: 5.8565e-07
+
+    is fuel:
+      bioethanol (import):
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 2.6
+      synthetic gasoline (import):
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 2.6
+      fossil gasoline (import):
+          Carbon dioxide, fossil: 2.6
+          Carbon dioxide, non-fossil: 0.0
+      bioethanol (domestic):
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 2.6
+      bioethanol, w CCS (domestic):
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 2.6
+
+  - name: market for kerosene (SPS)
+    reference product: kerosene
+    unit: kilogram
+    includes:
+      - kerosene (import)
+      - synthetic kerosene (import)
+      - synthetic kerosene (domestic)
+
+    replaces:
+      - name: market for kerosene
+        product: kerosene
+        location: CH
+        operator: contains
+
+    is fuel:
+      kerosene (import):
+          Carbon dioxide, fossil: 3.15
+          Carbon dioxide, non-fossil: 0.0
+      synthetic kerosene (import):
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 3.15
+      synthetic kerosene (domestic):
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 3.15
+
+  - name: market for hydrogen (SPS)
+    reference product: hydrogen
+    unit: kilogram
+    includes:
+      - hydrogen (import)
+      - hydrogen, PEM, small (domestic)
+      - hydrogen, PEM, large (domestic)
+      - hydrogen, SOEC, large (domestic)
+      - hydrogen, SMR, natural gas (domestic)
+      - hydrogen, SMR w CCS, natural gas (domestic)
+      - hydrogen, SMR, biomethane (domestic)
+      - hydrogen, SMR w CCS, biomethane (domestic)
+      - hydrogen, wood gasification (domestic)
+      - hydrogen, wood gasification w CCS (domestic)
+
+    replaces:
+      - name: market for hydrogen, gaseous
+        product: hydrogen, gaseous
+
+    replaces in:
+      - location: CH
+
+    add:
+      - name: Hydrogen
+        categories: air::non-urban air or from high stacks
+        unit: kilogram
+        amount: 0.005
+      - name: pipeline, hydrogen, low pressure distribution network
+        reference product: pipeline, for hydrogen distribution
+        unit: kilometer
+        amount: 1.14422E-06
+      - name: pipeline, hydrogen, high pressure transmission network
+        reference product: pipeline, for hydrogen transmission
+        unit: kilometer
+        amount: 2.01706E-09
+      - name: compressor assembly for transmission hydrogen pipeline
+        reference product: compressor, for hydrogen transmission
+        unit: unit
+        amount: 3.22703E-11
+      - name: geological hydrogen storage
+        reference product: hydrogen storage
+        unit: kilogram
+        amount: 0.302074305
+      - name: market for electricity, low voltage
+        reference product: electricity, low voltage
+        unit: kilowatt hour
+        amount: 1.82
