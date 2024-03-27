@@ -1499,9 +1499,6 @@ markets:
       - name: market for electricity, low voltage
         reference product: electricity, low voltage
         amount: 0.0067
-      - name: market for petrol
-        reference product: petrol
-        amount: 0.000551109935409916
       - name: treatment of wastewater, average, wastewater treatment
         reference product: wastewater, average
         amount: -6.89e-07
