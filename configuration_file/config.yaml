@@ -873,7 +873,7 @@ production pathways:
       name: ethanol production, via fermentation, from sugarbeet, with carbon capture and storage, energy allocation
       reference product: ethanol, from sugarbeet
       exists in original database: True
-      regional: True
+      regionalize: True
 
   kerosene (import):
     production volume:
@@ -897,6 +897,105 @@ production pathways:
     ecoinvent alias:
       name: kerosene production, synthetic, Fischer Tropsch process, hydrogen from electrolysis, energy allocation
       reference product: kerosene, synthetic
+      exists in original database: True
+      regionalize: True
+
+  hydrogen (import):
+    production volume:
+      variable: Imports|Hydrogen
+    ecoinvent alias:
+      name: market for hydrogen, gaseous
+      reference product: hydrogen, gaseous
+      exists in original database: False
+      new dataset: True
+
+
+  hydrogen, PEM, small (domestic):
+    production volume:
+      variable: Domestic hydrogen production|Electricity|PEM electrolysis small-medium scale
+    ecoinvent alias:
+      name: hydrogen production, gaseous, 30 bar, from PEM electrolysis, from grid electricity
+      reference product: hydrogen, gaseous, 30 bar
+      exists in original database: True
+      regionalize: True
+
+
+  hydrogen, PEM, large (domestic):
+    production volume:
+      variable: Domestic hydrogen production|Electricity|PEM electrolysis large scale
+    ecoinvent alias:
+      name: hydrogen production, gaseous, 30 bar, from PEM electrolysis, from grid electricity
+      reference product: hydrogen, gaseous, 30 bar
+      exists in original database: True
+      regionalize: True
+
+
+  hydrogen, SOEC, large (domestic):
+    production volume:
+      variable: Domestic hydrogen production|Electricity|SOEC electrolysis
+    ecoinvent alias:
+      name: hydrogen production, gaseous, 1 bar, from SOEC electrolysis, from grid electricity
+      reference product: hydrogen, gaseous, 1 bar
+      exists in original database: True
+      regionalize: True
+
+
+  hydrogen, SMR, natural gas (domestic):
+    production volume:
+      variable: Domestic hydrogen production|Gas|Fossil gases|SMR-ATR Reforming
+    ecoinvent alias:
+      name: hydrogen production, steam methane reforming of natural gas, 25 bar
+      reference product: hydrogen, gaseous, 25 bar
+      exists in original database: True
+      regionalize: True
+
+
+  hydrogen, SMR w CCS, natural gas (domestic):
+    production volume:
+      variable: Domestic hydrogen production|Gas|Fossil gases|SMR-ATR Reforming CCS
+    ecoinvent alias:
+      name: hydrogen production, steam methane reforming of natural gas, with CCS (MDEA, 98% eff.), 25 bar
+      reference product: hydrogen, gaseous, 25 bar
+      exists in original database: True
+      regionalize: True
+
+
+  hydrogen, SMR, biomethane (domestic):
+    production volume:
+      variable: Domestic hydrogen production|Gas|Synthetic gases|SMR-ATR Reforming
+    ecoinvent alias:
+      name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, 26 bar
+      reference product: hydrogen, gaseous, 26 bar
+      exists in original database: True
+      regionalize: True
+
+
+  hydrogen, SMR w CCS, biomethane (domestic):
+    production volume:
+      variable: Domestic hydrogen production|Gas|Synthetic gases|SMR-ATR Reforming CCS
+    ecoinvent alias:
+      name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, with CCS (MDEA, 98% eff.), 26 bar
+      reference product: hydrogen, gaseous, 26 bar
+      exists in original database: True
+      regionalize: True
+
+
+  hydrogen, wood gasification (domestic):
+    production volume:
+      variable: Domestic hydrogen production|Wood|Gasification
+    ecoinvent alias:
+      name: hydrogen production, gaseous, 25 bar, from gasification of woody biomass in entrained flow gasifier, at gasification plant
+      reference product: hydrogen, gaseous, 25 bar
+      exists in original database: True
+      regionalize: True
+
+
+  hydrogen, wood gasification w CCS (domestic):
+    production volume:
+      variable: Domestic hydrogen production|Wood|Gasification CCS
+    ecoinvent alias:
+      name: hydrogen production, gaseous, 25 bar, from gasification of woody biomass in entrained flow gasifier, with CCS, at gasification plant
+      reference product: hydrogen, gaseous, 25 bar
       exists in original database: True
       regionalize: True
 
@@ -1076,7 +1175,7 @@ markets:
     unit: cubic meter
     includes:
       - biogas, fermentation, sewage sludge (domestic)
-      - biogas, biomass, sewage sludge (domestic)
+      - biogas, fermentation, biomass (domestic)
 
     replaces:
       - name: market for biogas
@@ -1090,7 +1189,7 @@ markets:
       biogas, fermentation, sewage sludge (domestic):
         Carbon dioxide, fossil: 0.0
         Carbon dioxide, non-fossil: 1.96
-      biogas, biomass, sewage sludge (domestic):
+      biogas, fermentation, biomass (domestic):
         Carbon dioxide, fossil: 0.0
         Carbon dioxide, non-fossil: 1.96
 
