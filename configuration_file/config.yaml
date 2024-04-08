@@ -9,12 +9,49 @@ regionalize:
     - name: carbon dioxide, captured at wood burning power plant 20 MW post, pipeline 200km, storage 1000m
       reference product: carbon dioxide, captured at wood burning power plant 20 MW post, pipeline 200km, storage 1000m
       exists in original database: True
+    - name: carbon dioxide, captured at hydrogen production plant, pre, pipeline 200km, storage 1000m
+      reference product: carbon dioxide, captured at hydrogen production plant, pre, pipeline 200km, storage 1000m
+      exists in original database: True
+    - name: biomethane production, from biogas upgrading, using amine scrubbing
+      reference product: biomethane, from biogas upgrading, using amine scrubbing
+      exists in original database: True
     - name: heat and power co-generation, natural gas, conventional power plant, 100MW electrical
       reference product: electricity, high voltage
       exists in original database: True
     - name: electricity production, at co-generation wood-fired power plant, post, pipeline 200km, storage 1000m
       reference product: electricity, high voltage
       exists in original database: True
+    - name: hydrogen production, gaseous, 30 bar, from PEM electrolysis, from grid electricity
+      reference product: hydrogen, gaseous, 30 bar
+      exists in original database: True
+    - name: hydrogen production, steam methane reforming of natural gas, 25 bar
+      reference product: hydrogen, gaseous, 25 bar
+      exists in original database: True
+    - name: hydrogen production, steam methane reforming of natural gas, with CCS (MDEA, 98% eff.), 25 bar
+      reference product: hydrogen, gaseous, 25 bar
+      exists in original database: True
+    - name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, 26 bar
+      reference product: hydrogen, gaseous, 26 bar
+      exists in original database: True
+    - name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, with CCS (MDEA, 98% eff.), 26 bar
+      reference product: hydrogen, gaseous, 26 bar
+      exists in original database: True
+    - name: carbon monoxide, from RWGS, for Fischer Tropsch process, hydrogen from wood gasification, with CCS
+      reference product: carbon monoxide, from RWGS
+      exists in original database: True
+    - name: carbon monoxide, from RWGS, for Fischer Tropsch process, hydrogen from electrolysis
+      reference product: carbon monoxide, from RWGS
+      exists in original database: True
+    - name: carbon dioxide, captured from atmosphere, with a sorbent-based direct air capture system, 100ktCO2
+      reference product: carbon dioxide, captured from atmosphere
+      exists in original database: True
+    - name: syngas, RWGS, Production, for Fischer Tropsch process, hydrogen from wood gasification, with CCS
+      reference product: syngas, RWGS, Production
+      exists in original database: True
+    - name: syngas, RWGS, Production, for Fischer Tropsch process, hydrogen from electrolysis
+      reference product: syngas, RWGS, Production, for Fischer Tropsch process, hydrogen from electrolysis
+      exists in original database: True
+
 
 production pathways:
   hydro_run_of_river:
@@ -646,7 +683,7 @@ production pathways:
     production volume:
       variable: Imports|Gas|Fossil gases|Natural gas
     ecoinvent alias:
-      name: market for natural gas, high pressure
+      name: natural gas, high pressure, import from DE
       reference product: natural gas, high pressure
       exists in original database: True
 
@@ -671,7 +708,7 @@ production pathways:
     production volume:
       variable: Imports|Gas|Synthetic gases|Biogases|Biogas
     ecoinvent alias:
-      name: market for biomethane, high pressure
+      name: biomethane import, from neighboring countries
       reference product: biomethane, high pressure
       exists in original database: True
       mask: vehicle grade
@@ -791,15 +828,6 @@ production pathways:
       exists in original database: True
       regionalize: True
 
-  biodiesel (domestic):
-    production volume:
-      variable: Domestic biodiesel production
-    ecoinvent alias:
-      name: market for biodiesel (SPS)
-      reference product: biodiesel
-      exists in original database: False
-      new dataset: True
-
   biodiesel (import):
     production volume:
       variable: Imports|Oil|Synthetic liquids|Bioliquids|Biodiesel
@@ -830,8 +858,8 @@ production pathways:
     production volume:
       variable: Imports|Oil|Fossil liquids|Motor Diesel
     ecoinvent alias:
-      name: market for diesel, low-sulfur
-      reference product: diesel, low-sulfur
+      name: diesel import, from neighboring countries
+      reference product: diesel
       exists in original database: True
 
   fossil gasoline (import):
@@ -879,7 +907,7 @@ production pathways:
     production volume:
       variable: Imports|Oil|Fossil liquids|Kerosene (excl. international aviation)
     ecoinvent alias:
-      name: market for kerosene
+      name: kerosene import, from neighboring countries
       reference product: kerosene
       exists in original database: True
 
@@ -887,7 +915,7 @@ production pathways:
     production volume:
       variable: Imports|Oil|Synthetic liquids|PtL|PtL Kerosene
     ecoinvent alias:
-      name: kerosene production, synthetic, Fischer Tropsch process, hydrogen from electrolysis, energy allocation
+      name: synthetic kerosene import, from neighboring countries
       reference product: kerosene, synthetic
       exists in original database: True
 
@@ -917,7 +945,6 @@ production pathways:
       name: hydrogen production, gaseous, 30 bar, from PEM electrolysis, from grid electricity
       reference product: hydrogen, gaseous, 30 bar
       exists in original database: True
-      regionalize: True
 
 
   hydrogen, PEM, large (domestic):
@@ -927,7 +954,6 @@ production pathways:
       name: hydrogen production, gaseous, 30 bar, from PEM electrolysis, from grid electricity
       reference product: hydrogen, gaseous, 30 bar
       exists in original database: True
-      regionalize: True
 
 
   hydrogen, SOEC, large (domestic):
@@ -947,7 +973,6 @@ production pathways:
       name: hydrogen production, steam methane reforming of natural gas, 25 bar
       reference product: hydrogen, gaseous, 25 bar
       exists in original database: True
-      regionalize: True
 
 
   hydrogen, SMR w CCS, natural gas (domestic):
@@ -957,7 +982,6 @@ production pathways:
       name: hydrogen production, steam methane reforming of natural gas, with CCS (MDEA, 98% eff.), 25 bar
       reference product: hydrogen, gaseous, 25 bar
       exists in original database: True
-      regionalize: True
 
 
   hydrogen, SMR, biomethane (domestic):
@@ -967,7 +991,6 @@ production pathways:
       name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, 26 bar
       reference product: hydrogen, gaseous, 26 bar
       exists in original database: True
-      regionalize: True
 
 
   hydrogen, SMR w CCS, biomethane (domestic):
@@ -977,7 +1000,6 @@ production pathways:
       name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, with CCS (MDEA, 98% eff.), 26 bar
       reference product: hydrogen, gaseous, 26 bar
       exists in original database: True
-      regionalize: True
 
 
   hydrogen, wood gasification (domestic):
@@ -1000,175 +1022,6 @@ production pathways:
       regionalize: True
 
 markets:
-  - name: market for electricity, high voltage (SPS)
-    reference product: electricity, high voltage
-    unit: kilowatt hour
-    includes:
-      - hydro_run_of_river
-      - hydro (reservoir)
-      - hydro (pumped storage)
-      - nuclear (boiling water)
-      - nuclear (pressure water)
-      - oil (peak devices)
-      - oil (DH CHP)
-      - oil (industry CHP)
-      - gas (CCGT)
-      - gas (OCGT)
-      - gas (CCGT CCS)
-      - gas (CHP DH)
-      - gas (fuel cell DH)
-      - gas (CHP industry)
-      - gas (CHP CCS industry)
-      - gas (CHP fuel cell reformer)
-      - gas (CHP single family)
-      - gas (single family CHP fuel cell)
-      - gas (multi family CHP)
-      - gas (multi family CHP fuel cell)
-      - biogas (services CHP)
-      - gas (services CHP)
-      - gas (services CHP fuel cell)
-      - waste incineration, fossil
-      - waste incineration, fossil (CHP)
-      - waste incineration, fossil (industrial)
-      - waste incineration, fossil (CCS)
-      - waste incineration, fossil (CHP, CCS)
-      - waste incineration, fossil (industrial, CCS)
-      - waste incineration, non-fossil
-      - waste incineration, non-fossil (CHP)
-      - waste incineration, non-fossil (industrial)
-      - waste incineration, non-fossil (CCS)
-      - waste incineration, non-fossil (CHP, CCS)
-      - waste incineration, non-fossil (industrial, CCS)
-      - pv (large scale)
-      - pv (industry)
-      - pv (services)
-      - pv residential (multi family)
-      - pv residential (single family)
-      - wind
-      - geothermal
-      - hydrogen fuel cell (DH CHP)
-      - hydrogen fuel cell (industrial CHP)
-      - hydrogen fuel cell (services CHP)
-      - biomass (DH)
-      - biomass (CHP)
-      - biomass (CCS, BECCS)
-      - biomass (CCS, industrial)
-      - battery (large)
-      - battery (medium)
-      - battery (industry)
-      - battery (services)
-      - battery (single family)
-      - battery (multi family)
-      - CAES
-      - import
-
-    add:
-      - name: transmission network construction, electricity, high voltage
-        reference product: transmission network, electricity, high voltage
-        amount: 6.58e-09
-
-      - name: Dinitrogen monoxide
-        categories: air
-        unit: kilogram
-        amount: 5.0e-06
-
-      - name: Ozone
-        categories: air
-        unit: kilogram
-        amount: 4.16e-06
-
-    replaces:
-      - name: market for electricity, high voltage
-        product: electricity, high voltage
-        location: CH
-
-      - name: market group for electricity, high voltage
-        product: electricity, high voltage
-        operator: contains
-
-    replaces in:
-      - location: CH
-        operator: equals
-        excludes:
-          name: electricity import, from neighboring countries
-
-    except regions:
-      - World
-
-  - name: market for electricity, medium voltage (SPS)
-    reference product: electricity, medium voltage
-    unit: kilowatt hour
-    includes:
-      - medium_to_high
-
-    add:
-      - name: market for sulfur hexafluoride, liquid
-        reference product: sulfur hexafluoride, liquid
-        amount: 5.4e-08
-
-      - name: transmission network construction, electricity, medium voltage
-        reference product: transmission network, electricity, medium voltage
-        amount: 1.86e-08
-
-      - name: Sulfur hexafluoride
-        categories: air
-        unit: kilogram
-        amount: 5.4e-08
-
-      - name: market for electricity, high voltage (SPS)
-        reference product: electricity, high voltage
-        amount: 0.065
-
-    replaces:
-      - name: market for electricity, medium voltage
-        product: electricity, medium voltage
-        location: CH
-
-      - name: market group for electricity, medium voltage
-        product: electricity, medium voltage
-        operator: contains
-
-    replaces in:
-      - location: CH
-
-    except regions:
-      - World
-
-  - name: market for electricity, low voltage (SPS)
-    reference product: electricity, low voltage
-    unit: kilowatt hour
-    includes:
-      - low_to_medium
-
-    add:
-      - name: market for sulfur hexafluoride, liquid
-        reference product: sulfur hexafluoride, liquid
-        amount: 2.99e-09
-
-      - name: distribution network construction, electricity, low voltage
-        reference product: distribution network, electricity, low voltage
-        amount: 8.74e-08
-
-      - name: Sulfur hexafluoride
-        categories: air
-        unit: kilogram
-        amount: 2.99e-09
-
-      - name: market for electricity, medium voltage (SPS)
-        reference product: electricity, medium voltage
-        amount: 0.027
-
-    replaces:
-      - name: market for electricity, low voltage
-        product: electricity, low voltage
-        location: CH
-
-      - name: market group for electricity, low voltage
-        product: electricity, low voltage
-        operator: contains
-
-    replaces in:
-      - location: CH
 
   - name: market for biogas, domestic (SPS)
     reference product: biogas
@@ -1358,26 +1211,12 @@ markets:
     replaces in:
       - location: CH
 
-  - name: market for biodiesel (SPS)
-    reference product: biodiesel
-    unit: kilogram
-    includes:
-      - biodiesel, wood, FT (domestic)
-      - biodiesel, wood, FT w CCS (domestic)
-
-    replaces:
-      - name: market for biodiesel
-        product: biodiesel
-        location: CH
-
-    replaces in:
-      - location: CH
-
   - name: market for diesel (SPS)
     reference product: diesel
     unit: kilogram
     includes:
-      - biodiesel (domestic)
+      - biodiesel, wood, FT (domestic)
+      - biodiesel, wood, FT w CCS (domestic)
       - biodiesel (import)
       - synthetic diesel (domestic)
       - synthetic diesel (import)
@@ -1386,8 +1225,10 @@ markets:
     replaces:
       - name: market for diesel
         product: diesel
-        location: CH
-        operator: contains
+        operator: equals
+      - name: market for diesel, low-sulfur
+        product: diesel, low-sulfur
+        operator: equals
 
     replaces in:
       - location: CH
@@ -1436,21 +1277,24 @@ markets:
         amount: 5.8565e-07
 
     is fuel:
-        biodiesel (domestic):
-            Carbon dioxide, fossil: 0.0
-            Carbon dioxide, non-fossil: 3.15
+        biodiesel, wood, FT (domestic):
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 3.15
+        biodiesel, wood, FT w CCS (domestic):
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 3.15
         biodiesel (import):
-            Carbon dioxide, fossil: 0.0
-            Carbon dioxide, non-fossil: 3.15
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 3.15
         synthetic diesel (domestic):
           Carbon dioxide, fossil: 0.0
           Carbon dioxide, non-fossil: 3.15
         synthetic diesel (import):
-            Carbon dioxide, fossil: 0.0
-            Carbon dioxide, non-fossil: 3.15
+          Carbon dioxide, fossil: 0.0
+          Carbon dioxide, non-fossil: 3.15
         fossil diesel (import):
-            Carbon dioxide, fossil: 3.15
-            Carbon dioxide, non-fossil: 0.0
+          Carbon dioxide, fossil: 3.15
+          Carbon dioxide, non-fossil: 0.0
 
   - name: market for petrol (SPS)
     reference product: petrol
@@ -1465,7 +1309,6 @@ markets:
     replaces:
         - name: market for petrol
           product: petrol
-          location: CH
           operator: contains
 
     replaces in:
@@ -1542,6 +1385,49 @@ markets:
         location: CH
         operator: contains
 
+    add:
+      - name: infrastructure construction, for regional distribution of oil product
+        reference product: infrastructure, for regional distribution of oil product
+        amount: 2.6e-10
+      - name: market for fly ash and scrubber sludge
+        reference product: fly ash and scrubber sludge
+        amount: -0.000168
+      - name: market for heat, central or small-scale, other than natural gas
+        reference product: heat, central or small-scale, other than natural gas
+        amount: -0.000584
+      - name: market for municipal solid waste
+        reference product: municipal solid waste
+        amount: -6.27e-06
+      - name: market for rainwater mineral oil storage
+        reference product: rainwater mineral oil storage
+        amount: -7.5e-05
+      - name: market for tap water
+        reference product: tap water
+        amount: 0.000689
+      - name: market for transport, freight train
+        reference product: transport, freight train
+        amount: 0.0336
+      - name: market for transport, freight, lorry, unspecified
+        reference product: transport, freight, lorry, unspecified
+        amount: 0.0326
+      - name: market for electricity, low voltage
+        reference product: electricity, low voltage
+        amount: 0.0067
+      - name: market for kerosene
+        reference product: kerosene
+        amount: 0.000551109935409916
+      - name: treatment of wastewater, average, wastewater treatment
+        reference product: wastewater, average
+        amount: -6.89e-07
+      - name: Water
+        categories: air
+        unit: cubic meter
+        amount: 1.0335e-07
+      - name: Water
+        categories: water
+        unit: cubic meter
+        amount: 5.8565e-07
+
     is fuel:
       kerosene (import):
           Carbon dioxide, fossil: 3.15
@@ -1600,3 +1486,173 @@ markets:
         reference product: electricity, low voltage
         unit: kilowatt hour
         amount: 1.82
+
+  - name: market for electricity, high voltage (SPS)
+    reference product: electricity, high voltage
+    unit: kilowatt hour
+    includes:
+      - hydro_run_of_river
+      - hydro (reservoir)
+      - hydro (pumped storage)
+      - nuclear (boiling water)
+      - nuclear (pressure water)
+      - oil (peak devices)
+      - oil (DH CHP)
+      - oil (industry CHP)
+      - gas (CCGT)
+      - gas (OCGT)
+      - gas (CCGT CCS)
+      - gas (CHP DH)
+      - gas (fuel cell DH)
+      - gas (CHP industry)
+      - gas (CHP CCS industry)
+      - gas (CHP fuel cell reformer)
+      - gas (CHP single family)
+      - gas (single family CHP fuel cell)
+      - gas (multi family CHP)
+      - gas (multi family CHP fuel cell)
+      - biogas (services CHP)
+      - gas (services CHP)
+      - gas (services CHP fuel cell)
+      - waste incineration, fossil
+      - waste incineration, fossil (CHP)
+      - waste incineration, fossil (industrial)
+      - waste incineration, fossil (CCS)
+      - waste incineration, fossil (CHP, CCS)
+      - waste incineration, fossil (industrial, CCS)
+      - waste incineration, non-fossil
+      - waste incineration, non-fossil (CHP)
+      - waste incineration, non-fossil (industrial)
+      - waste incineration, non-fossil (CCS)
+      - waste incineration, non-fossil (CHP, CCS)
+      - waste incineration, non-fossil (industrial, CCS)
+      - pv (large scale)
+      - pv (industry)
+      - pv (services)
+      - pv residential (multi family)
+      - pv residential (single family)
+      - wind
+      - geothermal
+      - hydrogen fuel cell (DH CHP)
+      - hydrogen fuel cell (industrial CHP)
+      - hydrogen fuel cell (services CHP)
+      - biomass (DH)
+      - biomass (CHP)
+      - biomass (CCS, BECCS)
+      - biomass (CCS, industrial)
+      - battery (large)
+      - battery (medium)
+      - battery (industry)
+      - battery (services)
+      - battery (single family)
+      - battery (multi family)
+      - CAES
+      - import
+
+    add:
+      - name: transmission network construction, electricity, high voltage
+        reference product: transmission network, electricity, high voltage
+        amount: 6.58e-09
+
+      - name: Dinitrogen monoxide
+        categories: air
+        unit: kilogram
+        amount: 5.0e-06
+
+      - name: Ozone
+        categories: air
+        unit: kilogram
+        amount: 4.16e-06
+
+    replaces:
+      - name: market for electricity, high voltage
+        product: electricity, high voltage
+        location: CH
+
+      - name: market group for electricity, high voltage
+        product: electricity, high voltage
+        operator: contains
+
+    replaces in:
+      - location: CH
+        operator: equals
+        excludes:
+          name: electricity import, from neighboring countries
+
+    except regions:
+      - World
+
+  - name: market for electricity, medium voltage (SPS)
+    reference product: electricity, medium voltage
+    unit: kilowatt hour
+    includes:
+      - medium_to_high
+
+    add:
+      - name: market for sulfur hexafluoride, liquid
+        reference product: sulfur hexafluoride, liquid
+        amount: 5.4e-08
+
+      - name: transmission network construction, electricity, medium voltage
+        reference product: transmission network, electricity, medium voltage
+        amount: 1.86e-08
+
+      - name: Sulfur hexafluoride
+        categories: air
+        unit: kilogram
+        amount: 5.4e-08
+
+      - name: market for electricity, high voltage (SPS)
+        reference product: electricity, high voltage
+        amount: 0.065
+
+    replaces:
+      - name: market for electricity, medium voltage
+        product: electricity, medium voltage
+        location: CH
+
+      - name: market group for electricity, medium voltage
+        product: electricity, medium voltage
+        operator: contains
+
+    replaces in:
+      - location: CH
+
+    except regions:
+      - World
+
+  - name: market for electricity, low voltage (SPS)
+    reference product: electricity, low voltage
+    unit: kilowatt hour
+    includes:
+      - low_to_medium
+
+    add:
+      - name: market for sulfur hexafluoride, liquid
+        reference product: sulfur hexafluoride, liquid
+        amount: 2.99e-09
+
+      - name: distribution network construction, electricity, low voltage
+        reference product: distribution network, electricity, low voltage
+        amount: 8.74e-08
+
+      - name: Sulfur hexafluoride
+        categories: air
+        unit: kilogram
+        amount: 2.99e-09
+
+      - name: market for electricity, medium voltage (SPS)
+        reference product: electricity, medium voltage
+        amount: 0.027
+
+    replaces:
+      - name: market for electricity, low voltage
+        product: electricity, low voltage
+        location: CH
+
+      - name: market group for electricity, low voltage
+        product: electricity, low voltage
+        operator: contains
+
+    replaces in:
+      - location: CH
