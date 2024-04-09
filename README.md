@@ -39,33 +39,8 @@ Test
 Ecoinvent database compatibility
 --------------------------------
 
-ecoinvent 3.8 cut-off
+ecoinvent 3.9 cut-off
 
-IAM scenario compatibility
----------------------------
-
-The following coupling is done between IAM and EP2050+ scenarios:
-
-| IAM scenario           | EP2050+ scenario     |
-|------------------------|----------------------|
-| IMAGE SSP2-Base        | Business As Usual    |
-| IMAGE SSP2-RCP26       | ZERO Basis (default) |
-| IMAGE SSP2-RCP26       | ZERO A               |
-| IMAGE SSP2-RCP26       | ZERO B               |
-| IMAGE SSP2-RCP26       | ZERO C               |
-| IMAGE SSP2-RCP19       | ZERO Basis (default) |
-| IMAGE SSP2-RCP19       | ZERO A               |
-| IMAGE SSP2-RCP19       | ZERO B               |
-| IMAGE SSP2-RCP19       | ZERO C               |
-| REMIND SSP2-Base       | Business As Usual    |
-| REMIND SSP2-PkBudg1150 | ZERO Basis (default) |
-| REMIND SSP2-PkBudg1150 | ZERO A               |
-| REMIND SSP2-PkBudg1150 | ZERO B               |
-| REMIND SSP2-PkBudg1150 | ZERO C               |
-| REMIND SSP2-PkBudg500  | ZERO Basis           |
-| REMIND SSP2-PkBudg500  | ZERO A               |
-| REMIND SSP2-PkBudg500  | ZERO B               |
-| REMIND SSP2-PkBudg500  | ZERO C               |
 
 What does this do?
 ------------------

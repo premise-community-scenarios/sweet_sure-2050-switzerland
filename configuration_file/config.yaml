@@ -555,7 +555,6 @@ production pathways:
       name: electricity production, at co-generation wood-fired power plant, post, pipeline 200km, storage 1000m
       reference product: electricity, high voltage
       exists in original database: True
-      regionalize: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|Industrial CHPs wood (CCS)
         absolute: True
