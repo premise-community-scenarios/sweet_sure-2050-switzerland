@@ -51,6 +51,15 @@ regionalize:
     - name: syngas, RWGS, Production, for Fischer Tropsch process, hydrogen from electrolysis
       reference product: syngas, RWGS, Production, for Fischer Tropsch process, hydrogen from electrolysis
       exists in original database: True
+    - name: heat production, at hard coal industrial furnace 1-10MW
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: True
+    - name: heat production, at co-generation wood-fired power plant, post, pipeline 200km, storage 1000m
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: True
+    - name: heat and power co-generation, oil
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: True
 
 
 production pathways:
@@ -63,7 +72,7 @@ production pathways:
       mask: renewable energy products
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Hydro|Hydro Run of River
+      - variable: Efficiency|Hydro|Hydro Run of River
  
   hydro (reservoir):
     production volume:
@@ -74,7 +83,7 @@ production pathways:
       exists in original database: True
       mask: renewable energy products
     efficiency:
-      - variable: Efficiency of power plants (electric)|Hydro|Hydro Large
+      - variable: Efficiency|Hydro|Hydro Large
 
   hydro (pumped storage):
     production volume:
@@ -85,7 +94,7 @@ production pathways:
       exists in original database: True
       mask: renewable energy products
     efficiency:
-      - variable: Efficiency of power plants (electric)|Hydro|Pump storage
+      - variable: Efficiency|Hydro|Pump storage
 
   # originally, the scenario does not differentiate between nuclear technologies
   # we sub-split the volumes between Pressure And Water
@@ -115,7 +124,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Gas turbines combined cycle
+      - variable: Efficiency|Gas|Gas turbines combined cycle
         absolute: True
 
   gas (OCGT):
@@ -126,7 +135,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Gas turbines open cycle
+      - variable: Efficiency|Gas|Gas turbines open cycle
         absolute: True
 
   gas (CCGT CCS):
@@ -138,7 +147,7 @@ production pathways:
       exists in original database: True
       regionalize: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Gas turbines combined cycle CCS
+      - variable: Efficiency|Gas|Gas turbines combined cycle CCS
         absolute: True
 
   gas (CHP DH):
@@ -149,7 +158,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|CHP Gas (for District Heating)
+      - variable: Efficiency|Gas|CHP Gas (for District Heating)
         absolute: True
 
   gas (fuel cell DH):
@@ -160,7 +169,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|CHP Fuel Cell Gas (for District Heating)
+      - variable: Efficiency|Gas|CHP Fuel Cell Gas (for District Heating)
         absolute: True
 
   gas (CHP industry):
@@ -171,7 +180,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Industrial CHPs gas
+      - variable: Efficiency|Gas|Industrial CHPs gas
         absolute: True
 
   gas (CHP CCS industry):
@@ -183,7 +192,7 @@ production pathways:
       exists in original database: True
       regionalize: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Industrial CHPs gas (CCS)
+      - variable: Efficiency|Gas|Industrial CHPs gas (CCS)
         absolute: True
 
   gas (CHP fuel cell reformer):
@@ -194,7 +203,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Industrial CHPs fuel cells (gas reformer)
+      - variable: Efficiency|Gas|Industrial CHPs fuel cells (gas reformer)
         absolute: True
 
   gas (CHP single family):
@@ -205,7 +214,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Residential single family CHPs gas
+      - variable: Efficiency|Gas|Residential single family CHPs gas
         absolute: True
 
   gas (single family CHP fuel cell):
@@ -216,7 +225,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Residential single family CHPs fuel cells gas
+      - variable: Efficiency|Gas|Residential single family CHPs fuel cells gas
         absolute: True
 
   gas (multi family CHP):
@@ -227,7 +236,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Residential multi family CHPs gas
+      - variable: Efficiency|Gas|Residential multi family CHPs gas
         absolute: True
 
   gas (multi family CHP fuel cell):
@@ -238,7 +247,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Residential multi family CHPs fuel cells gas
+      - variable: Efficiency|Gas|Residential multi family CHPs fuel cells gas
         absolute: True
 
   biogas (services CHP):
@@ -250,7 +259,7 @@ production pathways:
       exists in original database: True
       mask: renewable energy products
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Services sectors CHPs (bio)gas
+      - variable: Efficiency|Gas|Services sectors CHPs (bio)gas
         absolute: True
 
   gas (services CHP):
@@ -261,7 +270,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Services sectors CHPs gas
+      - variable: Efficiency|Gas|Services sectors CHPs gas
         absolute: True
 
   gas (services CHP fuel cell):
@@ -272,7 +281,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Services sectors CHPs fuel cells (gas reformer)
+      - variable: Efficiency|Gas|Services sectors CHPs fuel cells (gas reformer)
         absolute: True
 
   # electricity from waste incineration comes for free
@@ -285,7 +294,7 @@ production pathways:
       reference product: electricity, from incineration of plastic waste mixture, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+      - variable: Efficiency|Wastes|Wastes Incineration (electric only)
         absolute: True
 
   waste incineration, fossil (CHP):
@@ -296,7 +305,7 @@ production pathways:
       reference product: electricity, from incineration of plastic waste mixture, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating)
+      - variable: Efficiency|Wastes|CHP Wastes (for District Heating)
         absolute: True
 
   waste incineration, fossil (industrial):
@@ -307,7 +316,7 @@ production pathways:
       reference product: electricity, from incineration of plastic waste mixture, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+      - variable: Efficiency|Wastes|Industrial CHPs wastes
         absolute: True
 
   # electricity from waste incineration
@@ -319,7 +328,7 @@ production pathways:
       reference product: electricity, from plastic waste mixture, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+      - variable: Efficiency|Wastes|Wastes Incineration (electric only)
         absolute: True
 
   waste incineration, fossil (CHP, CCS):
@@ -330,7 +339,7 @@ production pathways:
       reference product: electricity, from plastic waste mixture, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating)
+      - variable: Efficiency|Wastes|CHP Wastes (for District Heating)
         absolute: True
 
   waste incineration, fossil (industrial, CCS):
@@ -341,7 +350,7 @@ production pathways:
       reference product: electricity, from plastic waste mixture, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+      - variable: Efficiency|Wastes|Industrial CHPs wastes
         absolute: True
 
   # electricity from waste incineration comes for free
@@ -354,7 +363,7 @@ production pathways:
       reference product: electricity, from biowaste, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+      - variable: Efficiency|Wastes|Wastes Incineration (electric only)
         absolute: True
 
   waste incineration, non-fossil (CHP):
@@ -365,7 +374,7 @@ production pathways:
       reference product: electricity, from biowaste, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating)
+      - variable: Efficiency|Wastes|CHP Wastes (for District Heating)
         absolute: True
 
   waste incineration, non-fossil (industrial):
@@ -376,7 +385,7 @@ production pathways:
       reference product: electricity, from biowaste, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+      - variable: Efficiency|Wastes|Industrial CHPs wastes
         absolute: True
 
   # electricity from waste incineration comes for free
@@ -390,7 +399,7 @@ production pathways:
       reference product: electricity, from biowaste, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+      - variable: Efficiency|Wastes|Wastes Incineration (electric only)
         absolute: True
 
   waste incineration, non-fossil (CHP, CCS):
@@ -401,7 +410,7 @@ production pathways:
       reference product: electricity, from biowaste, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating)
+      - variable: Efficiency|Wastes|CHP Wastes (for District Heating)
         absolute: True
 
   waste incineration, non-fossil (industrial, CCS):
@@ -412,7 +421,7 @@ production pathways:
       reference product: electricity, from biowaste, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+      - variable: Efficiency|Wastes|Industrial CHPs wastes
         absolute: True
 
   pv (large scale):
@@ -477,7 +486,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Geothermal|Deep geothermal
+      - variable: Efficiency|Geothermal|Deep geothermal
 
   hydrogen fuel cell (DH CHP):
     production volume:
@@ -487,7 +496,7 @@ production pathways:
       reference product: electricity, from residential heating system
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Hydrogen|CHP Fuel Cell Hydrogen (for District Heating)
+      - variable: Efficiency|Hydrogen|CHP Fuel Cell Hydrogen (for District Heating)
 
 
   hydrogen fuel cell (industrial CHP):
@@ -498,7 +507,7 @@ production pathways:
       reference product: electricity, from residential heating system
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Hydrogen|Industrial CHPs fuel cells (hydrogen)
+      - variable: Efficiency|Hydrogen|Industrial CHPs fuel cells (hydrogen)
 
 
   hydrogen fuel cell (services CHP):
@@ -509,7 +518,7 @@ production pathways:
       reference product: electricity, from residential heating system
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Hydrogen|Services sectors CHPs fuel cells (hydrogen)
+      - variable: Efficiency|Hydrogen|Services sectors CHPs fuel cells (hydrogen)
 
 
   biomass (DH):
@@ -521,7 +530,7 @@ production pathways:
       exists in original database: True
       mask: renewable energy products
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wood|CHP Wood (for District Heating)
+      - variable: Efficiency|Wood|CHP Wood (for District Heating)
         absolute: True
 
   biomass (CHP):
@@ -533,7 +542,7 @@ production pathways:
       exists in original database: True
       mask: renewable energy products
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wood|Industrial CHPs wood
+      - variable: Efficiency|Wood|Industrial CHPs wood
         absolute: True
 
   biomass (CCS, BECCS):
@@ -545,7 +554,7 @@ production pathways:
       exists in original database: True
       regionalize: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wood|Biomass with CCS (BECCS)
+      - variable: Efficiency|Wood|Biomass with CCS (BECCS)
         absolute: True
 
   biomass (CCS, industrial):
@@ -556,7 +565,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wood|Industrial CHPs wood (CCS)
+      - variable: Efficiency|Wood|Industrial CHPs wood (CCS)
         absolute: True
 
   battery (large):
@@ -568,7 +577,7 @@ production pathways:
       exists in original database: True
       regionalize: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Battery storage large size centralised
+      - variable: Efficiency|Electricity storage (non hydro)|Battery storage large size centralised
 
   battery (medium):
     production volume:
@@ -579,7 +588,7 @@ production pathways:
       exists in original database: True
       regionalize: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Battery storage medium size centralised
+      - variable: Efficiency|Electricity storage (non hydro)|Battery storage medium size centralised
 
   battery (industry):
     production volume:
@@ -590,7 +599,7 @@ production pathways:
       exists in original database: True
       regionalize: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in industry
+      - variable: Efficiency|Electricity storage (non hydro)|Batteries in industry
 
   battery (services):
     production volume:
@@ -601,7 +610,7 @@ production pathways:
       exists in original database: True
       regionalize: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in Services sector
+      - variable: Efficiency|Electricity storage (non hydro)|Batteries in Services sector
 
   battery (single family):
     production volume:
@@ -611,7 +620,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in residentiial single family houses
+      - variable: Efficiency|Electricity storage (non hydro)|Batteries in residentiial single family houses
 
   battery (multi family):
     production volume:
@@ -621,7 +630,7 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in residential multi-family houses
+      - variable: Efficiency|Electricity storage (non hydro)|Batteries in residential multi-family houses
 
   CAES:
     production volume:
@@ -633,7 +642,7 @@ production pathways:
       regionalize: True
       mask: adiabatic
     efficiency:
-      - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|CAES
+      - variable: Efficiency|Electricity storage (non hydro)|CAES
 
   import:
     production volume:
@@ -698,8 +707,8 @@ production pathways:
     production volume:
       variable: Imports|Gas|Synthetic gases|PtG|PtG gas
     ecoinvent alias:
-      name: methane, from electrochemical methanation, with carbon from atmosphere
-      reference product: methane, from electrochemical methanation
+      name: synthetic natural gas import, from neighboring countries
+      reference product: natural gas, synthetic
       exists in original database: True
       ratio: 0.717
 
@@ -849,7 +858,7 @@ production pathways:
     production volume:
       variable: Imports|Oil|Synthetic liquids|PtL|PtL Diesel
     ecoinvent alias:
-      name: diesel production, synthetic, Fischer Tropsch process, hydrogen from electrolysis, energy allocation
+      name: synthetic diesel import, from neighboring countries
       reference product: diesel, synthetic
       exists in original database: True
 
@@ -945,7 +954,6 @@ production pathways:
       reference product: hydrogen, gaseous, 30 bar
       exists in original database: True
 
-
   hydrogen, PEM, large (domestic):
     production volume:
       variable: Domestic hydrogen production|Electricity|PEM electrolysis large scale
@@ -1019,6 +1027,351 @@ production pathways:
       reference product: hydrogen, gaseous, 25 bar
       exists in original database: True
       regionalize: True
+
+  DH_CHP_oil:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|CHP|Oil
+    ecoinvent alias:
+      name: heat and power co-generation, oil
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|CHP|Oil
+        absolute: True
+
+  DH_CHP_gas:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|CHP|Gas
+    ecoinvent alias:
+      name: heat and power co-generation, natural gas, 160kW electrical, Jakobsberg
+      reference product: heat, central or small-scale, natural gas, Jakobsberg
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|CHP|Gas
+        absolute: True
+
+  DH_CHP_renew_waste:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|CHP|Wastes|Renewable|CHP Wastes (for District Heating)
+    ecoinvent alias:
+      name: heat production, from biowaste, municipal incineration, energy allocation
+      reference product: heat production, from biowaste, municipal incineration, energy allocation
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|CHP|Wastes|Renewable|CHP Wastes (for District Heating)
+        absolute: True
+
+  DH_CHP_renew_waste_CCS:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|CHP|Wastes|Renewable|CHP Wastes (for District Heating) CCS
+    ecoinvent alias:
+      name: heat production, at co-generation biowaste-fired power plant, post, pipeline 200km, storage 1000m
+      reference product: heat, from biowaste, municipal incineration, energy allocation
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|CHP|Wastes|Renewable|CHP Wastes (for District Heating) CCS
+        absolute: True
+
+  DH_CHP_fossil_waste:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|CHP|Wastes|Non Renewable|CHP Wastes (for District Heating)
+    ecoinvent alias:
+      name: heat production, from incineration of plastic waste mixture, energy allocation
+      reference product: heat, from incineration of plastic waste mixture, energy allocation
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|CHP|Wastes|Non Renewable|CHP Wastes (for District Heating)
+        absolute: True
+
+  DH_CHP_fossil_waste_CCS:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|CHP|Wastes|Non Renewable|CHP Wastes (for District Heating) CCS
+    ecoinvent alias:
+      name: heat production, at co-generation plastic waste-fired power plant, post, pipeline 200km, storage 1000m
+      reference product: heat, from plastic waste mixture, municipal incineration, energy allocation
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|CHP|Wastes|Non Renewable|CHP Wastes (for District Heating) CCS
+        absolute: True
+
+  DH_CHP_wood:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|CHP|Wood|CHP Wood (for District Heating)
+    ecoinvent alias:
+      name: heat and power co-generation, wood chips, 6667 kW, state-of-the-art 2014
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|CHP|Wood|CHP Wood (for District Heating)
+        absolute: True
+
+  DH_CHP_hydrogen:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|CHP|Hydrogen|CHP Fuel Cell Hydrogen (for District Heating)
+    ecoinvent alias:
+      name: heat, residential, by combustion of hydrogen using CHP, allocated by exergy, distributed by pipeline, produced by Electrolysis, PEM using electricity from grid
+      reference product: heat, from residential heating system
+      exists in original database: True
+      regionalize: True
+    efficiency:
+      - variable: Efficiency|CHP|Hydrogen|CHP Fuel Cell Hydrogen (for District Heating)
+        absolute: True
+
+  DH_gas:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|Heat plants|Gas
+    ecoinvent alias:
+      name: heat production, natural gas, at boiler condensing modulating >100kW
+      reference product: heat, district or industrial, natural gas
+      exists in original database: True
+      regionalize: True
+    efficiency:
+      - variable: Efficiency|Heat plants|Gas
+        absolute: True
+
+  DH_nuclear:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|Heat plants|Nuclear fuel
+    ecoinvent alias:
+      name: heat, from nuclear power plant
+      reference product: heat
+      exists in original database: True
+
+  DH_oil:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|Heat plants|Oil|Heat plant oil
+    ecoinvent alias:
+      name: heat production, light fuel oil, at industrial furnace 1MW
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|Heat plants|Oil|Heat plant oil
+        absolute: True
+
+  DH_wood:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|Heat plants|Wood
+    ecoinvent alias:
+      name: heat production, wood chips from industry, at furnace 5000kW
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|Heat plants|Wood
+        absolute: True
+
+  DH_solar:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|Heat plants|Solar|Heat plant solar
+    ecoinvent alias:
+      name: heat production, at hot water tank, solar+electric, flat plate, multiple dwelling
+      reference product: heat, solar+electric, multiple-dwelling, for hot water
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|Heat plants|Solar|Heat plant solar
+
+  DH_geothermal:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|Heat plants|Geothermal|Heat plant deep geothermal
+    ecoinvent alias:
+      name: heat production, deep geothermal
+      reference product: heat, deep geothermal
+      exists in original database: True
+      regionalize: True
+
+  DH_heat_pump:
+    production volume:
+      variable: Heat generation from CHPs and heat plants|District heating|Heat plants|Electricity|Heat pump electric
+    ecoinvent alias:
+      name: heat production, air-water heat pump 10kW
+      reference product: heat, air-water heat pump 10kW
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency|Heat plants|Electricity|Heat pump electric
+        absolute: True
+
+  industry_process_electric_boiler:
+    production volume:
+      variable: Fuel consumption in industry sectors|Electricity|Electric boiler
+    ecoinvent alias:
+      name: electricity, used in industrial electric boiler
+      reference product: electricity, low voltage
+      exists in original database: True
+  
+  industry_process_heat_pump:
+    production volume:
+      variable: Fuel consumption in industry sectors|Electricity|Heat pump electric
+    ecoinvent alias:
+      name: electricity, used in industrial heat pump
+      reference product: electricity, low voltage
+      exists in original database: True
+  
+  industry_process_other_electric:
+    production volume:
+      variable: Fuel consumption in industry sectors|Electricity|Other electric processes
+    ecoinvent alias:
+      name: electricity, used in industrial electric processes
+      reference product: electricity, low voltage
+      exists in original database: True
+  
+  industry_process_light_fuel_oil:
+    production volume:
+      variable: Fuel consumption in industry sectors|Oil|Total|Light fuel boiler
+    ecoinvent alias:
+      name: light fuel oil, burned in industrial furnace 1MW
+      reference product: heat
+      exists in original database: True
+  
+  industry_process_heavy_fuel_oil:
+    production volume:
+      variable: Fuel consumption in industry sectors|Oil|Fossil liquids|Heavy fuel oil|Heavy fuel oil boiler
+    ecoinvent alias:
+      name: heavy fuel oil, burned in industrial furnace 1MW
+      reference product: heat
+      exists in original database: True
+  
+  industry_process_natural_gas:
+    production volume:
+      variable: Fuel consumption in industry sectors|Gas|Total
+    ecoinvent alias:
+      name: natural gas, burned in industrial furnace >100kW
+      reference product: heat
+      exists in original database: True
+  
+  industry_process_coal:
+    production volume:
+      variable: Fuel consumption in industry sectors|Coal|Coal boiler
+    ecoinvent alias:
+      name: hard coal, burned in hard coal industrial furnace 1-10MW
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_CHP_oil:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs oil
+    ecoinvent alias:
+      name: heat, from on-site industrial oil-fired CHP
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_CHP_gas:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs gas
+    ecoinvent alias:
+      name: heat, from on-site industrial gas-fired CHP
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_CHP_gas_CCS:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs gas (CCS)
+    ecoinvent alias:
+      name: heat, from on-site industrial gas-fired CHP with CCS
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_CHP_fuel_cell:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs fuel cells (gas reformer)
+    ecoinvent alias:
+      name: heat, from on-site industrial fuel cell CHP
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_CHP_waste_non_renew:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs wastes
+    ecoinvent alias:
+      name: heat, from on-site industrial non-renewable waste-fired CHP
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_CHP_waste_non_renew_CCS:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs wastes CCS
+    ecoinvent alias:
+      name: heat, from on-site industrial non-renewable waste-fired CHP with CCS
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_CHP_wood:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs wood
+    ecoinvent alias:
+      name: heat, from on-site industrial wood-fired CHP
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_CHP_wood_CCS:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs wood (CCS)
+    ecoinvent alias:
+      name: heat, from on-site industrial wood-fired CHP with CCS
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_CHP_hydrogen:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs fuel cells (hydrogen)
+    ecoinvent alias:
+      name: heat, from on-site industrial hydrogen-fired CHP
+      reference product: heat
+      exists in original database: True
+  
+  industry_heat_DH:
+    production volume:
+      variable: Fuel consumption in industry sectors|Heat|District heating
+    ecoinvent alias:
+      name: heat, from district heating
+      reference product: heat
+      exists in original database: True
+  
+  industry_process_wood:
+    production volume:
+      variable: Fuel consumption in industry sectors|Wood|Wood boiler
+    ecoinvent alias:
+      name: wood, burned in wood industrial furnace 1-10MW
+      reference product: heat
+      exists in original database: True
+  
+  industry_process_pellet:
+    production volume:
+      variable: Fuel consumption in industry sectors|Pellets|Pellet boiler
+    ecoinvent alias:
+      name: pellet, burned in pellet industrial furnace 300kW
+      reference product: heat
+      exists in original database: True
+  
+  industry_process_waste_non_renew:
+    production volume:
+      variable: Fuel consumption in industry sectors|Wastes|Non Renewable|Wastes boiler
+    ecoinvent alias:
+      name: non-renewable waste, burned in industrial furnace
+      reference product: heat
+      exists in original database: True
+  
+  industry_process_waste_renew:
+    production volume:
+      variable: Fuel consumption in industry sectors|Wastes|Renewable|Wastes boiler
+    ecoinvent alias:
+      name: renewable waste, burned in industrial furnace
+      reference product: heat
+      exists in original database: True
+  
+  industry_process_solar:
+    production volume:
+      variable: Fuel consumption in industry sectors|Solar|Solar thermal
+    ecoinvent alias:
+      name: solar energy, from industrial hot water tank
+      reference product: heat
+      exists in original database: True
+  
+  industry_process_hydrogen:
+    production volume:
+      variable: Fuel consumption in industry sectors|Hydrogen|Hydrogen boiler
+    ecoinvent alias:
+      name: hydrogen, burned in industrial gas turbine 1GW
+      reference product: heat
+      exists in original database: True
 
 markets:
 
@@ -1206,6 +1559,9 @@ markets:
       - name: market for wood chips, wet, measured as dry mass
         product: wood chips, wet, measured as dry mass
         location: CH
+      - name: market for wood chips, dry, measured as dry mass
+        product: wood chips, dry, measured as dry mass
+        location: RER
 
     replaces in:
       - location: CH
@@ -1655,3 +2011,95 @@ markets:
 
     replaces in:
       - location: CH
+
+  - name: market for district heating (SPS)
+    reference product: heat, district or industrial, other than natural gas
+    unit: megajoule
+    includes:
+      - DH_CHP_oil
+      - DH_CHP_gas
+      - DH_CHP_renew_waste
+      - DH_CHP_renew_waste_CCS
+      - DH_CHP_fossil_waste
+      - DH_CHP_fossil_waste_CCS
+      - DH_CHP_wood
+      - DH_CHP_hydrogen
+      - DH_gas
+      - DH_nuclear
+      - DH_oil
+      - DH_wood
+      - DH_solar
+      - DH_geothermal
+      - DH_heat_pump
+
+    replaces:
+      - name: market for heat, district or industrial, other than natural gas
+        product: heat, district or industrial, other than natural gas
+        location: CH
+
+    replaces in:
+      - location: CH
+
+    except regions:
+      - World
+
+  - name: market for process heat in industry (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - industry_process_electric_boiler
+      - industry_process_heat_pump
+      - industry_process_other_electric
+      - industry_process_light_fuel_oil
+      - industry_process_heavy_fuel_oil
+      - industry_process_natural_gas
+      - industry_process_coal
+      - industry_process_wood
+      - industry_process_pellet
+      - industry_process_waste_non_renew
+      - industry_process_waste_renew
+      - industry_process_solar
+      - industry_process_hydrogen
+
+  - name: market for space heating in industry (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - industry_heat_CHP_oil
+      - industry_heat_CHP_gas
+      - industry_heat_CHP_gas_CCS
+      - industry_heat_CHP_fuel_cell
+      - industry_heat_CHP_waste_non_renew
+      - industry_heat_CHP_waste_non_renew_CCS
+      - industry_heat_CHP_wood
+      - industry_heat_CHP_wood_CCS
+      - industry_heat_CHP_hydrogen
+      - industry_heat_DH
+
+  - name: market for process heat and space heating in industry (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+        - industry_process_electric_boiler
+        - industry_process_heat_pump
+        - industry_process_other_electric
+        - industry_process_light_fuel_oil
+        - industry_process_heavy_fuel_oil
+        - industry_process_natural_gas
+        - industry_process_coal
+        - industry_heat_CHP_oil
+        - industry_heat_CHP_gas
+        - industry_heat_CHP_gas_CCS
+        - industry_heat_CHP_fuel_cell
+        - industry_heat_CHP_waste_non_renew
+        - industry_heat_CHP_waste_non_renew_CCS
+        - industry_heat_CHP_wood
+        - industry_heat_CHP_wood_CCS
+        - industry_heat_CHP_hydrogen
+        - industry_heat_DH
+        - industry_process_wood
+        - industry_process_pellet
+        - industry_process_waste_non_renew
+        - industry_process_waste_renew
+        - industry_process_solar
+        - industry_process_hydrogen

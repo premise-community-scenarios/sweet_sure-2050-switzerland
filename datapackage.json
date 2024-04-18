@@ -44,11 +44,6 @@
                         "format": "default"
                     },
                     {
-                        "name": "pathway",
-                        "type": "string",
-                        "format": "default"
-                    },
-                    {
                         "name": "scenario",
                         "type": "string",
                         "format": "default"
