@@ -60,6 +60,9 @@ regionalize:
     - name: heat and power co-generation, oil
       reference product: heat, district or industrial, other than natural gas
       exists in original database: True
+    - name: heat production, hard coal briquette, stove 5-15kW
+      reference product: heat, central or small-scale, other than natural gas
+      exists in original database: True
 
 
 production pathways:
@@ -388,9 +391,6 @@ production pathways:
       - variable: Efficiency|Wastes|Industrial CHPs wastes
         absolute: True
 
-  # electricity from waste incineration comes for free
-  # since the burden is entirely allocated to the waste treatment process
-  # hence, CCS or not, the electricity is free
   waste incineration, non-fossil (CCS):
     production volume:
       variable: Electricity generation|Wastes|Renewable|Wastes Incineration (electric only) CCS
@@ -498,7 +498,6 @@ production pathways:
     efficiency:
       - variable: Efficiency|Hydrogen|CHP Fuel Cell Hydrogen (for District Heating)
 
-
   hydrogen fuel cell (industrial CHP):
     production volume:
       variable: Electricity generation|Hydrogen|Industrial CHPs fuel cells (hydrogen)
@@ -509,7 +508,6 @@ production pathways:
     efficiency:
       - variable: Efficiency|Hydrogen|Industrial CHPs fuel cells (hydrogen)
 
-
   hydrogen fuel cell (services CHP):
     production volume:
       variable: Electricity generation|Hydrogen|Services sectors CHPs fuel cells (hydrogen)
@@ -519,7 +517,6 @@ production pathways:
       exists in original database: True
     efficiency:
       - variable: Efficiency|Hydrogen|Services sectors CHPs fuel cells (hydrogen)
-
 
   biomass (DH):
     production volume:
@@ -945,7 +942,6 @@ production pathways:
       exists in original database: False
       new dataset: True
 
-
   hydrogen, PEM, small (domestic):
     production volume:
       variable: Domestic hydrogen production|Electricity|PEM electrolysis small-medium scale
@@ -962,7 +958,6 @@ production pathways:
       reference product: hydrogen, gaseous, 30 bar
       exists in original database: True
 
-
   hydrogen, SOEC, large (domestic):
     production volume:
       variable: Domestic hydrogen production|Electricity|SOEC electrolysis
@@ -972,7 +967,6 @@ production pathways:
       exists in original database: True
       regionalize: True
 
-
   hydrogen, SMR, natural gas (domestic):
     production volume:
       variable: Domestic hydrogen production|Gas|Fossil gases|SMR-ATR Reforming
@@ -980,7 +974,6 @@ production pathways:
       name: hydrogen production, steam methane reforming of natural gas, 25 bar
       reference product: hydrogen, gaseous, 25 bar
       exists in original database: True
-
 
   hydrogen, SMR w CCS, natural gas (domestic):
     production volume:
@@ -990,7 +983,6 @@ production pathways:
       reference product: hydrogen, gaseous, 25 bar
       exists in original database: True
 
-
   hydrogen, SMR, biomethane (domestic):
     production volume:
       variable: Domestic hydrogen production|Gas|Synthetic gases|SMR-ATR Reforming
@@ -998,7 +990,6 @@ production pathways:
       name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, 26 bar
       reference product: hydrogen, gaseous, 26 bar
       exists in original database: True
-
 
   hydrogen, SMR w CCS, biomethane (domestic):
     production volume:
@@ -1008,7 +999,6 @@ production pathways:
       reference product: hydrogen, gaseous, 26 bar
       exists in original database: True
 
-
   hydrogen, wood gasification (domestic):
     production volume:
       variable: Domestic hydrogen production|Wood|Gasification
@@ -1017,7 +1007,6 @@ production pathways:
       reference product: hydrogen, gaseous, 25 bar
       exists in original database: True
       regionalize: True
-
 
   hydrogen, wood gasification w CCS (domestic):
     production volume:
@@ -1369,9 +1358,370 @@ production pathways:
     production volume:
       variable: Fuel consumption in industry sectors|Hydrogen|Hydrogen boiler
     ecoinvent alias:
-      name: hydrogen, burned in industrial gas turbine 1GW
+      name: hydrogen burned, in hydrogen boiler
       reference product: heat
       exists in original database: True
+
+  services_electric_boiler:
+    production volume:
+      variable: Fuel consumption in Services sectors|Electricity|Electric boiler
+    ecoinvent alias:
+      name: electricity, used in industrial electric boiler
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  services_heat_pump:
+    production volume:
+      variable: Fuel consumption in Services sectors|Electricity|Heat pump electric
+    ecoinvent alias:
+      name: electricity, used in industrial heat pump
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  services_other_electric:
+    production volume:
+      variable: Fuel consumption in Services sectors|Electricity|Other electric appliances
+    ecoinvent alias:
+      name: electricity, used in industrial electric processes
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  services_light_fuel_oil:
+    production volume:
+      variable: Fuel consumption in Services sectors|Oil|Total|Light fuel boiler
+    ecoinvent alias:
+      name: light fuel oil, burned in industrial furnace 1MW
+      reference product: heat
+      exists in original database: True
+
+  services_natural_gas:
+    production volume:
+      variable: Fuel consumption in Services sectors|Gas|Total
+    ecoinvent alias:
+      name: natural gas, burned in industrial furnace >100kW
+      reference product: heat
+      exists in original database: True
+
+  services_CHP_gas:
+    production volume:
+      variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs gas
+    ecoinvent alias:
+      name: heat, from on-site industrial gas-fired CHP
+      reference product: heat
+      exists in original database: True
+
+  services_CHP_biogas:
+    production volume:
+      variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs (bio)gas
+    ecoinvent alias:
+      name: heat, from on-site industrial biogas-fired CHP
+      reference product: heat
+      exists in original database: True
+
+  services_CHP_fuel_cell:
+    production volume:
+      variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs fuel cells (gas reformer)
+    ecoinvent alias:
+      name: heat, from on-site industrial fuel cell CHP
+      reference product: heat
+      exists in original database: True
+
+  services_CHP_wood:
+    production volume:
+      variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs wood
+    ecoinvent alias:
+      name: heat, from on-site industrial wood-fired CHP
+      reference product: heat
+      exists in original database: True
+
+  services_CHP_hydrogen:
+    production volume:
+      variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs fuel cells (hydrogen)
+    ecoinvent alias:
+      name: heat, from on-site industrial hydrogen-fired CHP
+      reference product: heat
+      exists in original database: True
+
+  services_DH:
+    production volume:
+      variable: Fuel consumption in Services sectors|Heat|District heating
+    ecoinvent alias:
+      name: heat, from district heating
+      reference product: heat
+      exists in original database: True
+
+  services_wood:
+    production volume:
+      variable: Fuel consumption in Services sectors|Wood|Wood boiler
+    ecoinvent alias:
+      name: wood, burned in wood industrial furnace 1-10MW
+      reference product: heat
+      exists in original database: True
+
+  services_pellet:
+    production volume:
+      variable: Fuel consumption in Services sectors|Pellets|Pellet boiler
+    ecoinvent alias:
+      name: pellet, burned in pellet industrial furnace 300kW
+      reference product: heat
+      exists in original database: True
+
+  services_solar:
+    production volume:
+      variable: Fuel consumption in Services sectors|Solar|Solar thermal
+    ecoinvent alias:
+      name: solar energy, from industrial hot water tank
+      reference product: heat
+      exists in original database: True
+
+  services_hydrogen:
+    production volume:
+      variable: Fuel consumption in Services sectors|Hydrogen|From hydrogen grid|Hydrogen boiler
+    ecoinvent alias:
+      name: hydrogen burned, in hydrogen boiler
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_electric_boiler:
+    production volume:
+      variable: Fuel consumption in Residential sector|Electricity|Space heating|Electric boiler
+    ecoinvent alias:
+      name: electricity, used in residential electric boiler
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  residential_space_heating_heat_pump:
+    production volume:
+      variable: Fuel consumption in Residential sector|Electricity|Space heating|Heat pump electric
+    ecoinvent alias:
+      name: electricity, used in residential heat pump
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  residential_water_heating_electric_boiler:
+    production volume:
+      variable: Fuel consumption in Residential sector|Electricity|Water heating|Electric boiler
+    ecoinvent alias:
+      name: electricity, used in residential electric boiler
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  residential_water_heating_heat_pump:
+    production volume:
+      variable: Fuel consumption in Residential sector|Electricity|Water heating|Heat pump electric
+    ecoinvent alias:
+      name: electricity, used in residential heat pump
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  residential_other_electric:
+    production volume:
+      variable: Fuel consumption in Residential sector|Electricity|Other appliances
+    ecoinvent alias:
+      name: electricity, used in residential electric appliances
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  residential_space_heating_light_fuel_oil:
+    production volume:
+      variable: Fuel consumption in Residential sector|Oil|Total|Space heating|Light fuel boiler
+    ecoinvent alias:
+      name: light fuel oil, burned in residential 10kW boiler
+      reference product: heat
+      exists in original database: True
+
+  residential_water_heating_light_fuel_oil:
+    production volume:
+      variable: Fuel consumption in Residential sector|Oil|Total|Water heating|Light fuel boiler
+    ecoinvent alias:
+      name: light fuel oil, burned in residential 10kW boiler
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_gas:
+    production volume:
+      variable: Fuel consumption in Residential sector|Gas|Total|Space heating|Gas boiler
+    ecoinvent alias:
+      name: natural gas, burned in residential natural gas boiler <100kW
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_heat_pump_gas:
+    production volume:
+      variable: Fuel consumption in Residential sector|Gas|Total|Space heating|Heat pump gas
+    ecoinvent alias:
+      name: natural gas, burned in residential natural gas boiler <100kW
+      reference product: heat
+      exists in original database: True
+
+  residential_water_heating_gas:
+    production volume:
+      variable: Fuel consumption in Residential sector|Gas|Total|Water heating|Gas boiler
+    ecoinvent alias:
+      name: natural gas, burned in residential natural gas boiler <100kW
+      reference product: heat
+      exists in original database: True
+
+  residential_water_heating_heat_pump_gas:
+    production volume:
+      variable: Fuel consumption in Residential sector|Gas|Total|Water heating|Heat pump gas
+    ecoinvent alias:
+      name: natural gas, burned in residential natural gas boiler <100kW
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_coal:
+    production volume:
+      variable: Fuel consumption in Residential sector|Coal|Space heating|Coal boiler
+    ecoinvent alias:
+      name: hard coal, burned in hard coal residential boiler 5-15kW
+      reference product: heat
+      exists in original database: True
+
+  residential_water_heating_coal:
+    production volume:
+      variable: Fuel consumption in Residential sector|Coal|Water heating|Coal boiler
+    ecoinvent alias:
+      name: hard coal, burned in hard coal residential boiler 5-15kW
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_wood:
+    production volume:
+      variable: Fuel consumption in Residential sector|Wood|Space heating|Wood boiler
+    ecoinvent alias:
+      name: wood, burned in residential wood stove 5-15kW
+      reference product: heat
+      exists in original database: True
+
+  residential_water_heating_wood:
+    production volume:
+      variable: Fuel consumption in Residential sector|Wood|Water heating|Wood boiler
+    ecoinvent alias:
+      name: wood, burned in residential wood stove 5-15kW
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_pellet:
+    production volume:
+      variable: Fuel consumption in Residential sector|Pellets|Space heating|Pellets boiler
+    ecoinvent alias:
+      name: pellet, burned in residential pellet stove 5-15kW
+      reference product: heat
+      exists in original database: True
+
+  residential_water_heating_pellet:
+    production volume:
+      variable: Fuel consumption in Residential sector|Pellets|Water heating|Pellets boiler
+    ecoinvent alias:
+      name: pellet, burned in residential pellet stove 5-15kW
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_solar:
+    production volume:
+      variable: Fuel consumption in Residential sector|Solar|Space heating|Solar thermal
+    ecoinvent alias:
+      name: solar energy, from residential hot water tank
+      reference product: heat
+      exists in original database: True
+
+  residential_water_heating_solar:
+    production volume:
+      variable: Fuel consumption in Residential sector|Solar|Water heating|Solar thermal
+    ecoinvent alias:
+      name: solar energy, from residential hot water tank
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_hydrogen:
+    production volume:
+      variable: Fuel consumption in Residential sector|Hydrogen|From hydrogen grid|Space heating|Hydrogen boiler
+    ecoinvent alias:
+      name: hydrogen burned, in hydrogen boiler
+      reference product: heat
+      exists in original database: True
+
+  residential_water_heating_hydrogen:
+    production volume:
+      variable: Fuel consumption in Residential sector|Hydrogen|From hydrogen grid|Water heating|Hydrogen boiler
+    ecoinvent alias:
+      name: hydrogen burned, in hydrogen boiler
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_CHP_gas:
+    production volume:
+      variable: Fuel consumption in Residential sector|Heat|On-site CHPs|Residential sector CHPs gas
+    ecoinvent alias:
+      name: heat, from on-site residential gas-fired CHP
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_CHP_fuel_cell:
+    production volume:
+      variable: Fuel consumption in Residential sector|Heat|On-site CHPs|Residential sector CHPs fuel cells (gas reformer)
+    ecoinvent alias:
+      name: heat, from on-site residential fuel cell CHP
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_CHP_wood:
+    production volume:
+      variable: Fuel consumption in Residential sector|Heat|On-site CHPs|Residential sector CHPs wood
+    ecoinvent alias:
+      name: heat, from on-site residential wood-fired CHP
+      reference product: heat
+      exists in original database: True
+
+  residential_space_heating_DH:
+    production volume:
+      variable: Fuel consumption in Residential sector|Heat|District heating
+    ecoinvent alias:
+      name: heat, from district heating
+      reference product: heat
+      exists in original database: True
+
+  cars_electricity:
+    production volume:
+      variable: Fuel consumption in cars|Electricity
+    ecoinvent alias:
+      name: electricity, used in cars
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  cars_hydrogen:
+    production volume:
+      variable: Fuel consumption in cars|Hydrogen
+    ecoinvent alias:
+      name: hydrogen, used in cars
+      reference product: hydrogen, gaseous, 1 bar
+      exists in original database: True
+
+  cars_gasoline:
+    production volume:
+      variable: Fuel consumption in cars|Motor Gasoline
+    ecoinvent alias:
+      name: gasoline, used in cars
+      reference product: gasoline, low-sulfur
+      exists in original database: True
+
+  cars_diesel:
+    production volume:
+      variable: Fuel consumption in cars|Motor Diesel
+    ecoinvent alias:
+      name: diesel, used in cars
+      reference product: diesel, low-sulfur
+      exists in original database: True
+
+  cars_gas:
+    production volume:
+      variable: Fuel consumption in cars|Gas
+    ecoinvent alias:
+      name: natural gas, used in cars
+      reference product: natural gas, vehicle grade
+      exists in original database: True
+
 
 markets:
 
@@ -2080,26 +2430,114 @@ markets:
     reference product: heat
     unit: megajoule
     includes:
-        - industry_process_electric_boiler
-        - industry_process_heat_pump
-        - industry_process_other_electric
-        - industry_process_light_fuel_oil
-        - industry_process_heavy_fuel_oil
-        - industry_process_natural_gas
-        - industry_process_coal
-        - industry_heat_CHP_oil
-        - industry_heat_CHP_gas
-        - industry_heat_CHP_gas_CCS
-        - industry_heat_CHP_fuel_cell
-        - industry_heat_CHP_waste_non_renew
-        - industry_heat_CHP_waste_non_renew_CCS
-        - industry_heat_CHP_wood
-        - industry_heat_CHP_wood_CCS
-        - industry_heat_CHP_hydrogen
-        - industry_heat_DH
-        - industry_process_wood
-        - industry_process_pellet
-        - industry_process_waste_non_renew
-        - industry_process_waste_renew
-        - industry_process_solar
-        - industry_process_hydrogen
+      - industry_process_electric_boiler
+      - industry_process_heat_pump
+      - industry_process_other_electric
+      - industry_process_light_fuel_oil
+      - industry_process_heavy_fuel_oil
+      - industry_process_natural_gas
+      - industry_process_coal
+      - industry_heat_CHP_oil
+      - industry_heat_CHP_gas
+      - industry_heat_CHP_gas_CCS
+      - industry_heat_CHP_fuel_cell
+      - industry_heat_CHP_waste_non_renew
+      - industry_heat_CHP_waste_non_renew_CCS
+      - industry_heat_CHP_wood
+      - industry_heat_CHP_wood_CCS
+      - industry_heat_CHP_hydrogen
+      - industry_heat_DH
+      - industry_process_wood
+      - industry_process_pellet
+      - industry_process_waste_non_renew
+      - industry_process_waste_renew
+      - industry_process_solar
+      - industry_process_hydrogen
+
+  - name: market for space heating in services (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - services_electric_boiler
+      - services_heat_pump
+      - services_other_electric
+      - services_light_fuel_oil
+      - services_natural_gas
+      - services_CHP_gas
+      - services_CHP_biogas
+      - services_CHP_fuel_cell
+      - services_CHP_wood
+      - services_CHP_hydrogen
+      - services_DH
+      - services_wood
+      - services_pellet
+      - services_solar
+      - services_hydrogen
+
+  - name: market for space heating in residential (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - residential_space_heating_electric_boiler
+      - residential_space_heating_heat_pump
+      - residential_other_electric
+      - residential_space_heating_light_fuel_oil
+      - residential_space_heating_gas
+      - residential_space_heating_coal
+      - residential_space_heating_wood
+      - residential_space_heating_pellet
+      - residential_space_heating_solar
+      - residential_space_heating_hydrogen
+      - residential_space_heating_CHP_gas
+      - residential_space_heating_CHP_fuel_cell
+      - residential_space_heating_CHP_wood
+      - residential_space_heating_DH
+
+
+  - name: market for water heating in residential (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - residential_water_heating_light_fuel_oil
+      - residential_water_heating_gas
+      - residential_water_heating_coal
+      - residential_water_heating_wood
+      - residential_water_heating_pellet
+      - residential_water_heating_solar
+      - residential_water_heating_hydrogen
+
+  - name: market for space and water heating in residential (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - residential_space_heating_electric_boiler
+      - residential_space_heating_heat_pump
+      - residential_other_electric
+      - residential_space_heating_light_fuel_oil
+      - residential_space_heating_gas
+      - residential_space_heating_coal
+      - residential_space_heating_wood
+      - residential_space_heating_pellet
+      - residential_space_heating_solar
+      - residential_space_heating_hydrogen
+      - residential_space_heating_CHP_gas
+      - residential_space_heating_CHP_fuel_cell
+      - residential_space_heating_CHP_wood
+      - residential_space_heating_DH
+      - residential_water_heating_light_fuel_oil
+      - residential_water_heating_gas
+      - residential_water_heating_coal
+      - residential_water_heating_wood
+      - residential_water_heating_pellet
+      - residential_water_heating_solar
+      - residential_water_heating_hydrogen
+
+  - name: market for energy carriers for cars (SPS)
+    reference product: energy carriers
+    unit: megajoule
+    includes:
+      - cars_electricity
+      - cars_hydrogen
+      - cars_gasoline
+      - cars_diesel
+      - cars_gas
