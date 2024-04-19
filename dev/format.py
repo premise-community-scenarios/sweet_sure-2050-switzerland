@@ -13,55 +13,35 @@ diff[diff < 0] = 0
 
 df.loc[df["variables"] == "Imports|Electricity", 2020:] = diff
 
-# remove two specific rows
-rows_to_remove = [
-    "Fuel input for heat generation from CHPs and heat plants|District heating|CHP|Oil|Fossil liquids",
-    "Fuel input for heat generation from CHPs and heat plants|District heating|CHP|Oil|Synthetic liquids"
-]
+# add row with variable == "Electricity generation|Wastes|Renewable|Wastes Incineration (electric only)"
+# to row with variable == "Electricity generation|Wastes|Renewable|CHP Wastes (for District Heating)"
+# and remove the former
 
-df = df[~df["variables"].isin(rows_to_remove)]
+wastes_incineration = df.loc[df["variables"] == "Electricity generation|Wastes|Renewable|Wastes Incineration (electric only)"]
+chp_wastes = df.loc[df["variables"] == "Electricity generation|Wastes|Renewable|CHP Wastes (for District Heating)"]
+chp_wastes.loc[:, 2020:] += wastes_incineration.loc[:, 2020:]
+df = df.drop(wastes_incineration.index)
 
+# same with "Electricity generation|Wastes|Renewable|Wastes Incineration (electric only) CCS"
+# and "Electricity generation|Wastes|Renewable|CHP Wastes (for District Heating) CCS"
+wastes_incineration = df.loc[df["variables"] == "Electricity generation|Wastes|Renewable|Wastes Incineration (electric only) CCS"]
+chp_wastes = df.loc[df["variables"] == "Electricity generation|Wastes|Renewable|CHP Wastes (for District Heating) CCS"]
+chp_wastes.loc[:, 2020:] += wastes_incineration.loc[:, 2020:]
+df = df.drop(wastes_incineration.index)
 
-labels = [
-    ("Electricity generation", "Fuel input for electricity generation"),
-    ("Heat generation from CHPs and heat plants|District heating", "Fuel input for heat generation from CHPs and heat plants|District heating"),
-]
+# sane with "Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only)"
+# and "Electricity generation|Wastes|Non Renewable|CHP Wastes (for District Heating)"
+wastes_incineration = df.loc[df["variables"] == "Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only)"]
+chp_wastes = df.loc[df["variables"] == "Electricity generation|Wastes|Non Renewable|CHP Wastes (for District Heating)"]
+chp_wastes.loc[:, 2020:] += wastes_incineration.loc[:, 2020:]
+df = df.drop(wastes_incineration.index)
 
-for label in labels:
-
-    # recalculate efficiencies
-    output_labels = df["variables"].str.startswith(label[0])
-    input_labels = df["variables"].str.startswith(label[1])
-
-    efficiency_labels = [x.replace(label[0], "Efficiency") for x in list(df.loc[output_labels, "variables"].unique())]
-
-    # Replace zeros in the denominator with NaN
-    df.loc[output_labels, 2020:] = df.loc[output_labels, 2020:].replace(0, np.nan)
-    df.loc[input_labels, 2020:] = df.loc[input_labels, 2020:].replace(0, np.nan)
-
-    result = 1 / df.loc[input_labels, 2020:].div(df.loc[output_labels, 2020:].values, axis=1)
-
-
-    # append new rows to the dataframe
-    for i, label in enumerate(efficiency_labels):
-        df = pd.concat(
-            [
-                df,
-                pd.DataFrame(pd.Series({
-                    "model": "STEM",
-                    "scenario": "SPS1",
-                    "region": "CH",
-                    "variables": label,
-                    "unit": "%",
-                    2020: result.iloc[i, 0],
-                    2025: result.iloc[i, 1],
-                    2030: result.iloc[i, 3],
-                    2040: result.iloc[i, 4],
-                    2050: result.iloc[i, 5],
-                })).T
-            ],
-        )
-
+# and same with "Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only) CCS"
+# and "Electricity generation|Wastes|Non Renewable|CHP Wastes (for District Heating) CCS"
+wastes_incineration = df.loc[df["variables"] == "Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only) CCS"]
+chp_wastes = df.loc[df["variables"] == "Electricity generation|Wastes|Non Renewable|CHP Wastes (for District Heating) CCS"]
+chp_wastes.loc[:, 2020:] += wastes_incineration.loc[:, 2020:]
+df = df.drop(wastes_incineration.index)
 
 # sub-split nuclear generation into pressure water (60%) and boiling water (40%)
 nuclear_pw = copy.deepcopy(df.loc[df["variables"] == "Electricity generation|Nuclear Fuel"])
