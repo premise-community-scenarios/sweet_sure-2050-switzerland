@@ -310,9 +310,9 @@ production pathways:
         absolute: True
 
   # electricity from waste incineration
-  waste incineration, fossil (CCS):
+  waste incineration, fossil (CHP, CCS):
     production volume:
-      variable: Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only) CCS
+      variable: Electricity generation|Wastes|Non Renewable|CHP Wastes (for District Heating) CCS
     ecoinvent alias:
       name: electricity production, at co-generation plastic waste-fired power plant, post, pipeline 200km, storage 1000m
       reference product: electricity, from plastic waste mixture, municipal incineration, energy allocation
@@ -1041,7 +1041,6 @@ production pathways:
       name: heat production, natural gas, at boiler condensing modulating >100kW
       reference product: heat, district or industrial, natural gas
       exists in original database: True
-      regionalize: True
 
   DH_nuclear:
     production volume:
@@ -1610,7 +1609,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in cars|Electricity
     ecoinvent alias:
-      name: electricity, used in cars
+      name: electricity, used in passenger car
       reference product: electricity, low voltage
       exists in original database: True
 
@@ -1618,7 +1617,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in cars|Hydrogen
     ecoinvent alias:
-      name: hydrogen, used in cars
+      name: hydrogen, used in passenger car
       reference product: heat
       exists in original database: True
 
@@ -2143,16 +2142,12 @@ markets:
       - biogas (services CHP)
       - gas (services CHP)
       - gas (services CHP fuel cell)
-      - waste incineration, fossil
       - waste incineration, fossil (CHP)
       - waste incineration, fossil (industrial)
-      - waste incineration, fossil (CCS)
       - waste incineration, fossil (CHP, CCS)
       - waste incineration, fossil (industrial, CCS)
-      - waste incineration, non-fossil
       - waste incineration, non-fossil (CHP)
       - waste incineration, non-fossil (industrial)
-      - waste incineration, non-fossil (CCS)
       - waste incineration, non-fossil (CHP, CCS)
       - waste incineration, non-fossil (industrial, CCS)
       - pv (large scale)

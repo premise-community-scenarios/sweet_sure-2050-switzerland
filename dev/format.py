@@ -74,8 +74,6 @@ vars =[
     'Production|Electricity|Low to medium',
 ]
 
-print(df.columns)
-
 # create new rows for each variable
 for var in vars:
     df = pd.concat(
