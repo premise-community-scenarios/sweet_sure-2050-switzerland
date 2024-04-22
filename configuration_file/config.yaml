@@ -1233,9 +1233,10 @@ production pathways:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|District heating
     ecoinvent alias:
-      name: heat, from district heating
-      reference product: heat
-      exists in original database: True
+      name: market for district heating (SPS)
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: False
+      new dataset: True
   
   industry_process_wood:
     production volume:
@@ -1369,9 +1370,10 @@ production pathways:
     production volume:
       variable: Fuel consumption in Services sectors|Heat|District heating
     ecoinvent alias:
-      name: heat, from district heating
-      reference product: heat
-      exists in original database: True
+      name: market for district heating (SPS)
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: False
+      new dataset: True
 
   services_wood:
     production volume:
@@ -1601,15 +1603,16 @@ production pathways:
     production volume:
       variable: Fuel consumption in Residential sector|Heat|District heating
     ecoinvent alias:
-      name: heat, from district heating
-      reference product: heat
-      exists in original database: True
+      name: market for district heating (SPS)
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: False
+      new dataset: True
 
   cars_electricity:
     production volume:
       variable: Fuel consumption in cars|Electricity
     ecoinvent alias:
-      name: electricity, used in passenger car
+      name: electricity, used in passenger car vehicle
       reference product: electricity, low voltage
       exists in original database: True
 
@@ -1617,7 +1620,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in cars|Hydrogen
     ecoinvent alias:
-      name: hydrogen, used in passenger car
+      name: hydrogen, used in passenger car vehicle
       reference product: heat
       exists in original database: True
 
@@ -1625,7 +1628,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in cars|Motor Gasoline
     ecoinvent alias:
-      name: petrol, burned in passenger car
+      name: petrol, burned in passenger car vehicle
       reference product: heat
       exists in original database: True
 
@@ -1633,7 +1636,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in cars|Motor Diesel
     ecoinvent alias:
-      name: diesel, burned in passenger car
+      name: diesel, burned in passenger car vehicle
       reference product: heat
       exists in original database: True
 
@@ -1641,10 +1644,226 @@ production pathways:
     production volume:
       variable: Fuel consumption in cars|Gas
     ecoinvent alias:
-      name: compressed gas, burned in passenger car
+      name: compressed gas, burned in passenger car vehicle
       reference product: heat
       exists in original database: True
 
+  bus_electricity:
+    production volume:
+      variable: Fuel consumption in urban buses|Electricity
+    ecoinvent alias:
+      name: electricity, used in single deck coach or urban bus
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  bus_hydrogen:
+    production volume:
+      variable: Fuel consumption in urban buses|Hydrogen
+    ecoinvent alias:
+      name: hydrogen, used in single deck coach or urban bus
+      reference product: heat
+      exists in original database: True
+
+  bus_diesel:
+    production volume:
+      variable: Fuel consumption in urban buses|Motor Diesel
+    ecoinvent alias:
+      name: diesel, burned in single deck coach or urban bus
+      reference product: heat
+      exists in original database: True
+
+  bus_gas:
+    production volume:
+      variable: Fuel consumption in urban buses|Motor Gas
+    ecoinvent alias:
+      name: compressed gas, burned in single deck coach or urban bus
+      reference product: heat
+      exists in original database: True
+
+  coach_electricity:
+    production volume:
+      variable: Fuel consumption in coaches|Electricity
+    ecoinvent alias:
+      name: electricity, used in single deck coach or urban bus
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  coach_hydrogen:
+    production volume:
+      variable: Fuel consumption in coaches|Hydrogen
+    ecoinvent alias:
+      name: hydrogen, used in single deck coach or urban bus
+      reference product: heat
+      exists in original database: True
+
+  coach_diesel:
+    production volume:
+      variable: Fuel consumption in coaches|Motor Diesel
+    ecoinvent alias:
+      name: diesel, burned in single deck coach or urban bus
+      reference product: heat
+      exists in original database: True
+
+  coach_gas:
+    production volume:
+      variable: Fuel consumption in coaches|Motor Gas
+    ecoinvent alias:
+      name: compressed gas, burned in single deck coach or urban bus
+      reference product: heat
+      exists in original database: True
+
+  trolleybus:
+    production volume:
+      variable: Fuel consumption in trolleybuses|Electricity
+    ecoinvent alias:
+      name: electricity, used in single deck trolleybus
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  tram:
+    production volume:
+      variable: Fuel consumption in trams|Electricity
+    ecoinvent alias:
+      name: electricity, used in tram
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  motorcycle_gasoline:
+    production volume:
+      variable: Fuel consumption in motorised two wheelers|Motor Gasoline
+    ecoinvent alias:
+      name: petrol, burned in motorcycle
+      reference product: heat
+      exists in original database: True
+
+  motorcycle_electric:
+    production volume:
+      variable: Fuel consumption in motorised two wheelers|Electricity
+    ecoinvent alias:
+      name: electricity, used in battery electric motorcycle
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  motorcycle_hydrogen:
+    production volume:
+      variable: Fuel consumption in motorised two wheelers|Hydrogen
+    ecoinvent alias:
+      name: hydrogen, used in hydrogen motorcycle
+      reference product: heat
+      exists in original database: True
+
+  light_duty_truck_diesel:
+    production volume:
+      variable: Fuel consumption in light duty vehicles|Motor Diesel
+    ecoinvent alias:
+      name: diesel, burned in passenger car vehicle
+      reference product: heat
+      exists in original database: True
+
+  light_duty_truck_gasoline:
+    production volume:
+      variable: Fuel consumption in light duty vehicles|Motor Gasoline
+    ecoinvent alias:
+      name: petrol, burned in passenger car vehicle
+      reference product: heat
+      exists in original database: True
+
+  light_duty_truck_electricity:
+    production volume:
+      variable: Fuel consumption in light duty vehicles|Electricity
+    ecoinvent alias:
+      name: electricity, used in passenger car vehicle
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  light_duty_truck_hydrogen:
+    production volume:
+      variable: Fuel consumption in light duty vehicles|Hydrogen
+    ecoinvent alias:
+      name: hydrogen, used in passenger car vehicle
+      reference product: heat
+      exists in original database: True
+
+  light_duty_truck_gas:
+    production volume:
+      variable: Fuel consumption in light duty vehicles|Motor Gas
+    ecoinvent alias:
+      name: compressed gas, burned in passenger car vehicle
+      reference product: heat
+      exists in original database: True
+
+  heavy_duty_truck_diesel:
+    production volume:
+      variable: Fuel consumption in heavy duty vehicles|Motor Diesel
+    ecoinvent alias:
+      name: diesel, burned in heavy duty vehicle
+      reference product: heat
+      exists in original database: True
+
+  heavy_duty_truck_gasoline:
+    production volume:
+      variable: Fuel consumption in heavy duty vehicles|Motor Gasoline
+    ecoinvent alias:
+      name: petrol, burned in passenger car vehicle
+      reference product: heat
+      exists in original database: True
+
+  heavy_duty_truck_electricity:
+    production volume:
+      variable: Fuel consumption in heavy duty vehicles|Electricity
+    ecoinvent alias:
+      name: electricity, used in heavy duty vehicle
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  heavy_duty_truck_hydrogen:
+    production volume:
+      variable: Fuel consumption in heavy duty vehicles|Hydrogen
+    ecoinvent alias:
+      name: hydrogen, used in heavy duty vehicle
+      reference product: heat
+      exists in original database: True
+
+  heavy_duty_truck_gas:
+    production volume:
+      variable: Fuel consumption in heavy duty vehicles|Motor Gas
+    ecoinvent alias:
+      name: compressed gas, burned in heavy duty vehicle
+      reference product: heat
+      exists in original database: True
+
+
+  other_transport_gasoline:
+    production volume:
+      variable: Fuel consumption in other transport|Motor Gasoline
+    ecoinvent alias:
+      name: petrol, burned in passenger car vehicle
+      reference product: heat
+      exists in original database: True
+
+  other_transport_diesel:
+    production volume:
+      variable: Fuel consumption in other transport|Motor Diesel
+    ecoinvent alias:
+      name: diesel, burned in passenger car vehicle
+      reference product: heat
+      exists in original database: True
+
+  other_transport_electric:
+    production volume:
+      variable: Fuel consumption in other transport|Electricity
+    ecoinvent alias:
+      name: electricity, used in passenger car vehicle
+      reference product: electricity, low voltage
+      exists in original database: True
+
+  other_transport_hydrogen:
+    production volume:
+      variable: Fuel consumption in other transport|Hydrogen
+    ecoinvent alias:
+      name: hydrogen, used in passenger car vehicle
+      reference product: heat
+      exists in original database: True
 
 markets:
 
@@ -2452,7 +2671,7 @@ markets:
       - residential_water_heating_hydrogen
 
   - name: market for energy carriers for cars (SPS)
-    reference product: energy carriers
+    reference product: heat
     unit: megajoule
     includes:
       - cars_electricity
@@ -2460,3 +2679,59 @@ markets:
       - cars_gasoline
       - cars_diesel
       - cars_gas
+
+  - name: market for energy carriers for buses (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - bus_electricity
+      - bus_hydrogen
+      - bus_diesel
+      - bus_gas
+
+  - name: market for energy carriers for coaches (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - coach_electricity
+      - coach_hydrogen
+      - coach_gas
+      - coach_diesel
+      - coach_gas
+
+  - name: market for energy carriers for motorcycles (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - motorcycle_electric
+      - motorcycle_hydrogen
+      - motorcycle_gasoline
+
+  - name: market for energy carriers for light duty trucks (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - light_duty_truck_electricity
+      - light_duty_truck_hydrogen
+      - light_duty_truck_gas
+      - light_duty_truck_gasoline
+      - light_duty_truck_diesel
+
+  - name: market for energy carriers for heavy duty trucks (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - heavy_duty_truck_electricity
+      - heavy_duty_truck_hydrogen
+      - heavy_duty_truck_gas
+      - heavy_duty_truck_gasoline
+      - heavy_duty_truck_diesel
+
+  - name: market for energy carriers for other transport (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - other_transport_electric
+      - other_transport_hydrogen
+      - other_transport_gasoline
+      - other_transport_diesel
