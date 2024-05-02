@@ -1,7 +1,7 @@
 import pandas as pd
 import copy
 import numpy as np
-df = pd.read_excel("STEM_to_Premise_SPS1.xlsx", sheet_name="SPS1")
+df = pd.read_excel("STEM_to_Premise_SPS4.xlsx", sheet_name="SPS1")
 df.columns = ["model", "scenario", "region", "variables", "unit", 2020, 2022, 2025, 2030, 2040, 2050]
 
 # subtract export from imports
@@ -96,4 +96,4 @@ for var in vars:
     )
 
 # save to csv
-df.to_csv("../scenario_data/scenario_data.csv", index=False, sep=",")
+df.to_csv("../scenario_data/scenario_data_.csv", index=False, sep=",")

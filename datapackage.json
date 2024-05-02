@@ -21,6 +21,12 @@
                 "model": "image",
                 "pathway": "SSP2-RCP26"
             }
+        ],
+        "SPS4": [
+            {
+                "model": "image",
+                "pathway": "SSP2-RCP26"
+            }
         ]
     },
     "licenses": [{

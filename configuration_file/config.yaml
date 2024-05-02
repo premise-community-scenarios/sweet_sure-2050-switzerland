@@ -63,7 +63,18 @@ regionalize:
     - name: heat production, hard coal briquette, stove 5-15kW
       reference product: heat, central or small-scale, other than natural gas
       exists in original database: True
-
+    - name: heat production, light fuel oil, at boiler 10kW condensing, non-modulating
+      reference product: heat, central or small-scale, other than natural gas
+      exists in original database: True
+    - name: heat production, natural gas, at boiler condensing modulating <100kW
+      reference product: heat, central or small-scale, natural gas
+      exists in original database: True
+    - name: heat production, light fuel oil, at industrial furnace 1MW
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: True
+    - name: heat production, natural gas, at boiler condensing modulating >100kW
+      reference product: heat, district or industrial, natural gas
+      exists in original database: True
 
 production pathways:
   hydro_run_of_river:
@@ -563,13 +574,13 @@ production pathways:
 
   battery (single family):
     production volume:
-      variable: Electricity generation|Electricity storage (non hydro)|Batteries in residentiial single family houses
+      variable: Electricity generation|Electricity storage (non hydro)|Batteries in residential single family houses
     ecoinvent alias:
       name: electricity supply, from stationary 19.5 kWh NMC battery
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in residentiial single family houses
+      - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in residential single family houses
 
   battery (multi family):
     production volume:
@@ -735,7 +746,7 @@ production pathways:
       exists in original database: True
       mask: heavy fuel oil production
 
-  waste (waste):
+  wood (waste):
     production volume:
       variable: Primary Energy Consumption|Wood|Waste wood
     ecoinvent alias:
@@ -845,7 +856,7 @@ production pathways:
 
   bioethanol (domestic):
     production volume:
-      variable: Heat from domestic biodiesel production|Wood|Ethanol reactor
+      variable: Domestic ethanol production|Wood|Ethanol reactor
     ecoinvent alias:
       name: ethanol production from wood
       reference product: ethanol, without water, in 95% solution state, from fermentation
@@ -853,10 +864,11 @@ production pathways:
 
   bioethanol, w CCS (domestic):
     production volume:
-      variable: Heat from domestic biodiesel production|Wood|Ethanol reactor with CCS
+      variable: Domestic ethanol production|Wood|Ethanol reactor with CCS
     ecoinvent alias:
       name: ethanol production, via fermentation, from sugarbeet, with carbon capture and storage, energy allocation
       reference product: ethanol, from sugarbeet
+
       exists in original database: True
       regionalize: True
 
@@ -1101,7 +1113,7 @@ production pathways:
     efficiency:
       - variable: Efficiency of heat plants (thermal)|District heating|Heat plants|Electricity|Centralised Heat pump
 
-  industry_process_electric_boiler:
+  FE_industry_process_electric_boiler:
     production volume:
       variable: Fuel consumption in industry sectors|Electricity|Electric boiler
     ecoinvent alias:
@@ -1109,7 +1121,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
   
-  industry_process_heat_pump:
+  FE_industry_process_heat_pump:
     production volume:
       variable: Fuel consumption in industry sectors|Electricity|Heat pump electric
     ecoinvent alias:
@@ -1117,7 +1129,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
   
-  industry_process_other_electric:
+  FE_industry_process_FE_other_electric:
     production volume:
       variable: Fuel consumption in industry sectors|Electricity|Other electric processes
     ecoinvent alias:
@@ -1125,7 +1137,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
   
-  industry_process_light_fuel_oil:
+  FE_industry_process_light_fuel_oil:
     production volume:
       variable: Fuel consumption in industry sectors|Oil|Total|Light fuel boiler
     ecoinvent alias:
@@ -1133,7 +1145,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_process_heavy_fuel_oil:
+  FE_industry_process_heavy_fuel_oil:
     production volume:
       variable: Fuel consumption in industry sectors|Oil|Fossil liquids|Heavy fuel oil|Heavy fuel oil boiler
     ecoinvent alias:
@@ -1141,7 +1153,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_process_natural_gas:
+  FE_industry_process_natural_gas:
     production volume:
       variable: Fuel consumption in industry sectors|Gas|Total
     ecoinvent alias:
@@ -1149,7 +1161,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_process_coal:
+  FE_industry_process_coal:
     production volume:
       variable: Fuel consumption in industry sectors|Coal|Coal boiler
     ecoinvent alias:
@@ -1157,7 +1169,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_CHP_oil:
+  FE_industry_heat_CHP_oil:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs oil
     ecoinvent alias:
@@ -1165,7 +1177,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_CHP_gas:
+  FE_industry_heat_CHP_gas:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs gas
     ecoinvent alias:
@@ -1173,7 +1185,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_CHP_gas_CCS:
+  FE_industry_heat_CHP_gas_CCS:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs gas (CCS)
     ecoinvent alias:
@@ -1181,7 +1193,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_CHP_fuel_cell:
+  FE_industry_heat_CHP_fuel_cell:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs fuel cells (gas reformer)
     ecoinvent alias:
@@ -1189,7 +1201,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_CHP_waste_non_renew:
+  FE_industry_heat_CHP_waste_non_renew:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs wastes
     ecoinvent alias:
@@ -1197,7 +1209,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_CHP_waste_non_renew_CCS:
+  FE_industry_heat_CHP_waste_non_renew_CCS:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs wastes CCS
     ecoinvent alias:
@@ -1205,7 +1217,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_CHP_wood:
+  FE_industry_heat_CHP_wood:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs wood
     ecoinvent alias:
@@ -1213,7 +1225,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_CHP_wood_CCS:
+  FE_industry_heat_CHP_wood_CCS:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs wood (CCS)
     ecoinvent alias:
@@ -1221,7 +1233,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_CHP_hydrogen:
+  FE_industry_heat_CHP_hydrogen:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|On-site CHPs|Industrial CHPs fuel cells (hydrogen)
     ecoinvent alias:
@@ -1229,7 +1241,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_heat_DH:
+  FE_industry_heat_DH:
     production volume:
       variable: Fuel consumption in industry sectors|Heat|District heating
     ecoinvent alias:
@@ -1238,7 +1250,7 @@ production pathways:
       exists in original database: False
       new dataset: True
   
-  industry_process_wood:
+  FE_industry_process_wood:
     production volume:
       variable: Fuel consumption in industry sectors|Wood|Wood boiler
     ecoinvent alias:
@@ -1246,7 +1258,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_process_pellet:
+  FE_industry_process_pellet:
     production volume:
       variable: Fuel consumption in industry sectors|Pellets|Pellet boiler
     ecoinvent alias:
@@ -1254,7 +1266,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_process_waste_non_renew:
+  FE_industry_process_waste_non_renew:
     production volume:
       variable: Fuel consumption in industry sectors|Wastes|Non Renewable|Wastes boiler
     ecoinvent alias:
@@ -1262,7 +1274,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_process_waste_renew:
+  FE_industry_process_waste_renew:
     production volume:
       variable: Fuel consumption in industry sectors|Wastes|Renewable|Wastes boiler
     ecoinvent alias:
@@ -1270,7 +1282,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_process_solar:
+  FE_industry_process_solar:
     production volume:
       variable: Fuel consumption in industry sectors|Solar|Solar thermal
     ecoinvent alias:
@@ -1278,7 +1290,7 @@ production pathways:
       reference product: heat
       exists in original database: True
   
-  industry_process_hydrogen:
+  FE_industry_process_hydrogen:
     production volume:
       variable: Fuel consumption in industry sectors|Hydrogen|Hydrogen boiler
     ecoinvent alias:
@@ -1286,7 +1298,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_electric_boiler:
+  FE_services_electric_boiler:
     production volume:
       variable: Fuel consumption in Services sectors|Electricity|Electric boiler
     ecoinvent alias:
@@ -1294,7 +1306,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  services_heat_pump:
+  FE_services_heat_pump:
     production volume:
       variable: Fuel consumption in Services sectors|Electricity|Heat pump electric
     ecoinvent alias:
@@ -1302,7 +1314,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  services_other_electric:
+  FE_services_FE_other_electric:
     production volume:
       variable: Fuel consumption in Services sectors|Electricity|Other electric appliances
     ecoinvent alias:
@@ -1310,7 +1322,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  services_light_fuel_oil:
+  FE_services_light_fuel_oil:
     production volume:
       variable: Fuel consumption in Services sectors|Oil|Total|Light fuel boiler
     ecoinvent alias:
@@ -1318,7 +1330,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_natural_gas:
+  FE_services_natural_gas:
     production volume:
       variable: Fuel consumption in Services sectors|Gas|Total
     ecoinvent alias:
@@ -1326,7 +1338,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_CHP_gas:
+  FE_services_CHP_gas:
     production volume:
       variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs gas
     ecoinvent alias:
@@ -1334,7 +1346,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_CHP_biogas:
+  FE_services_CHP_biogas:
     production volume:
       variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs (bio)gas
     ecoinvent alias:
@@ -1342,7 +1354,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_CHP_fuel_cell:
+  FE_services_CHP_fuel_cell:
     production volume:
       variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs fuel cells (gas reformer)
     ecoinvent alias:
@@ -1350,7 +1362,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_CHP_wood:
+  FE_services_CHP_wood:
     production volume:
       variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs wood
     ecoinvent alias:
@@ -1358,7 +1370,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_CHP_hydrogen:
+  FE_services_CHP_hydrogen:
     production volume:
       variable: Fuel consumption in Services sectors|Heat|On-site CHPs|Services sectors CHPs fuel cells (hydrogen)
     ecoinvent alias:
@@ -1366,7 +1378,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_DH:
+  FE_services_DH:
     production volume:
       variable: Fuel consumption in Services sectors|Heat|District heating
     ecoinvent alias:
@@ -1375,7 +1387,7 @@ production pathways:
       exists in original database: False
       new dataset: True
 
-  services_wood:
+  FE_services_wood:
     production volume:
       variable: Fuel consumption in Services sectors|Wood|Wood boiler
     ecoinvent alias:
@@ -1383,7 +1395,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_pellet:
+  FE_services_pellet:
     production volume:
       variable: Fuel consumption in Services sectors|Pellets|Pellet boiler
     ecoinvent alias:
@@ -1391,7 +1403,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_solar:
+  FE_services_solar:
     production volume:
       variable: Fuel consumption in Services sectors|Solar|Solar thermal
     ecoinvent alias:
@@ -1399,7 +1411,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  services_hydrogen:
+  FE_services_hydrogen:
     production volume:
       variable: Fuel consumption in Services sectors|Hydrogen|From hydrogen grid|Hydrogen boiler
     ecoinvent alias:
@@ -1407,7 +1419,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_electric_boiler:
+  FE_residential_space_heating_electric_boiler:
     production volume:
       variable: Fuel consumption in Residential sector|Electricity|Space heating|Electric boiler
     ecoinvent alias:
@@ -1415,7 +1427,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  residential_space_heating_heat_pump:
+  FE_residential_space_heating_heat_pump:
     production volume:
       variable: Fuel consumption in Residential sector|Electricity|Space heating|Heat pump electric
     ecoinvent alias:
@@ -1423,7 +1435,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  residential_water_heating_electric_boiler:
+  FE_residential_water_heating_electric_boiler:
     production volume:
       variable: Fuel consumption in Residential sector|Electricity|Water heating|Electric boiler
     ecoinvent alias:
@@ -1431,7 +1443,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  residential_water_heating_heat_pump:
+  FE_residential_water_heating_heat_pump:
     production volume:
       variable: Fuel consumption in Residential sector|Electricity|Water heating|Heat pump electric
     ecoinvent alias:
@@ -1439,7 +1451,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  residential_other_electric:
+  FE_residential_FE_other_electric:
     production volume:
       variable: Fuel consumption in Residential sector|Electricity|Other appliances
     ecoinvent alias:
@@ -1447,7 +1459,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  residential_space_heating_light_fuel_oil:
+  FE_residential_space_heating_light_fuel_oil:
     production volume:
       variable: Fuel consumption in Residential sector|Oil|Total|Space heating|Light fuel boiler
     ecoinvent alias:
@@ -1455,7 +1467,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_water_heating_light_fuel_oil:
+  FE_residential_water_heating_light_fuel_oil:
     production volume:
       variable: Fuel consumption in Residential sector|Oil|Total|Water heating|Light fuel boiler
     ecoinvent alias:
@@ -1463,7 +1475,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_gas:
+  FE_residential_space_heating_gas:
     production volume:
       variable: Fuel consumption in Residential sector|Gas|Total|Space heating|Gas boiler
     ecoinvent alias:
@@ -1471,7 +1483,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_heat_pump_gas:
+  FE_residential_space_heating_heat_pump_gas:
     production volume:
       variable: Fuel consumption in Residential sector|Gas|Total|Space heating|Heat pump gas
     ecoinvent alias:
@@ -1479,7 +1491,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_water_heating_gas:
+  FE_residential_water_heating_gas:
     production volume:
       variable: Fuel consumption in Residential sector|Gas|Total|Water heating|Gas boiler
     ecoinvent alias:
@@ -1487,7 +1499,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_water_heating_heat_pump_gas:
+  FE_residential_water_heating_heat_pump_gas:
     production volume:
       variable: Fuel consumption in Residential sector|Gas|Total|Water heating|Heat pump gas
     ecoinvent alias:
@@ -1495,7 +1507,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_coal:
+  FE_residential_space_heating_coal:
     production volume:
       variable: Fuel consumption in Residential sector|Coal|Space heating|Coal boiler
     ecoinvent alias:
@@ -1503,7 +1515,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_water_heating_coal:
+  FE_residential_water_heating_coal:
     production volume:
       variable: Fuel consumption in Residential sector|Coal|Water heating|Coal boiler
     ecoinvent alias:
@@ -1511,7 +1523,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_wood:
+  FE_residential_space_heating_wood:
     production volume:
       variable: Fuel consumption in Residential sector|Wood|Space heating|Wood boiler
     ecoinvent alias:
@@ -1519,7 +1531,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_water_heating_wood:
+  FE_residential_water_heating_wood:
     production volume:
       variable: Fuel consumption in Residential sector|Wood|Water heating|Wood boiler
     ecoinvent alias:
@@ -1527,7 +1539,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_pellet:
+  FE_residential_space_heating_pellet:
     production volume:
       variable: Fuel consumption in Residential sector|Pellets|Space heating|Pellets boiler
     ecoinvent alias:
@@ -1535,7 +1547,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_water_heating_pellet:
+  FE_residential_water_heating_pellet:
     production volume:
       variable: Fuel consumption in Residential sector|Pellets|Water heating|Pellets boiler
     ecoinvent alias:
@@ -1543,7 +1555,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_solar:
+  FE_residential_space_heating_solar:
     production volume:
       variable: Fuel consumption in Residential sector|Solar|Space heating|Solar thermal
     ecoinvent alias:
@@ -1551,7 +1563,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_water_heating_solar:
+  FE_residential_water_heating_solar:
     production volume:
       variable: Fuel consumption in Residential sector|Solar|Water heating|Solar thermal
     ecoinvent alias:
@@ -1559,7 +1571,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_hydrogen:
+  FE_residential_space_heating_hydrogen:
     production volume:
       variable: Fuel consumption in Residential sector|Hydrogen|From hydrogen grid|Space heating|Hydrogen boiler
     ecoinvent alias:
@@ -1567,7 +1579,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_water_heating_hydrogen:
+  FE_residential_water_heating_hydrogen:
     production volume:
       variable: Fuel consumption in Residential sector|Hydrogen|From hydrogen grid|Water heating|Hydrogen boiler
     ecoinvent alias:
@@ -1575,7 +1587,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_CHP_gas:
+  FE_residential_space_heating_CHP_gas:
     production volume:
       variable: Fuel consumption in Residential sector|Heat|On-site CHPs|Residential sector CHPs gas
     ecoinvent alias:
@@ -1583,7 +1595,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_CHP_fuel_cell:
+  FE_residential_space_heating_CHP_fuel_cell:
     production volume:
       variable: Fuel consumption in Residential sector|Heat|On-site CHPs|Residential sector CHPs fuel cells (gas reformer)
     ecoinvent alias:
@@ -1591,7 +1603,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_CHP_wood:
+  FE_residential_space_heating_CHP_wood:
     production volume:
       variable: Fuel consumption in Residential sector|Heat|On-site CHPs|Residential sector CHPs wood
     ecoinvent alias:
@@ -1599,7 +1611,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  residential_space_heating_DH:
+  FE_residential_space_heating_DH:
     production volume:
       variable: Fuel consumption in Residential sector|Heat|District heating
     ecoinvent alias:
@@ -1608,7 +1620,7 @@ production pathways:
       exists in original database: False
       new dataset: True
 
-  cars_electricity:
+  FE_cars_electricity:
     production volume:
       variable: Fuel consumption in cars|Electricity
     ecoinvent alias:
@@ -1616,7 +1628,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  cars_hydrogen:
+  FE_cars_hydrogen:
     production volume:
       variable: Fuel consumption in cars|Hydrogen
     ecoinvent alias:
@@ -1624,7 +1636,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  cars_gasoline:
+  FE_cars_gasoline:
     production volume:
       variable: Fuel consumption in cars|Motor Gasoline
     ecoinvent alias:
@@ -1632,7 +1644,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  cars_diesel:
+  FE_cars_diesel:
     production volume:
       variable: Fuel consumption in cars|Motor Diesel
     ecoinvent alias:
@@ -1640,7 +1652,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  cars_gas:
+  FE_cars_gas:
     production volume:
       variable: Fuel consumption in cars|Gas
     ecoinvent alias:
@@ -1648,7 +1660,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  bus_electricity:
+  FE_bus_electricity:
     production volume:
       variable: Fuel consumption in urban buses|Electricity
     ecoinvent alias:
@@ -1656,7 +1668,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  bus_hydrogen:
+  FE_bus_hydrogen:
     production volume:
       variable: Fuel consumption in urban buses|Hydrogen
     ecoinvent alias:
@@ -1664,7 +1676,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  bus_diesel:
+  FE_bus_diesel:
     production volume:
       variable: Fuel consumption in urban buses|Motor Diesel
     ecoinvent alias:
@@ -1672,7 +1684,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  bus_gas:
+  FE_bus_gas:
     production volume:
       variable: Fuel consumption in urban buses|Motor Gas
     ecoinvent alias:
@@ -1680,7 +1692,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  coach_electricity:
+  FE_coach_electricity:
     production volume:
       variable: Fuel consumption in coaches|Electricity
     ecoinvent alias:
@@ -1688,7 +1700,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  coach_hydrogen:
+  FE_coach_hydrogen:
     production volume:
       variable: Fuel consumption in coaches|Hydrogen
     ecoinvent alias:
@@ -1696,7 +1708,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  coach_diesel:
+  FE_coach_diesel:
     production volume:
       variable: Fuel consumption in coaches|Motor Diesel
     ecoinvent alias:
@@ -1704,7 +1716,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  coach_gas:
+  FE_coach_gas:
     production volume:
       variable: Fuel consumption in coaches|Motor Gas
     ecoinvent alias:
@@ -1712,7 +1724,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  trolleybus:
+  FE_trolleybus:
     production volume:
       variable: Fuel consumption in trolleybuses|Electricity
     ecoinvent alias:
@@ -1720,7 +1732,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  tram:
+  FE_tram:
     production volume:
       variable: Fuel consumption in trams|Electricity
     ecoinvent alias:
@@ -1728,7 +1740,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  motorcycle_gasoline:
+  FE_motorcycle_gasoline:
     production volume:
       variable: Fuel consumption in motorised two wheelers|Motor Gasoline
     ecoinvent alias:
@@ -1736,7 +1748,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  motorcycle_electric:
+  FE_motorcycle_electric:
     production volume:
       variable: Fuel consumption in motorised two wheelers|Electricity
     ecoinvent alias:
@@ -1744,7 +1756,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  motorcycle_hydrogen:
+  FE_motorcycle_hydrogen:
     production volume:
       variable: Fuel consumption in motorised two wheelers|Hydrogen
     ecoinvent alias:
@@ -1752,7 +1764,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  light_duty_truck_diesel:
+  FE_light_duty_truck_diesel:
     production volume:
       variable: Fuel consumption in light duty vehicles|Motor Diesel
     ecoinvent alias:
@@ -1760,7 +1772,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  light_duty_truck_gasoline:
+  FE_light_duty_truck_gasoline:
     production volume:
       variable: Fuel consumption in light duty vehicles|Motor Gasoline
     ecoinvent alias:
@@ -1768,7 +1780,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  light_duty_truck_electricity:
+  FE_light_duty_truck_electricity:
     production volume:
       variable: Fuel consumption in light duty vehicles|Electricity
     ecoinvent alias:
@@ -1776,7 +1788,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  light_duty_truck_hydrogen:
+  FE_light_duty_truck_hydrogen:
     production volume:
       variable: Fuel consumption in light duty vehicles|Hydrogen
     ecoinvent alias:
@@ -1784,7 +1796,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  light_duty_truck_gas:
+  FE_light_duty_truck_gas:
     production volume:
       variable: Fuel consumption in light duty vehicles|Motor Gas
     ecoinvent alias:
@@ -1792,7 +1804,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  heavy_duty_truck_diesel:
+  FE_heavy_duty_truck_diesel:
     production volume:
       variable: Fuel consumption in heavy duty vehicles|Motor Diesel
     ecoinvent alias:
@@ -1800,7 +1812,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  heavy_duty_truck_gasoline:
+  FE_heavy_duty_truck_gasoline:
     production volume:
       variable: Fuel consumption in heavy duty vehicles|Motor Gasoline
     ecoinvent alias:
@@ -1808,7 +1820,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  heavy_duty_truck_electricity:
+  FE_heavy_duty_truck_electricity:
     production volume:
       variable: Fuel consumption in heavy duty vehicles|Electricity
     ecoinvent alias:
@@ -1816,7 +1828,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  heavy_duty_truck_hydrogen:
+  FE_heavy_duty_truck_hydrogen:
     production volume:
       variable: Fuel consumption in heavy duty vehicles|Hydrogen
     ecoinvent alias:
@@ -1824,7 +1836,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  heavy_duty_truck_gas:
+  FE_heavy_duty_truck_gas:
     production volume:
       variable: Fuel consumption in heavy duty vehicles|Motor Gas
     ecoinvent alias:
@@ -1833,7 +1845,7 @@ production pathways:
       exists in original database: True
 
 
-  other_transport_gasoline:
+  FE_other_transport_gasoline:
     production volume:
       variable: Fuel consumption in other transport|Motor Gasoline
     ecoinvent alias:
@@ -1841,7 +1853,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  other_transport_diesel:
+  FE_other_transport_diesel:
     production volume:
       variable: Fuel consumption in other transport|Motor Diesel
     ecoinvent alias:
@@ -1849,7 +1861,7 @@ production pathways:
       reference product: heat
       exists in original database: True
 
-  other_transport_electric:
+  FE_other_transport_electric:
     production volume:
       variable: Fuel consumption in other transport|Electricity
     ecoinvent alias:
@@ -1857,7 +1869,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  other_transport_hydrogen:
+  FE_other_transport_hydrogen:
     production volume:
       variable: Fuel consumption in other transport|Hydrogen
     ecoinvent alias:
@@ -2042,7 +2054,7 @@ markets:
     reference product: biomass
     unit: kilogram
     includes:
-      - waste (waste)
+      - wood (waste)
       - wood (residues)
       - wood (landscape maintenance)
       - wood (forest)
@@ -2054,6 +2066,8 @@ markets:
       - name: market for wood chips, dry, measured as dry mass
         product: wood chips, dry, measured as dry mass
         location: RER
+      - name: market for biomass, used as fuel
+        product: biomass, used as fuel
 
     replaces in:
       - location: CH
@@ -2535,203 +2549,203 @@ markets:
     reference product: heat
     unit: megajoule
     includes:
-      - industry_process_electric_boiler
-      - industry_process_heat_pump
-      - industry_process_other_electric
-      - industry_process_light_fuel_oil
-      - industry_process_heavy_fuel_oil
-      - industry_process_natural_gas
-      - industry_process_coal
-      - industry_process_wood
-      - industry_process_pellet
-      - industry_process_waste_non_renew
-      - industry_process_waste_renew
-      - industry_process_solar
-      - industry_process_hydrogen
+      - FE_industry_process_electric_boiler
+      - FE_industry_process_heat_pump
+      - FE_industry_process_FE_other_electric
+      - FE_industry_process_light_fuel_oil
+      - FE_industry_process_heavy_fuel_oil
+      - FE_industry_process_natural_gas
+      - FE_industry_process_coal
+      - FE_industry_process_wood
+      - FE_industry_process_pellet
+      - FE_industry_process_waste_non_renew
+      - FE_industry_process_waste_renew
+      - FE_industry_process_solar
+      - FE_industry_process_hydrogen
 
   - name: market for space heating in industry (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - industry_heat_CHP_oil
-      - industry_heat_CHP_gas
-      - industry_heat_CHP_gas_CCS
-      - industry_heat_CHP_fuel_cell
-      - industry_heat_CHP_waste_non_renew
-      - industry_heat_CHP_waste_non_renew_CCS
-      - industry_heat_CHP_wood
-      - industry_heat_CHP_wood_CCS
-      - industry_heat_CHP_hydrogen
-      - industry_heat_DH
+      - FE_industry_heat_CHP_oil
+      - FE_industry_heat_CHP_gas
+      - FE_industry_heat_CHP_gas_CCS
+      - FE_industry_heat_CHP_fuel_cell
+      - FE_industry_heat_CHP_waste_non_renew
+      - FE_industry_heat_CHP_waste_non_renew_CCS
+      - FE_industry_heat_CHP_wood
+      - FE_industry_heat_CHP_wood_CCS
+      - FE_industry_heat_CHP_hydrogen
+      - FE_industry_heat_DH
 
   - name: market for process heat and space heating in industry (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - industry_process_electric_boiler
-      - industry_process_heat_pump
-      - industry_process_other_electric
-      - industry_process_light_fuel_oil
-      - industry_process_heavy_fuel_oil
-      - industry_process_natural_gas
-      - industry_process_coal
-      - industry_heat_CHP_oil
-      - industry_heat_CHP_gas
-      - industry_heat_CHP_gas_CCS
-      - industry_heat_CHP_fuel_cell
-      - industry_heat_CHP_waste_non_renew
-      - industry_heat_CHP_waste_non_renew_CCS
-      - industry_heat_CHP_wood
-      - industry_heat_CHP_wood_CCS
-      - industry_heat_CHP_hydrogen
-      - industry_heat_DH
-      - industry_process_wood
-      - industry_process_pellet
-      - industry_process_waste_non_renew
-      - industry_process_waste_renew
-      - industry_process_solar
-      - industry_process_hydrogen
+      - FE_industry_process_electric_boiler
+      - FE_industry_process_heat_pump
+      - FE_industry_process_FE_other_electric
+      - FE_industry_process_light_fuel_oil
+      - FE_industry_process_heavy_fuel_oil
+      - FE_industry_process_natural_gas
+      - FE_industry_process_coal
+      - FE_industry_heat_CHP_oil
+      - FE_industry_heat_CHP_gas
+      - FE_industry_heat_CHP_gas_CCS
+      - FE_industry_heat_CHP_fuel_cell
+      - FE_industry_heat_CHP_waste_non_renew
+      - FE_industry_heat_CHP_waste_non_renew_CCS
+      - FE_industry_heat_CHP_wood
+      - FE_industry_heat_CHP_wood_CCS
+      - FE_industry_heat_CHP_hydrogen
+      - FE_industry_heat_DH
+      - FE_industry_process_wood
+      - FE_industry_process_pellet
+      - FE_industry_process_waste_non_renew
+      - FE_industry_process_waste_renew
+      - FE_industry_process_solar
+      - FE_industry_process_hydrogen
 
   - name: market for space heating in services (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - services_electric_boiler
-      - services_heat_pump
-      - services_other_electric
-      - services_light_fuel_oil
-      - services_natural_gas
-      - services_CHP_gas
-      - services_CHP_biogas
-      - services_CHP_fuel_cell
-      - services_CHP_wood
-      - services_CHP_hydrogen
-      - services_DH
-      - services_wood
-      - services_pellet
-      - services_solar
-      - services_hydrogen
+      - FE_services_electric_boiler
+      - FE_services_heat_pump
+      - FE_services_FE_other_electric
+      - FE_services_light_fuel_oil
+      - FE_services_natural_gas
+      - FE_services_CHP_gas
+      - FE_services_CHP_biogas
+      - FE_services_CHP_fuel_cell
+      - FE_services_CHP_wood
+      - FE_services_CHP_hydrogen
+      - FE_services_DH
+      - FE_services_wood
+      - FE_services_pellet
+      - FE_services_solar
+      - FE_services_hydrogen
 
   - name: market for space heating in residential (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - residential_space_heating_electric_boiler
-      - residential_space_heating_heat_pump
-      - residential_other_electric
-      - residential_space_heating_light_fuel_oil
-      - residential_space_heating_gas
-      - residential_space_heating_coal
-      - residential_space_heating_wood
-      - residential_space_heating_pellet
-      - residential_space_heating_solar
-      - residential_space_heating_hydrogen
-      - residential_space_heating_CHP_gas
-      - residential_space_heating_CHP_fuel_cell
-      - residential_space_heating_CHP_wood
-      - residential_space_heating_DH
+      - FE_residential_space_heating_electric_boiler
+      - FE_residential_space_heating_heat_pump
+      - FE_residential_FE_other_electric
+      - FE_residential_space_heating_light_fuel_oil
+      - FE_residential_space_heating_gas
+      - FE_residential_space_heating_coal
+      - FE_residential_space_heating_wood
+      - FE_residential_space_heating_pellet
+      - FE_residential_space_heating_solar
+      - FE_residential_space_heating_hydrogen
+      - FE_residential_space_heating_CHP_gas
+      - FE_residential_space_heating_CHP_fuel_cell
+      - FE_residential_space_heating_CHP_wood
+      - FE_residential_space_heating_DH
 
 
   - name: market for water heating in residential (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - residential_water_heating_light_fuel_oil
-      - residential_water_heating_gas
-      - residential_water_heating_coal
-      - residential_water_heating_wood
-      - residential_water_heating_pellet
-      - residential_water_heating_solar
-      - residential_water_heating_hydrogen
+      - FE_residential_water_heating_light_fuel_oil
+      - FE_residential_water_heating_gas
+      - FE_residential_water_heating_coal
+      - FE_residential_water_heating_wood
+      - FE_residential_water_heating_pellet
+      - FE_residential_water_heating_solar
+      - FE_residential_water_heating_hydrogen
 
   - name: market for space and water heating in residential (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - residential_space_heating_electric_boiler
-      - residential_space_heating_heat_pump
-      - residential_other_electric
-      - residential_space_heating_light_fuel_oil
-      - residential_space_heating_gas
-      - residential_space_heating_coal
-      - residential_space_heating_wood
-      - residential_space_heating_pellet
-      - residential_space_heating_solar
-      - residential_space_heating_hydrogen
-      - residential_space_heating_CHP_gas
-      - residential_space_heating_CHP_fuel_cell
-      - residential_space_heating_CHP_wood
-      - residential_space_heating_DH
-      - residential_water_heating_light_fuel_oil
-      - residential_water_heating_gas
-      - residential_water_heating_coal
-      - residential_water_heating_wood
-      - residential_water_heating_pellet
-      - residential_water_heating_solar
-      - residential_water_heating_hydrogen
+      - FE_residential_space_heating_electric_boiler
+      - FE_residential_space_heating_heat_pump
+      - FE_residential_FE_other_electric
+      - FE_residential_space_heating_light_fuel_oil
+      - FE_residential_space_heating_gas
+      - FE_residential_space_heating_coal
+      - FE_residential_space_heating_wood
+      - FE_residential_space_heating_pellet
+      - FE_residential_space_heating_solar
+      - FE_residential_space_heating_hydrogen
+      - FE_residential_space_heating_CHP_gas
+      - FE_residential_space_heating_CHP_fuel_cell
+      - FE_residential_space_heating_CHP_wood
+      - FE_residential_space_heating_DH
+      - FE_residential_water_heating_light_fuel_oil
+      - FE_residential_water_heating_gas
+      - FE_residential_water_heating_coal
+      - FE_residential_water_heating_wood
+      - FE_residential_water_heating_pellet
+      - FE_residential_water_heating_solar
+      - FE_residential_water_heating_hydrogen
 
   - name: market for energy carriers for cars (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - cars_electricity
-      - cars_hydrogen
-      - cars_gasoline
-      - cars_diesel
-      - cars_gas
+      - FE_cars_electricity
+      - FE_cars_hydrogen
+      - FE_cars_gasoline
+      - FE_cars_diesel
+      - FE_cars_gas
 
   - name: market for energy carriers for buses (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - bus_electricity
-      - bus_hydrogen
-      - bus_diesel
-      - bus_gas
+      - FE_bus_electricity
+      - FE_bus_hydrogen
+      - FE_bus_diesel
+      - FE_bus_gas
 
   - name: market for energy carriers for coaches (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - coach_electricity
-      - coach_hydrogen
-      - coach_gas
-      - coach_diesel
-      - coach_gas
+      - FE_coach_electricity
+      - FE_coach_hydrogen
+      - FE_coach_gas
+      - FE_coach_diesel
+      - FE_coach_gas
 
   - name: market for energy carriers for motorcycles (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - motorcycle_electric
-      - motorcycle_hydrogen
-      - motorcycle_gasoline
+      - FE_motorcycle_electric
+      - FE_motorcycle_hydrogen
+      - FE_motorcycle_gasoline
 
   - name: market for energy carriers for light duty trucks (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - light_duty_truck_electricity
-      - light_duty_truck_hydrogen
-      - light_duty_truck_gas
-      - light_duty_truck_gasoline
-      - light_duty_truck_diesel
+      - FE_light_duty_truck_electricity
+      - FE_light_duty_truck_hydrogen
+      - FE_light_duty_truck_gas
+      - FE_light_duty_truck_gasoline
+      - FE_light_duty_truck_diesel
 
   - name: market for energy carriers for heavy duty trucks (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - heavy_duty_truck_electricity
-      - heavy_duty_truck_hydrogen
-      - heavy_duty_truck_gas
-      - heavy_duty_truck_gasoline
-      - heavy_duty_truck_diesel
+      - FE_heavy_duty_truck_electricity
+      - FE_heavy_duty_truck_hydrogen
+      - FE_heavy_duty_truck_gas
+      - FE_heavy_duty_truck_gasoline
+      - FE_heavy_duty_truck_diesel
 
   - name: market for energy carriers for other transport (SPS)
     reference product: heat
     unit: megajoule
     includes:
-      - other_transport_electric
-      - other_transport_hydrogen
-      - other_transport_gasoline
-      - other_transport_diesel
+      - FE_other_transport_electric
+      - FE_other_transport_hydrogen
+      - FE_other_transport_gasoline
+      - FE_other_transport_diesel
