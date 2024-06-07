@@ -24,17 +24,17 @@ regionalize:
     - name: hydrogen production, gaseous, 30 bar, from PEM electrolysis, from grid electricity
       reference product: hydrogen, gaseous, 30 bar
       exists in original database: True
-    - name: hydrogen production, steam methane reforming of natural gas, 25 bar
-      reference product: hydrogen, gaseous, 25 bar
+    - name: hydrogen production, steam methane reforming
+      reference product: hydrogen, gaseous, low pressure
       exists in original database: True
-    - name: hydrogen production, steam methane reforming of natural gas, with CCS (MDEA, 98% eff.), 25 bar
-      reference product: hydrogen, gaseous, 25 bar
+    - name: hydrogen production, steam methane reforming, with CCS
+      reference product: hydrogen, gaseous, low pressure
       exists in original database: True
-    - name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, 26 bar
-      reference product: hydrogen, gaseous, 26 bar
+    - name: hydrogen production, steam methane reforming, from biomethane
+      reference product: hydrogen, gaseous, low pressure
       exists in original database: True
-    - name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, with CCS (MDEA, 98% eff.), 26 bar
-      reference product: hydrogen, gaseous, 26 bar
+    - name: hydrogen production, steam methane reforming, from biomethane, with CCS
+      reference product: hydrogen, gaseous, low pressure
       exists in original database: True
     - name: carbon monoxide, from RWGS, for Fischer Tropsch process, hydrogen from wood gasification, with CCS
       reference product: carbon monoxide, from RWGS
@@ -901,8 +901,8 @@ production pathways:
     production volume:
       variable: Imports|Hydrogen
     ecoinvent alias:
-      name: market for hydrogen, gaseous
-      reference product: hydrogen, gaseous
+      name: market for hydrogen, gaseous, low pressure
+      reference product: hydrogen, gaseous, low pressure
       exists in original database: False
       new dataset: True
 
@@ -935,32 +935,32 @@ production pathways:
     production volume:
       variable: Domestic hydrogen production|Gas|Fossil gases|SMR-ATR Reforming
     ecoinvent alias:
-      name: hydrogen production, steam methane reforming of natural gas, 25 bar
-      reference product: hydrogen, gaseous, 25 bar
+      name: hydrogen production, steam methane reforming
+      reference product: hydrogen, gaseous, low pressure
       exists in original database: True
 
   hydrogen, SMR w CCS, natural gas (domestic):
     production volume:
       variable: Domestic hydrogen production|Gas|Fossil gases|SMR-ATR Reforming CCS
     ecoinvent alias:
-      name: hydrogen production, steam methane reforming of natural gas, with CCS (MDEA, 98% eff.), 25 bar
-      reference product: hydrogen, gaseous, 25 bar
+      name: hydrogen production, steam methane reforming, with CCS
+      reference product: hydrogen, gaseous, low pressure
       exists in original database: True
 
   hydrogen, SMR, biomethane (domestic):
     production volume:
       variable: Domestic hydrogen production|Gas|Synthetic gases|SMR-ATR Reforming
     ecoinvent alias:
-      name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, 26 bar
-      reference product: hydrogen, gaseous, 26 bar
+      name: hydrogen production, steam methane reforming, from biomethane
+      reference product: hydrogen, gaseous, low pressure
       exists in original database: True
 
   hydrogen, SMR w CCS, biomethane (domestic):
     production volume:
       variable: Domestic hydrogen production|Gas|Synthetic gases|SMR-ATR Reforming CCS
     ecoinvent alias:
-      name: hydrogen production, steam methane reforming, from biomethane, high and low temperature, with CCS (MDEA, 98% eff.), 26 bar
-      reference product: hydrogen, gaseous, 26 bar
+      name: hydrogen production, steam methane reforming, from biomethane, with CCS
+      reference product: hydrogen, gaseous, low pressure
       exists in original database: True
 
   hydrogen, wood gasification (domestic):
@@ -2316,8 +2316,8 @@ markets:
       - hydrogen, wood gasification w CCS (domestic)
 
     replaces:
-      - name: market for hydrogen, gaseous
-        product: hydrogen, gaseous
+      - name: market for hydrogen, gaseous, low pressure
+        product: hydrogen, gaseous, low pressure
 
     replaces in:
       - location: CH
