@@ -694,7 +694,7 @@ production pathways:
     production volume:
       variable: Domestic PtG and PtL production|PtG|PtG gas
     ecoinvent alias:
-      name: methane, from electrochemical methanation, with carbon from atmosphere
+      name: methane, from electrochemical methanation, with carbon from atmosphere, using heat pump heat
       reference product: methane, from electrochemical methanation
       exists in original database: True
       regionalize: True
@@ -729,7 +729,7 @@ production pathways:
       exists in original database: True
       mask: aluminium industry
 
-  light fuel oil:
+  light_fuel_oil:
     production volume:
       variable: Imports|Oil|Fossil liquids|Light fuel oil
     ecoinvent alias:
@@ -829,6 +829,7 @@ production pathways:
       name: diesel import, from neighboring countries
       reference product: diesel
       exists in original database: True
+      mask: synthetic
 
   fossil gasoline (import):
     production volume:
@@ -879,6 +880,7 @@ production pathways:
       name: kerosene import, from neighboring countries
       reference product: kerosene
       exists in original database: True
+      mask: synthetic
 
   synthetic kerosene (import):
     production volume:
@@ -904,6 +906,7 @@ production pathways:
       name: market for hydrogen, gaseous, low pressure
       reference product: hydrogen, gaseous, low pressure
       exists in original database: False
+      mask: period
       new dataset: True
 
   hydrogen, PEM, small (domestic):
@@ -938,6 +941,7 @@ production pathways:
       name: hydrogen production, steam methane reforming
       reference product: hydrogen, gaseous, low pressure
       exists in original database: True
+      mask: CCS
 
   hydrogen, SMR w CCS, natural gas (domestic):
     production volume:
@@ -954,6 +958,7 @@ production pathways:
       name: hydrogen production, steam methane reforming, from biomethane
       reference product: hydrogen, gaseous, low pressure
       exists in original database: True
+      mask: CCS
 
   hydrogen, SMR w CCS, biomethane (domestic):
     production volume:
@@ -1035,6 +1040,7 @@ production pathways:
     ecoinvent alias:
       name: heat and power co-generation, wood chips, 6667 kW, state-of-the-art 2014
       reference product: heat, district or industrial, other than natural gas
+      mask: renewable
       exists in original database: True
 
   DH_CHP_hydrogen:
@@ -1080,6 +1086,7 @@ production pathways:
       name: heat production, wood chips from industry, at furnace 5000kW
       reference product: heat, district or industrial, other than natural gas
       exists in original database: True
+      mask: renewable
     efficiency:
       - variable: Efficiency of heat plants (thermal)|District heating|Heat plants|Wood|Heat plant wood
         absolute: True
@@ -1184,6 +1191,7 @@ production pathways:
       name: heat, from on-site industrial gas-fired CHP
       reference product: heat
       exists in original database: True
+      mask: CCS
   
   FE_industry_heat_CHP_gas_CCS:
     production volume:
@@ -1208,6 +1216,7 @@ production pathways:
       name: heat, from on-site industrial non-renewable waste-fired CHP
       reference product: heat
       exists in original database: True
+      mask: CCS
   
   FE_industry_heat_CHP_waste_non_renew_CCS:
     production volume:
@@ -1224,6 +1233,7 @@ production pathways:
       name: heat, from on-site industrial wood-fired CHP
       reference product: heat
       exists in original database: True
+      mask: CCS
   
   FE_industry_heat_CHP_wood_CCS:
     production volume:
@@ -1281,6 +1291,7 @@ production pathways:
       name: renewable waste, burned in industrial furnace
       reference product: heat
       exists in original database: True
+      mask: non-renewable
   
   FE_industry_process_solar:
     production volume:
@@ -1953,7 +1964,7 @@ markets:
     reference product: light fuel oil
     unit: kilogram
     includes:
-      - light fuel oil
+      - light_fuel_oil
 
     add:
       - name: market for transport, freight train
