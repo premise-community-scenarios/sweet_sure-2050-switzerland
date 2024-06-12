@@ -843,8 +843,8 @@ production pathways:
     production volume:
       variable: Imports|Oil|Synthetic liquids|Bioliquids|Ethanol
     ecoinvent alias:
-      name: market for ethanol, without water, in 99.7% solution state, from ethylene
-      reference product: ethanol, without water, in 99.7% solution state, from ethylene
+      name: ethanol production from wood
+      reference product: ethanol, without water, in 95% solution state, from fermentation
       exists in original database: True
   
   synthetic gasoline (import):
