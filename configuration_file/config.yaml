@@ -75,6 +75,12 @@ regionalize:
     - name: heat production, natural gas, at boiler condensing modulating >100kW
       reference product: heat, district or industrial, natural gas
       exists in original database: True
+    - name: heat, from on-site industrial fuel cell CHP
+      reference product: heat
+      exists in original database: True
+    - name: heat and power co-generation, natural gas, 1MW electrical, lean burn
+      reference product: heat, district or industrial, natural gas
+      exists in original database: True
 
 production pathways:
   hydro_run_of_river:
