@@ -132,3 +132,49 @@ List of available scenarios can be found in the `datapackage.json` file.
 
 ```
 
+To produce a data package for `pathways`, use the following script instead:
+
+```python
+
+    from premise import *
+    import bw2data
+    from datapackage import Package
+    bw2data.projects.set_current("some brightway project")
+    
+        
+    sps = Package("../datapackage.json")
+    scenarios=[
+        {"model": "remind", "pathway": "SSP2-NPi", "external scenarios": [{"scenario": "SPS4", "data": sps}]},
+        {"model": "remind", "pathway": "SSP2-PkBudg1150", "external scenarios": [{"scenario": "SPS4", "data": sps}]},
+        {"model": "remind", "pathway": "SSP2-PkBudg500", "external scenarios": [{"scenario": "SPS4", "data": sps}]},
+        {"model": "remind", "pathway": "SSP2-NPi", "external scenarios": [{"scenario": "SPS1", "data": sps}]},
+        {"model": "remind", "pathway": "SSP2-PkBudg1150", "external scenarios": [{"scenario": "SPS1", "data": sps}]},
+        {"model": "remind", "pathway": "SSP2-PkBudg500", "external scenarios": [{"scenario": "SPS1", "data": sps}]},
+    ]
+
+    for scenario in scenarios:
+        name=f"{scenario['model']}-{scenario['pathway']}-stem-{scenario['external scenarios'][0]['scenario']}"
+        print(name)
+        ndb = PathwaysDataPackage(
+            scenarios=[scenario,],
+            years=[2020, 2025, 2030, 2035, 2040, 2045, 2050],
+            source_db="ecoinvent-3.10-cutoff", # <-- name of the database in the BW2 project. Must be a string.
+            source_version="3.10",
+            key="xxx",
+            use_absolute_efficiency=True,
+            biosphere_name="ecoinvent-3.10-biosphere"
+        )
+        
+        ndb.create_datapackage(
+            name=name,
+            contributors=[
+                {"name": "some name",
+                "email": "some email adress",}
+            ],
+        )
+    
+```
+
+This will produce six different data packages, one for each combination of REMIND's SSP2-NPi and SSP2-PkBudg1150 
+and SPS1 and SPS4 scenarios. These data packages can then be read by `pathways` to compute the system-wide impacts of 
+the energy scenario produced by STEM.
