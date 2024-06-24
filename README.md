@@ -1,45 +1,42 @@
-# energy-perspective-2050-switzerland ![GitHub release (latest by date)](https://img.shields.io/github/v/release/premise-community-scenarios/energy-perspective-2050-switzerland) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6653948.svg)](https://doi.org/10.5281/zenodo.6653948)
+# sweet-sure-2050-switzerland ![GitHub release (latest by date)](https://img.shields.io/github/v/release/premise-community-scenarios/sweet-sure-2050-switzerland) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6653948.svg)](https://doi.org/10.5281/zenodo.6653948)
 
 
 Description
 -----------
 
-This is a repository containing a scenario that implements the projections of the 
-Energy Perspective 2050+ report for:
+This is a repository containing a data package that implements the projections of the 
+TIMES model for Switzerland (STEM) within the life-cycle assessment (LCA) database ecoinvent.
+Projections are implemented for the scenarios **SPS1** and **SPS4**, developed within SFOE's SWEET-SURE program.
 
-* electricity, 
-* hydrogen, 
-* gas, 
-* and liquid fuels. 
-
-It is meant to be used in `premise` in addition to a global IAM scenario, to provide 
-refined projections at the country level.
+This data package is meant to be used in `premise` in addition to a global IAM scenario, to provide 
+refined projections at the country level. `premise` can export the result as a data package for `pathways`,
+which is then used to compute the system-wide impacts of the energy scenario produced by STEM.
 
 This data package contains all the files necessary for `premise` to implement
 this scenario and create market-specific composition for electricity (including imports from
-neighboring countries), liquid and gaseous fuels (including hydrogen).
+neighboring countries), liquid and gaseous fuels (including hydrogen) and models their supply and use.
 
-Sourced from publication
-------------------------
+Publication
+-----------
 
-Energy perspectives 2050+\
-Swiss Federal Office for Energy\
-https://www.bfe.admin.ch/bfe/en/home/policy/energy-perspectives-2050-plus.html/
+This data package is used to produce results for the following publication:
 
-Data validation 
----------------
+Switzerland's net zero objective: quantifying impacts beyond borders 
+Alvaro Jose Hahn Menacho, Romain Sacchi, Christian Bauer, Evangelos Panos and Peter Burgherr
+*In review.*
 
-[![goodtables.io](https://goodtables.io/badge/github/premise-community-scenarios/energy-perspective-2050-switzerland.svg)](https://goodtables.io/github/premise-community-scenarios/energy-perspective-2050-switzerland)
-
-Test 
-----
-
-![example workflow](https://github.com/premise-community-scenarios/energy-perspective-2050-switzerland/actions/workflows/main.yml/badge.svg?branch=main)
 
 Ecoinvent database compatibility
 --------------------------------
 
-ecoinvent 3.9 cut-off
+ecoinvent 3.10 cut-off
+
+
+License
+-------
+
+This scenario is licensed under the Creative Commons Attribution 4.0 International Public License (CC BY 4.0).
+See the LICENSE file for more details.
 
 
 What does this do?
@@ -50,138 +47,87 @@ What does this do?
 This external scenario creates markets for Switzerland listed below, according
 to the projections from the Energy Perspectives 2050+ (yellow boundaries in map above).
 
-Electricity
-***********
+Markets
+*******
 
-* `market for electricity, high voltage, EP2050` (CH)
-* `market for electricity, medium voltage, EP2050` (CH)
-* `market for electricity, medium voltage, EP2050` (CH)
+* market for biogas, domestic (SPS)
+* market for biomass, for power generation (SPS)
+* market for diesel (SPS)
+* market for district heating (SPS)
+* market for electricity, high voltage (SPS)
+* market for electricity, low voltage (SPS)
+* market for electricity, medium voltage (SPS)
+* market for energy carriers for buses (SPS)
+* market for energy carriers for cars (SPS)
+* market for energy carriers for coaches (SPS)
+* market for energy carriers for heavy duty trucks (SPS)
+* market for energy carriers for light duty trucks (SPS)
+* market for energy carriers for motorcycles (SPS)
+* market for energy carriers for other transport (SPS)
+* market for hydrogen (SPS)
+* market for methane (SPS)
+* market for petrol (SPS)
+* market for process heat and space heating in industry (SPS)
+* market for process heat in industry (SPS)
+* market for space and water heating in residential (SPS)
+* market for space heating in industry (SPS)
+* market for space heating in residential (SPS)
+* market for space heating in services (SPS)
+* market for water heating in residential (SPS)
 
-These markets are relinked to activities that consume electricity in Switzerland.
+
+These markets are relinked to activities that consume final energy in Switzerland.
 
 Additionally, the Swiss markets rely to a varying extent on imports from
-neighboring countries (FR + DE + IT + AT), for which a market is also created 
-(orange boundaries in map above):
-
-* `import from neighboring countries electricity, high voltage` (CH)
-
-That market itself relies on imports from the rest of Europe, which is
-provided by the regional IAM market for European electricity (blue boundaries in map above).
-
-Liquid fuels
-************
-
-* `market for petrol, EP2050` (CH)
-* `market for diesel, EP2050` (CH)
-
-This includes the production of biofuel and synthetic fuel.
-The latter is produced in the neighboring countries, using
-the corresponding markets for hydrogen and electricity.
+neighboring countries, which is provided by the regional IAM market.
 
 
-Gaseous fuels
-*************
-
-* `market for hydrogen, gaseous, EP2050` (CH)
-* `market for compressed gas, high pressure, EP2050` (CH)
-* `market for compressed gas, low pressure, EP2050` (CH)
-
-For hydrogen, this includes the domestic and foreign production, via electrolysis.
-The latter is produced in the neighboring countries, using
-the corresponding markets for electricity.
-
-For compressed gas, this includes the provision of natural gas, biomethane
-and synthetic gas (from neighboring countries), using
-the corresponding markets for electricity.
 
 How are technologies mapped?
 ---------------------------
-The tables below show how the mapping between reported technologies
-and LCI datasets is done. Unless specified otherwise, ecoinvent
-LCI datasets are used.
 
-Electricity
-***********
+See the mapping file: configuration_file/config.yaml.
 
-| Technologies in EP2050+            | LCI datasets used                                               | Remarks                                                                                                                   |
-| ---------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Hydro, run-of-river                | electricity production, hydro, run-of-river                     |
-| Hydro, alpine reservoir            | electricity production, hydro, reservoir, alpine region         |
-| Nuclear, Boiling water reactor     | electricity production, nuclear, boiling water reactor          | The split between boiling water and pressure water is not provided. We use the current split, based on production volume. |
-| Nuclear, Pressure water reactor    | electricity production, nuclear, pressure water reactor         |
-| Conventional, Waste-to-Energy      | treatment of municipal solid waste, incineration                |
-| Conventional, Other                | electricity production, natural gas, combined cycle power plant | The report does not specify what "Other" is. Assumed to be natural gas.                                                   |
-| Conventional, Coal                 | electricity production, hard coal                               |
-| Conventional, Natural gas          | electricity production, natural gas, combined cycle power plant |
-| Renewable, Photovoltaic            | electricity production, photovoltaic                            | Datasets from 10.13140/RG.2.2.17977.19041.                                                                                |
-| Renewable, Wind turbines, Onshore  | electricity production, wind, 1-3MW turbine, onshore            |
-| Renewable, Wind turbines, Offshore | electricity production, wind, 1-3MW turbine, offshore           |
-| Renewable, Geothermal              | electricity production, deep geothermal                         | Dataset provided by premise, based on the geothermal heat dataset of ecoinvent.                                           |
-| Renewable, Biomass                 | heat and power co-generation, wood chips, 6667 kW               |
-| Renewable, Biogas                  | heat and power co-generation, biogas, gas engine                |
-
-Liquid fuels
-************
-
-
-| Technologies in EP2050+            | LCI datasets used                                               | Remarks                                                                                                             |
-|------------------------------------|-----------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|
-| Diesel                             | market for diesel, low-sulfur                                   | 
-| Biodiesel                          | Biodiesel, from rapeseed oil, at fuelling station         | Provided by premise. |
-| Synthetic diesel                   | diesel production, synthetic, from Fischer Tropsch process, hydrogen from electrolysis, energy allocation, at fuelling station, EP2050          | Provided by premise. |
-| Petrol                             | market for petrol, low-sulfur                                   |
-| Bioethanol                         | ethanol production from sugar beet                |
-| Synthetic petrol                   | gasoline production, synthetic, from methanol, hydrogen from electrolysis, CO2 from DAC, energy allocation, at fuelling station, EP2050 | Provided by premise. |                                                                                                |
-
-
-
-Gaseous fuels
-*************
-
-
-| Technologies in EP2050+ | LCI datasets used                                                                                                                      | Remarks          |
-|-------------------------|----------------------------------------------------------------------------------------------------------------------------------------|------------------|
-| Hydrogen, domestic      | hydrogen production, electrolysis, 25 bar, domestic, EP2050                                                                            | Provided by premise. |
-| Hydrogen, imported      | hydrogen production, electrolysis, 25 bar, imported, EP2050                                                                            | Provided by premise. |
-| Compressed natural gas  | natural gas, high pressure, at consumer | From 10.13140/RG.2.2.29142.78409.           |
-| Liquefied natural gas   | market for natural gas, liquefied                                                                                                          |
-| Biomethane              | market for biomethane, high pressure                                                                                                          |
-| Synthetic gas           | Methane, synthetic, gaseous, 5 bar, from electrochemical methanation, at fuelling station, EP2050 | Provided by premise. |
-
-
-
-Flow diagram
-------------
-
-![map electricity markets](assets/flow_diagram.png)
 
 How to use it?
 --------------
 
+The following script results in teh generation of four LCA databases for the years 2020, 2030, 2040 and 2050,
+with STEM's SPS1 scenario combined with REMIND's SSP2-NPi scenario.
+
+Other scenarios can be implemented by changing the `scenarios` list.
+List of available scenarios can be found in the `datapackage.json` file.
+
 ```python
 
-    import brightway2 as bw
-    from premise import NewDatabase
+    from premise import *
+    import bw2data
     from datapackage import Package
+    bw2data.projects.set_current("some brightway project")
     
     
-    fp = r"https://raw.githubusercontent.com/premise-community-scenarios/energy-perspective-2050-switzerland/main/datapackage.json"
-    ep2050 = Package(fp)
-    
-    bw.projects.set_current("your_bw_project")
+    sps = Package("../datapackage.json")
+    scenarios = [
+        {"model": "remind", "pathway": "SSP2-NPi", "year": 2020, "external scenarios": [{"scenario": "SPS1", "data": sps}]},
+        {"model": "remind", "pathway": "SSP2-NPi", "year": 2030, "external scenarios": [{"scenario": "SPS1", "data": sps}]},
+        {"model": "remind", "pathway": "SSP2-NPi", "year": 2040, "external scenarios": [{"scenario": "SPS1", "data": sps}]},
+        {"model": "remind", "pathway": "SSP2-NPi", "year": 2050, "external scenarios": [{"scenario": "SPS1", "data": sps}]},
+    ]
     
     ndb = NewDatabase(
-            scenarios = [
-                {"model":"image", "pathway":"SSP2-Base", "year":2050,},
-                {"model":"image", "pathway":"SSP2-RCP26", "year":2030,},
-            ],        
-            source_db="ecoinvent 3.8 cutoff",
-            source_version="3.8",
-            key='xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-            external_scenarios=[
-                ep2050, # <-- list datapackages here
-            ] 
-        )
-    ndb.update_external_scenario()
+            scenarios=scenarios,
+            source_db="ecoinvent-3.10-cutoff", # <-- name of the database in the BW2 project. Must be a string.
+            source_version="3.10", # <-- version of ecoinvent. Can be "3.5", "3.6", "3.7" or "3.8". Must be a string.
+            key="xxxx", # <-- ask the key to run premise from the developers
+            use_absolute_efficiency=True,
+            biosphere_name="ecoinvent-3.10-biosphere"
+            
+    )
+    
+    ndb.update()
+    
+    ndb.write_db_to_brightway()
+
+
 ```
 
