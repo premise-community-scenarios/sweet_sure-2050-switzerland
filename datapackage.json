@@ -7,28 +7,22 @@
     "contributors":[{
     "title": "Romain Sacchi",
     "email": "romain.sacchi@psi.ch"
+    },
+    {
+    "title": "Alvaro H. Menacho",
+    "email": "alvaro.hahn-menacho@psi.ch"
     }],
     "dependencies": {
-        "premise": ">=2.0.0"
+        "premise": ">=2.1.1"
     },
     "ecoinvent": {
-        "version": "3.9",
+        "version": "3.10",
         "system model": "cut-off"
     },
-    "scenarios": {
-        "SPS1": [
-            {
-                "model": "image",
-                "pathway": "SSP2-RCP26"
-            }
-        ],
-        "SPS4": [
-            {
-                "model": "image",
-                "pathway": "SSP2-RCP26"
-            }
-        ]
-    },
+    "scenarios": [
+        "SPS1",
+        "SPS4"
+    ],
     "licenses": [{
     "id": "CC0-1.0",
     "title": "CC0 1.0",
