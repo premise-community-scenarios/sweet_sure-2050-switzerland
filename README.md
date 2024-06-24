@@ -93,7 +93,7 @@ See the mapping file: configuration_file/config.yaml.
 How to use it?
 --------------
 
-The following script results in teh generation of four LCA databases for the years 2020, 2030, 2040 and 2050,
+The following script generates four LCA databases for the years 2020, 2030, 2040 and 2050,
 with STEM's SPS1 scenario combined with REMIND's SSP2-NPi scenario.
 
 Other scenarios can be implemented by changing the `scenarios` list.
