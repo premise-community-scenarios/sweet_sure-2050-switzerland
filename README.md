@@ -22,7 +22,7 @@ Publication
 This data package is used to produce results for the following publication:
 
 **Switzerland's net zero objective: quantifying impacts beyond borders.**  
-Alvaro Jose Hahn Menacho, Romain Sacchi, Christian Bauer, Evangelos Panos and Peter Burgherr
+Alvaro Jose Hahn Menacho, Romain Sacchi, Christian Bauer, Evangelos Panos and Peter Burgherr.  
 *In review.*
 
 
