@@ -10,7 +10,7 @@ Projections are implemented for the scenarios **SPS1** and **SPS4**, developed w
 
 This data package is meant to be used in `premise` in addition to a global IAM scenario, to provide 
 refined projections at the country level. `premise` can export the result as a data package for `pathways`,
-which is then used to compute the system-wide impacts of the energy scenario produced by STEM.
+which is then be used to compute the system-wide impacts of the energy scenario produced by STEM.
 
 This data package contains all the files necessary for `premise` to implement
 this scenario and create market-specific composition for electricity (including imports from
@@ -21,7 +21,7 @@ Publication
 
 This data package is used to produce results for the following publication:
 
-Switzerland's net zero objective: quantifying impacts beyond borders 
+**Switzerland's net zero objective: quantifying impacts beyond borders.**  
 Alvaro Jose Hahn Menacho, Romain Sacchi, Christian Bauer, Evangelos Panos and Peter Burgherr
 *In review.*
 
@@ -118,7 +118,7 @@ List of available scenarios can be found in the `datapackage.json` file.
     ndb = NewDatabase(
             scenarios=scenarios,
             source_db="ecoinvent-3.10-cutoff", # <-- name of the database in the BW2 project. Must be a string.
-            source_version="3.10", # <-- version of ecoinvent. Can be "3.5", "3.6", "3.7" or "3.8". Must be a string.
+            source_version="3.10", # <-- version of ecoinvent. Must be a string.
             key="xxxx", # <-- ask the key to run premise from the developers
             use_absolute_efficiency=True,
             biosphere_name="ecoinvent-3.10-biosphere"
@@ -158,9 +158,9 @@ To produce a data package for `pathways`, use the following script instead:
         ndb = PathwaysDataPackage(
             scenarios=[scenario,],
             years=[2020, 2025, 2030, 2035, 2040, 2045, 2050],
-            source_db="ecoinvent-3.10-cutoff", # <-- name of the database in the BW2 project. Must be a string.
+            source_db="ecoinvent-3.10-cutoff",
             source_version="3.10",
-            key="xxx",
+            key="xxxx",
             use_absolute_efficiency=True,
             biosphere_name="ecoinvent-3.10-biosphere"
         )
