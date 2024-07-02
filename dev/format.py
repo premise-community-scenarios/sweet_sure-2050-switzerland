@@ -95,5 +95,28 @@ for var in vars:
         ],
     )
 
+# add efficiency variable about cell energy density
+# from 0.25 kWh/kg in 2020 to 0.5 kWh/kg in 2050
+df = pd.concat(
+        [
+            df,
+            pd.DataFrame(pd.Series({
+                "model": "STEM",
+                "scenario": "SPS1",
+                "region": "CH",
+                "variables": "Battery cell density",
+                "unit": "UNITLESS",
+                2020: 1,
+                2022: 1.07,
+                2025: 1.17,
+                2030: 1.33,
+                2040: 1.67,
+                2050: 2,
+            })).T
+        ],
+    )
+
+
+
 # save to csv
 df.to_csv("../scenario_data/scenario_data_.csv", index=False, sep=",")

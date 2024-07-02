@@ -4085,3 +4085,5 @@ STEM,SPS4,CH,Electricity generation|Nuclear fuel|Pressure water,PJ/yr.,49.656000
 STEM,SPS4,CH,Electricity generation|Nuclear fuel|Boiling water,PJ/yr.,33.10400012967648,33.103994526408925,21.89441548938781,23.460812487768553,13.12825563446455,0.0
 STEM,SPS4,CH,Production|Electricity|Medium to high,TWh,1,1,1,1,1,1
 STEM,SPS4,CH,Production|Electricity|Low to medium,TWh,1,1,1,1,1,1
+STEM,SPS1,CH,Battery cell density,unitless,1.0,1.07,1.17,1.33,1.67,2.0
+STEM,SPS4,CH,Battery cell density,unitless,1,1.07,1.17,1.33,1.67,2.0

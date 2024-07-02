@@ -1644,6 +1644,12 @@ production pathways:
       name: electricity, used in passenger car vehicle
       reference product: electricity, low voltage
       exists in original database: True
+    efficiency:
+      - variable: Battery cell density
+        reference year: 2020
+        includes:
+          technosphere:
+            - Li-ion
 
   FE_cars_hydrogen:
     production volume:
@@ -1684,6 +1690,12 @@ production pathways:
       name: electricity, used in single deck coach or urban bus
       reference product: electricity, low voltage
       exists in original database: True
+    efficiency:
+      - variable: Battery cell density
+        reference year: 2020
+        includes:
+          technosphere:
+            - Li-ion
 
   FE_bus_hydrogen:
     production volume:
@@ -1716,6 +1728,12 @@ production pathways:
       name: electricity, used in single deck coach or urban bus
       reference product: electricity, low voltage
       exists in original database: True
+    efficiency:
+      - variable: Battery cell density
+        reference year: 2020
+        includes:
+          technosphere:
+            - Li-ion
 
   FE_coach_hydrogen:
     production volume:
@@ -1748,6 +1766,12 @@ production pathways:
       name: electricity, used in single deck trolleybus
       reference product: electricity, low voltage
       exists in original database: True
+    efficiency:
+      - variable: Battery cell density
+        reference year: 2020
+        includes:
+          technosphere:
+            - Li-ion
 
   FE_tram:
     production volume:
@@ -1756,6 +1780,12 @@ production pathways:
       name: electricity, used in tram
       reference product: electricity, low voltage
       exists in original database: True
+    efficiency:
+      - variable: Battery cell density
+        reference year: 2020
+        includes:
+          technosphere:
+            - Li-ion
 
   FE_motorcycle_gasoline:
     production volume:
@@ -1772,6 +1802,12 @@ production pathways:
       name: electricity, used in battery electric motorcycle
       reference product: electricity, low voltage
       exists in original database: True
+    efficiency:
+      - variable: Battery cell density
+        reference year: 2020
+        includes:
+          technosphere:
+            - Li-ion
 
   FE_motorcycle_hydrogen:
     production volume:
@@ -1804,6 +1840,12 @@ production pathways:
       name: electricity, used in passenger car vehicle
       reference product: electricity, low voltage
       exists in original database: True
+    efficiency:
+      - variable: Battery cell density
+        reference year: 2020
+        includes:
+          technosphere:
+            - Li-ion
 
   FE_light_duty_truck_hydrogen:
     production volume:
@@ -1844,6 +1886,12 @@ production pathways:
       name: electricity, used in heavy duty vehicle
       reference product: electricity, low voltage
       exists in original database: True
+    efficiency:
+      - variable: Battery cell density
+        reference year: 2020
+        includes:
+          technosphere:
+            - Li-ion
 
   FE_heavy_duty_truck_hydrogen:
     production volume:
@@ -1885,6 +1933,12 @@ production pathways:
       name: electricity, used in passenger car vehicle
       reference product: electricity, low voltage
       exists in original database: True
+    efficiency:
+      - variable: Battery cell density
+        reference year: 2020
+        includes:
+          technosphere:
+            - Li-ion
 
   FE_other_transport_hydrogen:
     production volume:
