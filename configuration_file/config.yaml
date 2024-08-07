@@ -397,7 +397,7 @@ production pathways:
     production volume:
       variable: Electricity generation|Solar|Solar PV (large scale)
     ecoinvent alias:
-      name: electricity production, photovoltaic, commercial
+      name: electricity production, from photovoltaic panels
       reference product: electricity, low voltage
       exists in original database: True
       mask: renewable energy products
@@ -406,7 +406,7 @@ production pathways:
     production volume:
       variable: Electricity generation|Solar|Solar PV (Industry)
     ecoinvent alias:
-      name: electricity production, photovoltaic, commercial
+      name: electricity production, from photovoltaic panels
       reference product: electricity, low voltage
       exists in original database: True
       mask: renewable energy products
@@ -415,7 +415,7 @@ production pathways:
     production volume:
       variable: Electricity generation|Solar|Solar PV (Services)
     ecoinvent alias:
-      name: electricity production, photovoltaic, commercial
+      name: electricity production, from photovoltaic panels
       reference product: electricity, low voltage
       exists in original database: True
       mask: renewable energy products
@@ -424,7 +424,7 @@ production pathways:
     production volume:
       variable: Electricity generation|Solar|Solar PV (Residential multi family)
     ecoinvent alias:
-      name: electricity production, photovoltaic, residential
+      name: electricity production, from photovoltaic panels
       reference product: electricity, low voltage
       exists in original database: True
       mask: renewable energy products
@@ -433,7 +433,7 @@ production pathways:
     production volume:
       variable: Electricity generation|Solar|Solar PV (Residential single family)
     ecoinvent alias:
-      name: electricity production, photovoltaic, residential
+      name: electricity production, from photovoltaic panels
       reference product: electricity, low voltage
       exists in original database: True
       mask: renewable energy products
@@ -442,9 +442,9 @@ production pathways:
     production volume:
       variable: Electricity generation|Wind|Wind turbines
     ecoinvent alias:
-      name: electricity production, wind, 1-3MW turbine, onshore
+      name: electricity production, wind
       reference product: electricity, high voltage
-      exists in original database: True
+      exists in original database: False
       mask: renewable energy products
 
   geothermal:
@@ -461,31 +461,25 @@ production pathways:
     production volume:
       variable: Electricity generation|Hydrogen|CHP Fuel Cell Hydrogen (for District Heating)
     ecoinvent alias:
-      name: electricity, residential, by conversion of hydrogen using fuel cell, PEM, allocated by exergy, distributed by pipeline, produced by Electrolysis, PEM using electricity from grid
-      reference product: electricity, from residential heating system
+      name: electricity production, from hydrogen fuel cell
+      reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Efficiency of power plants (electric)|Hydrogen|CHP Fuel Cell Hydrogen (for District Heating)
 
   hydrogen fuel cell (industrial CHP):
     production volume:
       variable: Electricity generation|Hydrogen|Industrial CHPs fuel cells (hydrogen)
     ecoinvent alias:
-      name: electricity, residential, by conversion of hydrogen using fuel cell, PEM, allocated by exergy, distributed by pipeline, produced by Electrolysis, PEM using electricity from grid
-      reference product: electricity, from residential heating system
+      name: electricity production, from hydrogen fuel cell
+      reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Efficiency of power plants (electric)|Hydrogen|Industrial CHPs fuel cells (hydrogen)
 
   hydrogen fuel cell (services CHP):
     production volume:
       variable: Electricity generation|Hydrogen|Services sectors CHPs fuel cells (hydrogen)
     ecoinvent alias:
-      name: electricity, residential, by conversion of hydrogen using fuel cell, PEM, allocated by exergy, distributed by pipeline, produced by Electrolysis, PEM using electricity from grid
-      reference product: electricity, from residential heating system
+      name: electricity production, from hydrogen fuel cell
+      reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Efficiency of power plants (electric)|Hydrogen|Services sectors CHPs fuel cells (hydrogen)
 
   biomass (DH):
     production volume:
@@ -538,8 +532,8 @@ production pathways:
     production volume:
       variable: Electricity generation|Electricity storage (non hydro)|Battery storage large size centralised
     ecoinvent alias:
-      name: electricity supply, high voltage, from vanadium-redox flow battery system
-      reference product: electricity, high voltage
+      name: electricity supply, from stationary battery (CONT scenario)
+      reference product: electricity, low voltage
       exists in original database: True
       regionalize: True
     efficiency:
@@ -549,8 +543,8 @@ production pathways:
     production volume:
       variable: Electricity generation|Electricity storage (non hydro)|Battery storage medium size centralised
     ecoinvent alias:
-      name: electricity supply, high voltage, from vanadium-redox flow battery system
-      reference product: electricity, high voltage
+      name: electricity supply, from stationary battery (CONT scenario)
+      reference product: electricity, low voltage
       exists in original database: True
       regionalize: True
     efficiency:
@@ -560,8 +554,8 @@ production pathways:
     production volume:
       variable: Electricity generation|Electricity storage (non hydro)|Batteries in industry
     ecoinvent alias:
-      name: electricity supply, high voltage, from vanadium-redox flow battery system
-      reference product: electricity, high voltage
+      name: electricity supply, from stationary battery (CONT scenario)
+      reference product: electricity, low voltage
       exists in original database: True
       regionalize: True
     efficiency:
@@ -571,8 +565,8 @@ production pathways:
     production volume:
       variable: Electricity generation|Electricity storage (non hydro)|Batteries in Services sector
     ecoinvent alias:
-      name: electricity supply, high voltage, from vanadium-redox flow battery system
-      reference product: electricity, high voltage
+      name: electricity supply, from stationary battery (CONT scenario)
+      reference product: electricity, low voltage
       exists in original database: True
       regionalize: True
     efficiency:
@@ -582,8 +576,8 @@ production pathways:
     production volume:
       variable: Electricity generation|Electricity storage (non hydro)|Batteries in residential single family houses
     ecoinvent alias:
-      name: electricity supply, from stationary 19.5 kWh NMC battery
-      reference product: electricity, high voltage
+      name: electricity supply, from stationary battery (CONT scenario)
+      reference product: electricity, low voltage
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in residential single family houses
@@ -592,8 +586,8 @@ production pathways:
     production volume:
       variable: Electricity generation|Electricity storage (non hydro)|Batteries in residential multi-family houses
     ecoinvent alias:
-      name: electricity supply, from stationary 19.5 kWh NMC battery
-      reference product: electricity, high voltage
+      name: electricity supply, from stationary battery (CONT scenario)
+      reference product: electricity, low voltage
       exists in original database: True
     efficiency:
       - variable: Efficiency of power plants (electric)|Electricity storage (non hydro)|Batteries in residential multi-family houses
@@ -875,7 +869,6 @@ production pathways:
     ecoinvent alias:
       name: ethanol production, via fermentation, from sugarbeet, with carbon capture and storage, energy allocation
       reference product: ethanol, from sugarbeet
-
       exists in original database: True
       regionalize: True
 
@@ -1644,12 +1637,6 @@ production pathways:
       name: electricity, used in passenger car vehicle
       reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Battery cell density
-        reference year: 2020
-        includes:
-          technosphere:
-            - Li-ion
 
   FE_cars_hydrogen:
     production volume:
@@ -1690,12 +1677,6 @@ production pathways:
       name: electricity, used in single deck coach or urban bus
       reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Battery cell density
-        reference year: 2020
-        includes:
-          technosphere:
-            - Li-ion
 
   FE_bus_hydrogen:
     production volume:
@@ -1728,12 +1709,6 @@ production pathways:
       name: electricity, used in single deck coach or urban bus
       reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Battery cell density
-        reference year: 2020
-        includes:
-          technosphere:
-            - Li-ion
 
   FE_coach_hydrogen:
     production volume:
@@ -1766,12 +1741,6 @@ production pathways:
       name: electricity, used in single deck trolleybus
       reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Battery cell density
-        reference year: 2020
-        includes:
-          technosphere:
-            - Li-ion
 
   FE_tram:
     production volume:
@@ -1780,12 +1749,6 @@ production pathways:
       name: electricity, used in tram
       reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Battery cell density
-        reference year: 2020
-        includes:
-          technosphere:
-            - Li-ion
 
   FE_motorcycle_gasoline:
     production volume:
@@ -1802,12 +1765,6 @@ production pathways:
       name: electricity, used in battery electric motorcycle
       reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Battery cell density
-        reference year: 2020
-        includes:
-          technosphere:
-            - Li-ion
 
   FE_motorcycle_hydrogen:
     production volume:
@@ -1840,12 +1797,6 @@ production pathways:
       name: electricity, used in passenger car vehicle
       reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Battery cell density
-        reference year: 2020
-        includes:
-          technosphere:
-            - Li-ion
 
   FE_light_duty_truck_hydrogen:
     production volume:
@@ -1886,12 +1837,6 @@ production pathways:
       name: electricity, used in heavy duty vehicle
       reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Battery cell density
-        reference year: 2020
-        includes:
-          technosphere:
-            - Li-ion
 
   FE_heavy_duty_truck_hydrogen:
     production volume:
@@ -1933,12 +1878,6 @@ production pathways:
       name: electricity, used in passenger car vehicle
       reference product: electricity, low voltage
       exists in original database: True
-    efficiency:
-      - variable: Battery cell density
-        reference year: 2020
-        includes:
-          technosphere:
-            - Li-ion
 
   FE_other_transport_hydrogen:
     production volume:
@@ -2816,6 +2755,102 @@ markets:
     reference product: heat
     unit: megajoule
     includes:
+      - FE_other_transport_electric
+      - FE_other_transport_hydrogen
+      - FE_other_transport_gasoline
+      - FE_other_transport_diesel
+
+  - name: market for final energy use (SPS)
+    reference product: energy
+    unit: megajoule
+    includes:
+      # should include all variables starting with FE_
+      - FE_industry_process_electric_boiler
+      - FE_industry_process_heat_pump
+      - FE_industry_process_FE_other_electric
+      - FE_industry_process_light_fuel_oil
+      - FE_industry_process_heavy_fuel_oil
+      - FE_industry_process_natural_gas
+      - FE_industry_process_coal
+      - FE_industry_process_wood
+      - FE_industry_process_pellet
+      - FE_industry_process_waste_non_renew
+      - FE_industry_process_waste_renew
+      - FE_industry_process_solar
+      - FE_industry_process_hydrogen
+      - FE_industry_heat_CHP_oil
+      - FE_industry_heat_CHP_gas
+      - FE_industry_heat_CHP_gas_CCS
+      - FE_industry_heat_CHP_fuel_cell
+      - FE_industry_heat_CHP_waste_non_renew
+      - FE_industry_heat_CHP_waste_non_renew_CCS
+      - FE_industry_heat_CHP_wood
+      - FE_industry_heat_CHP_wood_CCS
+      - FE_industry_heat_CHP_hydrogen
+      - FE_industry_heat_DH
+      - FE_services_electric_boiler
+      - FE_services_heat_pump
+      - FE_services_FE_other_electric
+      - FE_services_light_fuel_oil
+      - FE_services_natural_gas
+      - FE_services_CHP_gas
+      - FE_services_CHP_biogas
+      - FE_services_CHP_fuel_cell
+      - FE_services_CHP_wood
+      - FE_services_CHP_hydrogen
+      - FE_services_DH
+      - FE_services_wood
+      - FE_services_pellet
+      - FE_services_solar
+      - FE_services_hydrogen
+      - FE_residential_space_heating_electric_boiler
+      - FE_residential_space_heating_heat_pump
+      - FE_residential_FE_other_electric
+      - FE_residential_space_heating_light_fuel_oil
+      - FE_residential_space_heating_gas
+      - FE_residential_space_heating_coal
+      - FE_residential_space_heating_wood
+      - FE_residential_space_heating_pellet
+      - FE_residential_space_heating_solar
+      - FE_residential_space_heating_hydrogen
+      - FE_residential_space_heating_CHP_gas
+      - FE_residential_space_heating_CHP_fuel_cell
+      - FE_residential_space_heating_CHP_wood
+      - FE_residential_space_heating_DH
+      - FE_residential_water_heating_light_fuel_oil
+      - FE_residential_water_heating_gas
+      - FE_residential_water_heating_coal
+      - FE_residential_water_heating_wood
+      - FE_residential_water_heating_pellet
+      - FE_residential_water_heating_solar
+      - FE_residential_water_heating_hydrogen
+      - FE_cars_electricity
+      - FE_cars_hydrogen
+      - FE_cars_gasoline
+      - FE_cars_diesel
+      - FE_cars_gas
+      - FE_bus_electricity
+      - FE_bus_hydrogen
+      - FE_bus_diesel
+      - FE_bus_gas
+      - FE_coach_electricity
+      - FE_coach_hydrogen
+      - FE_coach_gas
+      - FE_coach_diesel
+      - FE_coach_gas
+      - FE_motorcycle_electric
+      - FE_motorcycle_hydrogen
+      - FE_motorcycle_gasoline
+      - FE_light_duty_truck_electricity
+      - FE_light_duty_truck_hydrogen
+      - FE_light_duty_truck_gas
+      - FE_light_duty_truck_gasoline
+      - FE_light_duty_truck_diesel
+      - FE_heavy_duty_truck_electricity
+      - FE_heavy_duty_truck_hydrogen
+      - FE_heavy_duty_truck_gas
+      - FE_heavy_duty_truck_gasoline
+      - FE_heavy_duty_truck_diesel
       - FE_other_transport_electric
       - FE_other_transport_hydrogen
       - FE_other_transport_gasoline
