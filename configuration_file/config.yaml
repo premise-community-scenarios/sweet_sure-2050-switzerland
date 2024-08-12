@@ -2178,8 +2178,8 @@ markets:
       - bioethanol, w CCS (domestic)
 
     replaces:
-        - name: market for petrol
-          product: petrol
+        - name: market for petrol, low-sulfur
+          product: petrol, low-sulfur
           operator: contains
 
     replaces in:
