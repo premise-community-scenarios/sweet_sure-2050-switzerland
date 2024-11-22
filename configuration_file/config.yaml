@@ -12,6 +12,9 @@ regionalize:
     - name: carbon dioxide, captured at hydrogen production plant, pre, pipeline 200km, storage 1000m
       reference product: carbon dioxide, captured at hydrogen production plant, pre, pipeline 200km, storage 1000m
       exists in original database: True
+    - name: carbon dioxide, captured from atmosphere, with a solvent-based direct air capture system, 1MtCO2, with heat pump heat, and grid electricity
+      reference product: carbon dioxide, captured from atmosphere
+      exists in original database: True
     - name: biomethane production, from biogas upgrading, using amine scrubbing
       reference product: biomethane, from biogas upgrading, using amine scrubbing
       exists in original database: True
@@ -846,6 +849,7 @@ production pathways:
       name: ethanol production from wood
       reference product: ethanol, without water, in 95% solution state, from fermentation
       exists in original database: True
+      ratio: 1.6
   
   synthetic gasoline (import):
     production volume:
@@ -862,6 +866,7 @@ production pathways:
       name: ethanol production from wood
       reference product: ethanol, without water, in 95% solution state, from fermentation
       exists in original database: True
+      ratio: 1.6
 
   bioethanol, w CCS (domestic):
     production volume:
@@ -871,6 +876,7 @@ production pathways:
       reference product: ethanol, from sugarbeet
       exists in original database: True
       regionalize: True
+      ratio: 1.6
 
   kerosene (import):
     production volume:
@@ -1161,10 +1167,18 @@ production pathways:
   
   FE_industry_process_natural_gas:
     production volume:
-      variable: Fuel consumption in industry sectors|Gas|Total
+      variable: Fuel consumption in industry sectors|Gas|Total|Gas boiler
     ecoinvent alias:
       name: natural gas, burned in industrial furnace >100kW
       reference product: heat
+      exists in original database: True
+
+  FE_industry_process_biomethane:
+    production volume:
+      variable: Fuel consumption in industry sectors|Gas|Total|Biogas boiler
+    ecoinvent alias:
+      name: heat production, biomethane, at boiler condensing modulating <100kW
+      reference product: heat, central or small-scale, biomethane
       exists in original database: True
   
   FE_industry_process_coal:
@@ -1342,10 +1356,18 @@ production pathways:
 
   FE_services_natural_gas:
     production volume:
-      variable: Fuel consumption in Services sectors|Gas|Total
+      variable: Fuel consumption in Services sectors|Gas|Total|Gas boiler
     ecoinvent alias:
       name: natural gas, burned in industrial furnace >100kW
       reference product: heat
+      exists in original database: True
+
+  FE_services_biomethane:
+    production volume:
+      variable: Fuel consumption in Services sectors|Gas|Total|Biogas boiler
+    ecoinvent alias:
+      name: heat production, biomethane, at boiler condensing modulating <100kW
+      reference product: heat, central or small-scale, biomethane
       exists in original database: True
 
   FE_services_CHP_gas:
@@ -2228,19 +2250,19 @@ markets:
     is fuel:
       bioethanol (import):
           Carbon dioxide, fossil: 0.0
-          Carbon dioxide, non-fossil: 2.6
+          Carbon dioxide, non-fossil: 3.15
       synthetic gasoline (import):
           Carbon dioxide, fossil: 0.0
-          Carbon dioxide, non-fossil: 2.6
+          Carbon dioxide, non-fossil: 3.15
       fossil gasoline (import):
-          Carbon dioxide, fossil: 2.6
+          Carbon dioxide, fossil: 3.15
           Carbon dioxide, non-fossil: 0.0
       bioethanol (domestic):
           Carbon dioxide, fossil: 0.0
-          Carbon dioxide, non-fossil: 2.6
+          Carbon dioxide, non-fossil: 3.15
       bioethanol, w CCS (domestic):
           Carbon dioxide, fossil: 0.0
-          Carbon dioxide, non-fossil: 2.6
+          Carbon dioxide, non-fossil: 3.15
 
   - name: market for kerosene (SPS)
     reference product: kerosene
@@ -2565,6 +2587,7 @@ markets:
       - FE_industry_process_light_fuel_oil
       - FE_industry_process_heavy_fuel_oil
       - FE_industry_process_natural_gas
+      - FE_industry_process_biomethane
       - FE_industry_process_coal
       - FE_industry_process_wood
       - FE_industry_process_pellet
@@ -2598,6 +2621,7 @@ markets:
       - FE_industry_process_light_fuel_oil
       - FE_industry_process_heavy_fuel_oil
       - FE_industry_process_natural_gas
+      - FE_industry_process_biomethane
       - FE_industry_process_coal
       - FE_industry_heat_CHP_oil
       - FE_industry_heat_CHP_gas
@@ -2625,6 +2649,7 @@ markets:
       - FE_services_FE_other_electric
       - FE_services_light_fuel_oil
       - FE_services_natural_gas
+      - FE_services_biomethane
       - FE_services_CHP_gas
       - FE_services_CHP_biogas
       - FE_services_CHP_fuel_cell
@@ -2760,6 +2785,43 @@ markets:
       - FE_other_transport_gasoline
       - FE_other_transport_diesel
 
+  - name: market for energy carriers for transport (SPS)
+    reference product: heat
+    unit: megajoule
+    includes:
+      - FE_cars_electricity
+      - FE_cars_hydrogen
+      - FE_cars_gasoline
+      - FE_cars_diesel
+      - FE_cars_gas
+      - FE_bus_electricity
+      - FE_bus_hydrogen
+      - FE_bus_diesel
+      - FE_bus_gas
+      - FE_coach_electricity
+      - FE_coach_hydrogen
+      - FE_coach_gas
+      - FE_coach_diesel
+      - FE_coach_gas
+      - FE_motorcycle_electric
+      - FE_motorcycle_hydrogen
+      - FE_motorcycle_gasoline
+      - FE_light_duty_truck_electricity
+      - FE_light_duty_truck_hydrogen
+      - FE_light_duty_truck_gas
+      - FE_light_duty_truck_gasoline
+      - FE_light_duty_truck_diesel
+      - FE_heavy_duty_truck_electricity
+      - FE_heavy_duty_truck_hydrogen
+      - FE_heavy_duty_truck_gas
+      - FE_heavy_duty_truck_gasoline
+      - FE_heavy_duty_truck_diesel
+      - FE_other_transport_electric
+      - FE_other_transport_hydrogen
+      - FE_other_transport_gasoline
+      - FE_other_transport_diesel
+      
+
   - name: market for final energy use (SPS)
     reference product: energy
     unit: megajoule
@@ -2771,6 +2833,7 @@ markets:
       - FE_industry_process_light_fuel_oil
       - FE_industry_process_heavy_fuel_oil
       - FE_industry_process_natural_gas
+      - FE_industry_process_biomethane
       - FE_industry_process_coal
       - FE_industry_process_wood
       - FE_industry_process_pellet
@@ -2793,6 +2856,7 @@ markets:
       - FE_services_FE_other_electric
       - FE_services_light_fuel_oil
       - FE_services_natural_gas
+      - FE_services_biomethane
       - FE_services_CHP_gas
       - FE_services_CHP_biogas
       - FE_services_CHP_fuel_cell

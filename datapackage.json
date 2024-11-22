@@ -21,6 +21,8 @@
     },
     "scenarios": [
         "SPS1",
+        "SPS2",
+        "SPS3",
         "SPS4"
     ],
     "licenses": [{
