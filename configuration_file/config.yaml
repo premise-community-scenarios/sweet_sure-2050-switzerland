@@ -921,6 +921,7 @@ production pathways:
       name: hydrogen production, gaseous, 30 bar, from PEM electrolysis, from grid electricity
       reference product: hydrogen, gaseous, 30 bar
       exists in original database: True
+      regionalize: True
 
   hydrogen, PEM, large (domestic):
     production volume:
@@ -929,6 +930,7 @@ production pathways:
       name: hydrogen production, gaseous, 30 bar, from PEM electrolysis, from grid electricity
       reference product: hydrogen, gaseous, 30 bar
       exists in original database: True
+      regionalize: True
 
   hydrogen, SOEC, large (domestic):
     production volume:

@@ -11,7 +11,7 @@ for scenario in [
     "SPS4",
 ]:
 
-    df = pd.read_excel(f"STEM_to_Premise_{scenario}.xlsx", sheet_name="SPS1")
+    df = pd.read_excel(f"STEM_to_Premise_{scenario}.xlsx", sheet_name=scenario)
     df.columns = ["model", "scenario", "region", "variables", "unit", 2020, 2022, 2025, 2030, 2040, 2050]
 
     df["model"] = "STEM"
