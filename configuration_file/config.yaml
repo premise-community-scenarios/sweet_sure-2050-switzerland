@@ -1340,7 +1340,7 @@ production pathways:
       reference product: electricity, low voltage
       exists in original database: True
 
-  FE_services_FE_other_electric:
+  FE_services_other_electric:
     production volume:
       variable: Fuel consumption in Services sectors|Electricity|Other electric appliances
     ecoinvent alias:
@@ -2648,7 +2648,7 @@ markets:
     includes:
       - FE_services_electric_boiler
       - FE_services_heat_pump
-      - FE_services_FE_other_electric
+      - FE_services_other_electric
       - FE_services_light_fuel_oil
       - FE_services_natural_gas
       - FE_services_biomethane
@@ -2855,7 +2855,7 @@ markets:
       - FE_industry_heat_DH
       - FE_services_electric_boiler
       - FE_services_heat_pump
-      - FE_services_FE_other_electric
+      - FE_services_other_electric
       - FE_services_light_fuel_oil
       - FE_services_natural_gas
       - FE_services_biomethane
