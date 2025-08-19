@@ -21,15 +21,20 @@ Publication
 
 This data package is used to produce results for the following publication:
 
-**Switzerland's net zero objective: quantifying impacts beyond borders.**  
-Alvaro Jose Hahn Menacho, Romain Sacchi, Christian Bauer, Evangelos Panos and Peter Burgherr.  
-*In review.*
+**The global environmental footprint of Switzerland’s net-zero energy system uncovers impacts abroad**  
+Alvaro Jose Hahn Menacho, Romain Sacchi, Christian Bauer, Christian Moretti, Evangelos Panos, Russell McKenna and Peter Burgherr.  
+*Communications Earth & Environment 6 (1), 266. doi: https://doi.org/10.1038/s43247-025-02220-5*
+
+**The material-energy nexus in net-zero transition scenarios: exploring environmental trade-offs and uncertainties**  
+Alvaro Jose Hahn Menacho, Romain Sacchi, Christian Bauer, Evangelos Panos, Russell McKenna and Peter Burgherr.  
+*Resources, Conservation and Recycling 218, 108251. doi: https://doi.org/10.1016/j.resconrec.2025.108251*
 
 
 Ecoinvent database compatibility
 --------------------------------
 
-ecoinvent 3.10 cut-off
+- ecoinvent 3.11 cut-off
+- ecoinvent 3.10 cut-off
 
 
 License
