@@ -736,9 +736,10 @@ production pathways:
     production volume:
       variable: Imports|Oil|Fossil liquids|Light fuel oil
     ecoinvent alias:
-      name: light fuel oil, import from Europe
+      name: light fuel oil, import from Europe without Switzerland
       reference product: light fuel oil
       exists in original database: True
+
 
   heavy fuel oil:
     production volume:
@@ -838,7 +839,7 @@ production pathways:
     production volume:
       variable: Imports|Oil|Fossil liquids|Motor Gasoline
     ecoinvent alias:
-      name: petrol, low-sulfur, import from Europe
+      name: petrol, low-sulfur, import from Europe without Switzerland
       reference product: petrol, low-sulfur
       exists in original database: True
 
@@ -1990,8 +1991,8 @@ markets:
       - light_fuel_oil
 
     add:
-      - name: market for transport, freight train
-        reference product: transport, freight train
+      - name: market for transport, freight, train, fleet average
+        reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
         reference product: transport, freight, lorry, unspecified
@@ -2060,8 +2061,8 @@ markets:
       - name: market for tap water
         reference product: tap water
         amount: 0.000689
-      - name: market for transport, freight train
-        reference product: transport, freight train
+      - name: market for transport, freight, train, fleet average
+        reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
         reference product: transport, freight, lorry, unspecified
@@ -2147,8 +2148,8 @@ markets:
       - name: market for tap water
         reference product: tap water
         amount: 0.000689
-      - name: market for transport, freight train
-        reference product: transport, freight train
+      - name: market for transport, freight, train, fleet average
+        reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
         reference product: transport, freight, lorry, unspecified
@@ -2228,8 +2229,8 @@ markets:
       - name: market for tap water
         reference product: tap water
         amount: 0.000689
-      - name: market for transport, freight train
-        reference product: transport, freight train
+      - name: market for transport, freight, train, fleet average
+        reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
         reference product: transport, freight, lorry, unspecified
@@ -2299,8 +2300,8 @@ markets:
       - name: market for tap water
         reference product: tap water
         amount: 0.000689
-      - name: market for transport, freight train
-        reference product: transport, freight train
+      - name: market for transport, freight, train, fleet average
+        reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
         reference product: transport, freight, lorry, unspecified
