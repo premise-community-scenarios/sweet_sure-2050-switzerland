@@ -12,8 +12,8 @@ regionalize:
     - name: carbon dioxide, captured at hydrogen production plant, pre, pipeline 200km, storage 1000m
       reference product: carbon dioxide, captured at hydrogen production plant, pre, pipeline 200km, storage 1000m
       exists in original database: True
-    - name: carbon dioxide, captured from atmosphere, with a solvent-based direct air capture system, 1MtCO2, with heat pump heat, and grid electricity
-      reference product: carbon dioxide, captured from atmosphere
+    - name: carbon dioxide, captured and stored, with a sorbent-based direct air capture system, 100ktCO2, with heat pump heat, and grid electricity
+      reference product: carbon dioxide, captured
       exists in original database: True
     - name: biomethane production, from biogas upgrading, using amine scrubbing
       reference product: biomethane, from biogas upgrading, using amine scrubbing
@@ -45,8 +45,8 @@ regionalize:
     - name: carbon monoxide, from RWGS, for Fischer Tropsch process, hydrogen from electrolysis
       reference product: carbon monoxide, from RWGS
       exists in original database: True
-    - name: carbon dioxide, captured from atmosphere, with a sorbent-based direct air capture system, 100ktCO2
-      reference product: carbon dioxide, captured from atmosphere
+    - name: carbon dioxide, captured and stored, with a sorbent-based direct air capture system, 100ktCO2
+      reference product: carbon dioxide, captured
       exists in original database: True
     - name: syngas, RWGS, Production, for Fischer Tropsch process, hydrogen from wood gasification, with CCS
       reference product: syngas, RWGS, Production
