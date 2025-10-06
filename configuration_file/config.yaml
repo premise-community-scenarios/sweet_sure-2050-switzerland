@@ -2922,3 +2922,20 @@ markets:
       - FE_other_transport_hydrogen
       - FE_other_transport_gasoline
       - FE_other_transport_diesel
+capacity_addition:
+  settings:
+    regions: ["CH"]
+    apply_to_all_regions: false
+  New Cap - Electricity - Solar PV:
+    ecoinvent_aliases:
+      fltr:
+        name:
+          - photovoltaic
+          - installation
+        reference product:
+          - photovoltaic
+          - installation
+        unit: unit
+        mask: market
+    iam_aliases:
+      variable: Electricity generation capacity addition|Solar
