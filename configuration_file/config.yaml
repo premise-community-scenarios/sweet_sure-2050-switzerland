@@ -806,8 +806,7 @@ production pathways:
     ecoinvent alias:
       name: biodiesel production, via transesterification, from used cooking oil, energy allocation
       reference product: biodiesel, from cooking oil
-      exists in original database: False
-      new dataset: True
+      exists in original database: True
 
   synthetic diesel (domestic):
     production volume:
@@ -911,9 +910,8 @@ production pathways:
     ecoinvent alias:
       name: market for hydrogen, gaseous, low pressure
       reference product: hydrogen, gaseous, low pressure
-      exists in original database: False
+      exists in original database: True
       mask: period
-      new dataset: True
 
   hydrogen, PEM, small (domestic):
     production volume:
@@ -2922,20 +2920,3 @@ markets:
       - FE_other_transport_hydrogen
       - FE_other_transport_gasoline
       - FE_other_transport_diesel
-capacity_addition:
-  settings:
-    regions: ["CH"]
-    apply_to_all_regions: false
-  New Cap - Electricity - Solar PV:
-    ecoinvent_aliases:
-      fltr:
-        name:
-          - photovoltaic
-          - installation
-        reference product:
-          - photovoltaic
-          - installation
-        unit: unit
-        mask: market
-    iam_aliases:
-      variable: Electricity generation capacity addition|Solar
