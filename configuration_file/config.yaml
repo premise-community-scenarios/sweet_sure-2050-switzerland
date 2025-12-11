@@ -1993,7 +1993,7 @@ markets:
         reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
-        reference product: transport, freight, lorry, unspecified
+        reference product: transport, freight, lorry, diesel, unspecified
         amount: 0.0326
       - name: market for electricity, low voltage
         reference product: electricity, low voltage
@@ -2063,7 +2063,7 @@ markets:
         reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
-        reference product: transport, freight, lorry, unspecified
+        reference product: transport, freight, lorry, diesel, unspecified
         amount: 0.0326
       - name: treatment of wastewater, average, wastewater treatment
         reference product: wastewater, average
@@ -2150,7 +2150,7 @@ markets:
         reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
-        reference product: transport, freight, lorry, unspecified
+        reference product: transport, freight, lorry, diesel, unspecified
         amount: 0.0326
       - name: market for electricity, low voltage
         reference product: electricity, low voltage
@@ -2231,7 +2231,7 @@ markets:
         reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
-        reference product: transport, freight, lorry, unspecified
+        reference product: transport, freight, lorry, diesel, unspecified
         amount: 0.0326
       - name: market for electricity, low voltage
         reference product: electricity, low voltage
@@ -2302,7 +2302,7 @@ markets:
         reference product: transport, freight, train, fleet average
         amount: 0.0336
       - name: market for transport, freight, lorry, unspecified
-        reference product: transport, freight, lorry, unspecified
+        reference product: transport, freight, lorry, diesel, unspecified
         amount: 0.0326
       - name: market for electricity, low voltage
         reference product: electricity, low voltage
