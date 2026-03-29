@@ -1877,6 +1877,38 @@ production pathways:
       reference product: heat
       exists in original database: True
 
+  FE_passenger_rail_electricity:
+    production volume:
+      variable: Fuel consumption in other transport|Electricity|Passenger electric rail
+    ecoinvent alias:
+      name: electricity, used in passenger train
+      reference product: electricity, high voltage
+      exists in original database: True
+
+  FE_freight_rail_electricity:
+    production volume:
+      variable: Fuel consumption in other transport|Electricity|Freight electric rail
+    ecoinvent alias:
+      name: electricity, used in passenger train
+      reference product: electricity, high voltage
+      exists in original database: True
+
+  FE_passenger_rail_hydrogen:
+    production volume:
+      variable: Fuel consumption in other transport|Hydrogen|Passenger hydrogen rail
+    ecoinvent alias:
+      name: hydrogen, used in a fuel cell in a passenger train
+      reference product: heat
+      exists in original database: True
+
+  FE_freight_rail_hydrogen:
+    production volume:
+      variable: Fuel consumption in other transport|Hydrogen|Freight hydrogen rail
+    ecoinvent alias:
+      name: hydrogen, used in a fuel cell in a passenger train
+      reference product: heat
+      exists in original database: True
+
 
   FE_other_transport_gasoline:
     production volume:
@@ -1896,7 +1928,7 @@ production pathways:
 
   FE_other_transport_electric:
     production volume:
-      variable: Fuel consumption in other transport|Electricity
+      variable: Fuel consumption in other transport|Electricity|Other electric transport
     ecoinvent alias:
       name: electricity, used in passenger car vehicle
       reference product: electricity, low voltage
@@ -1904,7 +1936,7 @@ production pathways:
 
   FE_other_transport_hydrogen:
     production volume:
-      variable: Fuel consumption in other transport|Hydrogen
+      variable: Fuel consumption in other transport|Hydrogen|Other hydrogen transport
     ecoinvent alias:
       name: hydrogen, used in passenger car vehicle
       reference product: heat
