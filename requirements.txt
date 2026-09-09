@@ -2,6 +2,6 @@ numpy
 pandas
 pyyaml
 schema
-premise
+premise>=2.5.1
 datapackage
 git+https://github.com/brightway-lca/brightway2-io.git

@@ -88,6 +88,7 @@ for filepath in sorted(glob.glob(os.path.join(folder, "*.xlsx"))):
             2050,
         ]
 
+        df["variables"] = df["variables"].str.strip()
         df["model"] = "STEM"
         df["scenario"] = scenario_name
 

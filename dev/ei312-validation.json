@@ -1,0 +1,61 @@
+{
+  "project": "ecoinvent-3.12-cutoff",
+  "source_db": "ecoinvent-3.12-cutoff",
+  "biosphere": "biosphere",
+  "ecoinvent_version": "3.12",
+  "inventory_source_version": "3.10",
+  "premise_version": "2.5.1",
+  "scenario": "SPS1_bas0",
+  "year": 2050,
+  "model": "remind",
+  "pathway": "SSP2-NPi",
+  "updates": [
+    "external"
+  ],
+  "database_written": false,
+  "datasets": 30019,
+  "source_datasets": 26533,
+  "descriptor_sha256": "43079fff53c9b01ddd8453afc9b38d5541eb720cd6fd65051cd067e8bd73bd49",
+  "resource_sha256": {
+    "scenario_data/scenario_data.csv": "d58e9cfb4629fdb21af7c8a1902efea926453c114b75f340d6b7b04e377992c5",
+    "configuration_file/config.yaml": "6b7369f0d0b8ae3edcbd7b380b64f14b1fc4bef1f259612fa90bb115acc5d67e",
+    "inventories/lci-sweet_sure.xlsx": "033e048627c82192ff649bba8cfd4fe4fc23d855c1f3db6446de75b0501f1dba"
+  },
+  "unresolved_technosphere": [],
+  "unresolved_biosphere": [],
+  "nonfinite_amounts": [],
+  "sps_markets": [
+    "market for biogas, domestic (SPS)",
+    "market for biomass, for power generation (SPS)",
+    "market for diesel (SPS)",
+    "market for district heating (SPS)",
+    "market for electricity, high voltage (SPS)",
+    "market for electricity, low voltage (SPS)",
+    "market for electricity, medium voltage (SPS)",
+    "market for energy carriers for buses (SPS)",
+    "market for energy carriers for cars (SPS)",
+    "market for energy carriers for coaches (SPS)",
+    "market for energy carriers for heavy duty trucks (SPS)",
+    "market for energy carriers for light duty trucks (SPS)",
+    "market for energy carriers for motorcycles (SPS)",
+    "market for energy carriers for other transport (SPS)",
+    "market for energy carriers for transport (SPS)",
+    "market for final energy use (SPS)",
+    "market for hydrogen (SPS)",
+    "market for kerosene (SPS)",
+    "market for methane (SPS)",
+    "market for petrol (SPS)",
+    "market for process heat and space heating in industry (SPS)",
+    "market for process heat in industry (SPS)",
+    "market for space and water heating in residential (SPS)",
+    "market for space heating in industry (SPS)",
+    "market for space heating in residential (SPS)",
+    "market for space heating in services (SPS)",
+    "market for water heating in residential (SPS)"
+  ],
+  "missing_markets": [],
+  "zero_volume_markets": [
+    "market for heavy fuel oil (SPS)",
+    "market for light fuel oil (SPS)"
+  ]
+}

@@ -13,7 +13,7 @@
     "email": "alvaro.hahn-menacho@psi.ch"
     }],
     "dependencies": {
-        "premise": ">=2.1.1"
+        "premise": ">=2.5.1"
     },
     "ecoinvent": {
         "version": "3.10",
@@ -154,9 +154,8 @@
             "path": "inventories/lci-sweet_sure.xlsx",
             "profile": "data-resource",
             "name": "inventories",
-            "format": "csv",
-            "mediatype": "text/csv",
-            "encoding": "utf-8",
+            "format": "xlsx",
+            "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "schema": {
                 "fields": [
                     {

@@ -512,7 +512,7 @@ production pathways:
     production volume:
       variable: Electricity generation|Wood|Biomass with CCS (BECCS)
     ecoinvent alias:
-      name: electricity production, at biomass-fired IGCC power plant, pre, pipeline 200km, storage 1000m
+      name: electricity production, at biomass-fired IGCC power plant, post, pipeline 200km, storage 1000m
       reference product: electricity, high voltage
       exists in original database: True
       regionalize: True
@@ -778,8 +778,8 @@ production pathways:
     production volume:
       variable: Primary Energy Consumption|Wood|Wood from Forest (hard wood)
     ecoinvent alias:
-      name: market for wood chips, wet, measured as dry mass
-      reference product: wood chips, wet, measured as dry mass
+      name: market for wood chips, green, measured as dry mass
+      reference product: wood chips, green, measured as dry mass
       exists in original database: True
 
   biodiesel, wood, FT (domestic):
@@ -2125,8 +2125,8 @@ markets:
       - wood (forest)
 
     replaces:
-      - name: market for wood chips, wet, measured as dry mass
-        product: wood chips, wet, measured as dry mass
+      - name: market for wood chips, green, measured as dry mass
+        product: wood chips, green, measured as dry mass
         location: CH
       - name: market for wood chips, dry, measured as dry mass
         product: wood chips, dry, measured as dry mass
