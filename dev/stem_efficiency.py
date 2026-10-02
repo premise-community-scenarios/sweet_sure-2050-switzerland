@@ -5,6 +5,10 @@ The ecoinvent production allocation factor is retained. Physical fuel demand is
 recovered as allocated fuel demand / allocation factor. A CCS wrapper's fuel
 basis is traced through its electricity/heat supplier, not inferred from kWh
 conversion alone. Absolute targets are never clipped or converted to trends.
+
+Explicitly filtered electricity inputs use output electricity / input electricity
+as their efficiency basis. Only those inputs are scaled; biosphere exchanges and
+infrastructure retain their own physical basis.
 """
 
 from contextlib import contextmanager
@@ -164,6 +168,91 @@ def apply_absolute(dataset, basis, target, rescale):
     }
 
 
+def apply_electricity_input_efficiency(
+    dataset, target, rescale, includes, excludes=(), policy=None, outputs=None
+):
+    """Apply a configured electricity-to-electricity efficiency to selected inputs."""
+    if not includes or not math.isfinite(target) or target <= 0:
+        raise ValueError(
+            "Electricity efficiency needs explicit input filters and a positive target"
+        )
+    production = [e for e in dataset["exchanges"] if e["type"] == "production"]
+    selected = [
+        e
+        for e in dataset["exchanges"]
+        if e["type"] == "technosphere"
+        and any(name in e["name"] for name in includes)
+        and not any(name in e["name"] for name in excludes)
+    ]
+    if (
+        dataset["unit"] != "kilowatt hour"
+        or len(production) != 1
+        or production[0]["unit"] != "kilowatt hour"
+        or not selected
+        or any(e["unit"] != "kilowatt hour" for e in selected)
+        or any(
+            not math.isfinite(e["amount"]) or e["amount"] <= 0
+            for e in selected + production
+        )
+    ):
+        raise ValueError(
+            f"Filtered absolute efficiency for {identity(dataset)} requires "
+            "one electricity output and explicitly selected positive electricity inputs. "
+            f"Output unit: {dataset['unit']}; production: "
+            f"{[(e.get('name'), e.get('unit'), e.get('amount')) for e in production]}; "
+            f"selected inputs: {[(e['name'], e['unit'], e['amount']) for e in selected]}; "
+            f"available electricity inputs: {[(e['name'], e['amount']) for e in dataset['exchanges'] if e['type'] == 'technosphere' and e['unit'] == 'kilowatt hour']}"
+        )
+    requested = target
+    bounds_record = None
+    if policy:
+        from premise.efficiency_bounds import bound_external_efficiency
+
+        target, bounds_record = bound_external_efficiency(
+            dataset, target, policy, outputs
+        )
+    output = production[0]["amount"]
+    before_input = sum(e["amount"] for e in selected)
+    before = output / before_input
+    factor = before / target
+    for exc in selected:
+        rescale(exc, factor)
+    after_input = sum(e["amount"] for e in selected)
+    after = output / after_input
+    if not math.isclose(after, target, rel_tol=1e-9):
+        raise ValueError(f"Failed electricity-efficiency check for {identity(dataset)}")
+    dataset["current efficiency"] = after
+    dataset.setdefault("log parameters", {}).update(
+        {
+            "old efficiency": before,
+            "new efficiency": after,
+            "technosphere scaling factor": factor,
+        }
+    )
+    dataset["comment"] = dataset.get("comment", "") + (
+        f" STEM absolute electricity-input efficiency: {before:.8g} -> {after:.8g}. "
+        "Only explicitly selected electricity inputs adjusted."
+    )
+    return {
+        "activity": dataset["name"],
+        "product": dataset["reference product"],
+        "location": dataset["location"],
+        "source": dataset.get("external scenario source"),
+        "old_physical_efficiency": before,
+        "stem_target_efficiency": requested,
+        "applied_target_efficiency": target,
+        "verified_physical_efficiency": after,
+        "efficiency_bounds": bounds_record,
+        "scaling_factor": factor,
+        "basis": "explicitly selected electricity input/output",
+        "old_electricity_input": before_input,
+        "new_electricity_input": after_input,
+        "electricity_output": output,
+        "includes": list(includes),
+        "excludes": list(excludes),
+    }
+
+
 @contextmanager
 def absolute_stem_efficiencies(source_db, audit_path):
     import premise.external as external
@@ -235,12 +324,6 @@ def absolute_stem_efficiencies(source_db, audit_path):
             if absolute and setting and dataset["location"] in setting[1]:
                 target = setting[1][dataset["location"]]
                 if target != 0:
-                    if setting[0] or dataset.get("excludes technosphere", {}).get(
-                        variable
-                    ):
-                        raise ValueError(
-                            "Filtered absolute STEM efficiencies need a dedicated fuel audit."
-                        )
                     active[variable] = float(target)
         if not active:
             return original_adjust(dataset, fuels_specs, fuel_map_reverse)
@@ -249,6 +332,37 @@ def absolute_stem_efficiencies(source_db, audit_path):
                 f"Conflicting STEM efficiency targets for {identity(dataset)}: {active}"
             )
         transformer = context["transformer"]
+        filtered = [
+            v
+            for v in active
+            if dataset["technosphere filters"][v][0]
+            or dataset.get("excludes technosphere", {}).get(v)
+        ]
+        if filtered:
+            if len(active) != 1 or any(
+                v in dataset.get("biosphere filters", {}) for v in active
+            ):
+                raise ValueError(
+                    "Filtered electricity efficiency requires a single technosphere-only target"
+                )
+            variable = filtered[0]
+            record = apply_electricity_input_efficiency(
+                dataset,
+                active[variable],
+                lambda exc, factor: rescale_exchange(
+                    exc, factor, remove_uncertainty=False
+                ),
+                includes=dataset["technosphere filters"][variable][0],
+                excludes=dataset.get("excludes technosphere", {}).get(variable, []),
+                policy=dataset.get("efficiency bounds", {}).get(variable, {}),
+                outputs=dataset.get("efficiency output data", {})
+                .get(variable, {})
+                .get(dataset["location"]),
+            )
+            record.update(year=transformer.year, variables=list(active))
+            records.append(record)
+            Path(audit_path).write_text(json.dumps(records, indent=2) + "\n")
+            return dataset
         fuel_filters = prepare_fuel_filters(tuple(fuel_map_reverse))
 
         def energy(exc):

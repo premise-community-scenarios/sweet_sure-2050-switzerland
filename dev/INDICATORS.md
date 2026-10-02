@@ -117,3 +117,38 @@ exported matrices and summed scenario demand (without Pathways calculation code)
 conda run -n pathways python dev/verify_indicator_totals.py \
   results/indicators_sps1_ei312_20260928/results_remind-SSP2-PkBudg1000-stem-SPS1_bas0.manifest.json
 ```
+
+### Pumped-storage water balance and efficiency (2026-10-02)
+
+Premise's Swiss hydropower correction now covers both reservoir and pumped-storage
+inventories. The configured evaporation is 0.00175 m³/kWh, following Flury and
+Frischknecht (2012), sections 4.1.3 and 4.2.1. Discharge is calculated as the
+inventory's own turbine-water withdrawal minus evaporation. Thus the pumped-storage
+withdrawal of approximately 4.3 m³ is retained, instead of using the reservoir
+inventory's approximately 0.81 m³. Foreign datasets and other hydro technologies
+are outside this correction. Missing or ambiguous water-balance components fail
+explicitly; relative uncertainty is rescaled where possible.
+
+The SWEET `hydro (pumped storage)` mapping now requests an absolute efficiency,
+with explicit technosphere filters for high-voltage electricity markets and
+market groups. Both names are needed because the background electricity update
+can relink the original Swiss market to a regional market group before the
+external transformation. `dev/stem_efficiency.py` interprets explicitly filtered
+electricity-to-electricity efficiency as output divided by the selected inputs.
+It scales only those inputs, retaining supplier proportions and every other
+exchange. It requires one electricity output and positive selected electricity
+inputs, and records the before/after balance in `.efficiencies.json`. This is
+independent of scenario and technology labels; the filter is explicitly configured.
+The target comes from STEM each year, rather than a hard-coded 80% value.
+
+`dev/validate_stem_build.py` now verifies the exported pumping input and water
+balance whenever this mapping is enabled. The paired check in
+`dev/validate_hydropower_fix.py` compares complete A/B matrices with the prior
+packages, allowing only the configured pumping input and Swiss hydro water flows
+to change. Tests and fresh 2030 builds for SPS2_bas0 and SPS4_bas0 are recorded in
+`results/hydropower_fix_20261002_v2`. Both have no unlinked exchanges or missing
+active efficiency targets. Their existing 81 background warnings are unchanged.
+All twelve indicator totals pass independent SuperLU checks. Freshwater totals
+are 178.213 and 156.431 million m³/year, respectively, versus 536.069 and 253.072
+in the previous batch. The full 40-scenario batch and dashboard still contain
+the earlier results until explicitly regenerated.

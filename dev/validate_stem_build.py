@@ -41,17 +41,13 @@ def validate(path):
         assert values.ndim == 1
         return float(np.interp(year, input_years, values))
 
-    aliases = {}
-    used = Counter()
-    for pathway, settings in config["production pathways"].items():
-        alias = settings["ecoinvent alias"]
-        key = alias["name"], alias["reference product"]
-        name = alias["name"] + (
-            f"_{pathway}" if used[key] and not alias.get("new dataset") else ""
-        )
-        aliases[pathway] = name
-        if not alias.get("new dataset"):
-            used[key] += 1
+    # Read Premise's actual bindings: provider copies can have arbitrary names.
+    with zipfile.ZipFile(path) as archive:
+        mapping = yaml.safe_load(archive.read("mapping/mapping.yaml"))
+    aliases = {
+        pathway: mapping[f"EXT - 0 - {pathway}"]["dataset"][0]["name"]
+        for pathway in config["production pathways"]
+    }
 
     adjustments = json.loads(path.with_suffix(".efficiencies.json").read_text())
     efficiency_checks = []
@@ -114,6 +110,7 @@ def validate(path):
         if m["name"] == "market for electricity, high voltage (SPS)"
     )
     pv_checks = []
+    pumped_storage_checks = []
     build_log = (path.parent / "build.log").read_text()
     omitted_market_names = set(
         re.findall(r"No suppliers found for (.+?) in CH\. No market created", build_log)
@@ -203,6 +200,82 @@ def validate(path):
                     }
                 )
 
+            pump_settings = config["production pathways"].get(
+                "hydro (pumped storage)", {}
+            )
+            pump_efficiency = next(
+                (
+                    setting
+                    for setting in pump_settings.get("efficiency", [])
+                    if setting.get("absolute")
+                    and setting.get("includes", {}).get("technosphere")
+                ),
+                None,
+            )
+            if pump_efficiency:
+                pump_id = ai.loc[
+                    ai.name.eq(aliases["hydro (pumped storage)"])
+                    & ai.location.eq("CH")
+                    & ai["reference product"].eq("electricity, high voltage")
+                    & ai.unit.eq("kilowatt hour"),
+                    "index",
+                ].item()
+                pump_inputs = a.loc[
+                    a["index of activity"].eq(pump_id) & a.flip.eq(1)
+                ].merge(ai, left_on="index of product", right_on="index")
+                electricity_input = pump_inputs.loc[
+                    pump_inputs.unit.eq("kilowatt hour")
+                    & pump_inputs.name.map(
+                        lambda name: any(
+                            token in name
+                            for token in pump_efficiency["includes"]["technosphere"]
+                        )
+                    ),
+                    "value",
+                ].sum()
+                output = a.loc[
+                    a["index of activity"].eq(pump_id) & a.flip.eq(0), "value"
+                ].sum()
+                target = value(pump_efficiency["variable"], year)
+                assert np.isclose(output / electricity_input, target, rtol=1e-7, atol=0)
+                bi = pd.read_csv(
+                    archive.open(f"{directory}/B_matrix_index.csv"), sep=";"
+                )
+                b = pd.read_csv(archive.open(f"{directory}/B_matrix.csv"), sep=";")
+                bio = b.loc[b["index of activity"].eq(pump_id)].merge(
+                    bi, left_on="index of biosphere flow", right_on="index"
+                )
+                withdrawal = bio.loc[
+                    bio.name.eq("Water, turbine use, unspecified natural origin")
+                    & bio.compartment.eq("natural resource"),
+                    "value",
+                ].sum()
+                discharge = bio.loc[
+                    bio.name.eq("Water") & bio.compartment.eq("water"), "value"
+                ].sum()
+                evaporation = bio.loc[
+                    bio.name.eq("Water") & bio.compartment.eq("air"), "value"
+                ].sum()
+                # Cache/export exchanges have float32 precision. Comparing the
+                # difference of two ~4.3 m3 flows needs an absolute tolerance.
+                tolerance = 2 * float(np.spacing(np.float32(withdrawal)))
+                assert np.isclose(evaporation, 0.00175, rtol=1e-7, atol=0)
+                assert abs(withdrawal - discharge - evaporation) <= tolerance
+                pumped_storage_checks.append(
+                    {
+                        "year": year,
+                        "activity": aliases["hydro (pumped storage)"],
+                        "stem_efficiency": target,
+                        "exported_efficiency": output / electricity_input,
+                        "pumping_kWh_per_kWh": electricity_input / output,
+                        "withdrawal_m3": withdrawal,
+                        "discharge_m3": discharge,
+                        "evaporation_m3": evaporation,
+                        "net_water_m3": withdrawal - discharge,
+                        "water_balance_tolerance": tolerance,
+                    }
+                )
+
     unlinked = path.parent / "unlinked.log"
     assert (
         unlinked.is_file() and unlinked.stat().st_size == 0
@@ -236,6 +309,7 @@ def validate(path):
         "efficiency_adjustment_checks": efficiency_checks,
         "missing_efficiency_targets": missing_efficiency_targets,
         "pv_share_checks": pv_checks,
+        "pumped_storage_checks": pumped_storage_checks,
         "zero_supply_market_omissions": zero_supply_omissions,
         "premise_validation_findings": findings,
         "findings_by_rule": [

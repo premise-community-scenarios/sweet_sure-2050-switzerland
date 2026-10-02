@@ -118,6 +118,12 @@ production pathways:
       mask: renewable energy products
     efficiency:
       - variable: Efficiency of power plants (electric)|Hydro|Pump storage
+        # Round-trip electricity efficiency: update the pumping input only.
+        absolute: true
+        includes:
+          technosphere:
+            - market for electricity, high voltage
+            - market group for electricity, high voltage
 
   # originally, the scenario does not differentiate between nuclear technologies
   # we sub-split the volumes between Pressure And Water
