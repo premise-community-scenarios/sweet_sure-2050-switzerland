@@ -84,6 +84,10 @@ def test_workers_isolate_caches_and_retry_only_failed_scenario(tmp_path, monkeyp
                     ".coverage.json",
                     ".audit.json",
                     ".efficiencies.json",
+                    ".heat_pumps.json",
+                    ".heat_pump_validation.json",
+                    ".wood_coproducts.json",
+                    ".wood_coproduct_validation.json",
                 ]:
                     batch.write_json(
                         cwd / f"{stem}{suffix}",
@@ -143,3 +147,38 @@ def test_dropped_biosphere_flow_quarantines_cache_and_prevents_resume(
     monkeypatch.setattr(batch, "resolve_key", lambda _: "fixture-key")
     with pytest.raises(batch.InventoryImportFailure, match="fresh batch"):
         batch.run_batch(tmp_path, state, workers=1, retry_failed=True)
+
+
+def test_pruning_keeps_source_caches_and_only_removes_disposable_stores(tmp_path):
+    cache = tmp_path / "worker_caches" / "0"
+    checkpoint = cache / "cached_files" / ("a" * 32 + ".inventory-store")
+    checkpoint.mkdir(parents=True)
+    (checkpoint / "data").write_bytes(b"temporary")
+    source = cache / "cache" / "source.pickle"
+    source.parent.mkdir()
+    source.write_bytes(b"keep source")
+    baseline = cache / "cached_files" / "validation-baseline.pkl"
+    baseline.write_bytes(b"keep baseline")
+    other = cache / "cached_files" / "named.inventory-store"
+    other.mkdir()
+    removed = batch.prune_worker_checkpoints(tmp_path, cache)
+    assert len(removed) == 1 and removed[0]["bytes"] == 9
+    assert not checkpoint.exists()
+    assert (
+        source.read_bytes() == b"keep source" and baseline.exists() and other.exists()
+    )
+
+
+def test_pruning_refuses_external_symlink_and_quarantined_caches(tmp_path):
+    cache = tmp_path / "worker_caches" / "0"
+    cache.mkdir(parents=True)
+    outside = tmp_path / "other"
+    outside.mkdir()
+    (cache / "cached_files").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="symlinked"):
+        batch.prune_worker_checkpoints(tmp_path, cache)
+    with pytest.raises(ValueError, match="outside"):
+        batch.prune_worker_checkpoints(tmp_path, outside)
+    (cache / "IMPORT_FAILURES.json").write_text("{}")
+    with pytest.raises(batch.InventoryImportFailure, match="quarantined"):
+        batch.prune_worker_checkpoints(tmp_path, cache)

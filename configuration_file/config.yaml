@@ -232,7 +232,9 @@ production pathways:
       reference product: electricity, high voltage
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Gas|Industrial CHPs fuel cells (gas reformer)
+      # Original export references a fixed zero fuel cell. Recover the labelled
+      # STEM fuel input; retain the exported series separately for provenance.
+      - variable: Efficiency of power plants (electric)|Gas|Industrial CHPs fuel cells (gas reformer)|Recovered from STEM
         absolute: True
 
   gas (CHP single family):
@@ -313,6 +315,51 @@ production pathways:
       - variable: Efficiency of power plants (electric)|Gas|Services sectors CHPs fuel cells (gas reformer)
         absolute: True
 
+  # Electricity-only waste output is separate from allocated CHP output.
+  waste incineration, fossil (electricity only):
+    production volume:
+      variable: Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only)
+    ecoinvent alias:
+      name: electricity production, from incineration of plastic waste mixture, electricity only
+      reference product: electricity, from incineration of plastic waste mixture, electricity only
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+        absolute: True
+
+  waste incineration, fossil (electricity only, CCS):
+    production volume:
+      variable: Electricity generation|Wastes|Non Renewable|Wastes Incineration (electric only) CCS
+    ecoinvent alias:
+      name: electricity production, from incineration of plastic waste mixture, electricity only, post, pipeline 200km, storage 1000m
+      reference product: electricity, from incineration of plastic waste mixture, electricity only, with CCS
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only) CCS
+        absolute: True
+
+  waste incineration, non-fossil (electricity only):
+    production volume:
+      variable: Electricity generation|Wastes|Renewable|Wastes Incineration (electric only)
+    ecoinvent alias:
+      name: electricity production, from incineration of biowaste, electricity only
+      reference product: electricity, from incineration of biowaste, electricity only
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+        absolute: True
+
+  waste incineration, non-fossil (electricity only, CCS):
+    production volume:
+      variable: Electricity generation|Wastes|Renewable|Wastes Incineration (electric only) CCS
+    ecoinvent alias:
+      name: electricity production, from incineration of biowaste, electricity only, post, pipeline 200km, storage 1000m
+      reference product: electricity, from incineration of biowaste, electricity only, with CCS
+      exists in original database: True
+    efficiency:
+      - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only) CCS
+        absolute: True
+
   waste incineration, fossil (CHP):
     production volume:
       variable: Electricity generation|Wastes|Non Renewable|CHP Wastes (for District Heating)
@@ -344,7 +391,7 @@ production pathways:
       reference product: electricity, from plastic waste mixture, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Wastes Incineration (electric only)
+      - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating) CCS
         absolute: True
 
   waste incineration, fossil (industrial, CCS):
@@ -355,7 +402,7 @@ production pathways:
       reference product: electricity, from plastic waste mixture, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+      - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes CCS
         absolute: True
 
   waste incineration, non-fossil (CHP):
@@ -388,7 +435,7 @@ production pathways:
       reference product: electricity, from biowaste, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating)
+      - variable: Efficiency of power plants (electric)|Wastes|CHP Wastes (for District Heating) CCS
         absolute: True
 
   waste incineration, non-fossil (industrial, CCS):
@@ -399,53 +446,53 @@ production pathways:
       reference product: electricity, from biowaste, municipal incineration, energy allocation
       exists in original database: True
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes
+      - variable: Efficiency of power plants (electric)|Wastes|Industrial CHPs wastes CCS
         absolute: True
 
+  # IEA PVPS Task 12 (2026), supplied by premise's lci-PV-2026*.xlsx.
+  # No Swiss utility-scale mix is supplied: use the 10 MWp silicon reference
+  # system at 1000 kWh/kWp/year and regionalize it to CH. Retain its at-plant
+  # reference product; do not infer a voltage level or add distribution losses.
   pv (large scale):
     production volume:
       variable: Electricity generation|Solar|Solar PV (large scale)
     ecoinvent alias:
-      name: electricity production, from photovoltaic panels
-      reference product: electricity, low voltage
+      name: electricity production, photovoltaic, 10 mwp ground-mounted, single-crystalline silicon, panel, mounted, annual yield 1000 kwh/kwp
+      reference product: electricity, photovoltaic, at plant
       exists in original database: True
-      mask: renewable energy products
+      regionalize: True
 
   pv (industry):
     production volume:
       variable: Electricity generation|Solar|Solar PV (Industry)
     ecoinvent alias:
-      name: electricity production, from photovoltaic panels
-      reference product: electricity, low voltage
+      name: electricity production, photovoltaic, commercial
+      reference product: electricity, medium voltage
       exists in original database: True
-      mask: renewable energy products
 
   pv (services):
     production volume:
       variable: Electricity generation|Solar|Solar PV (Services)
     ecoinvent alias:
-      name: electricity production, from photovoltaic panels
-      reference product: electricity, low voltage
+      name: electricity production, photovoltaic, commercial
+      reference product: electricity, medium voltage
       exists in original database: True
-      mask: renewable energy products
 
   pv residential (multi family):
     production volume:
       variable: Electricity generation|Solar|Solar PV (Residential multi family)
     ecoinvent alias:
-      name: electricity production, from photovoltaic panels
+      name: electricity production, photovoltaic, residential
       reference product: electricity, low voltage
       exists in original database: True
-      mask: renewable energy products
 
   pv residential (single family):
     production volume:
       variable: Electricity generation|Solar|Solar PV (Residential single family)
     ecoinvent alias:
-      name: electricity production, from photovoltaic panels
+      name: electricity production, photovoltaic, residential
       reference product: electricity, low voltage
       exists in original database: True
-      mask: renewable energy products
 
   wind:
     production volume:
@@ -492,15 +539,26 @@ production pathways:
 
   biomass (DH):
     production volume:
-      variable: Electricity generation|Wood|CHP Wood (for District Heating)
+      variable: Electricity generation|Wood|CHP Wood (for District Heating)|CHP only
     ecoinvent alias:
       name: heat and power co-generation, wood chips, 6667 kW, state-of-the-art 2014
       reference product: electricity, high voltage
       exists in original database: True
       mask: renewable energy products
     efficiency:
-      - variable: Efficiency of power plants (electric)|Wood|CHP Wood (for District Heating)
+      - variable: Efficiency of power plants (electric)|Wood|CHP Wood (for District Heating)|CHP only
         absolute: True
+        # Explicit electrical-efficiency limits; fractions, not percentages.
+        bounds: {min: 0.05, max: 0.30}
+        heat pathway: DH_CHP_wood
+
+  electricity, wood biogas coproduct:
+    production volume:
+      variable: Electricity from domestic biogas production|Wood|Gasification
+    ecoinvent alias:
+      name: electricity production, from wood-to-biogas, STEM coproduct allocation
+      reference product: electricity, high voltage
+      exists in original database: True
 
   biomass (CHP):
     production volume:
@@ -513,12 +571,15 @@ production pathways:
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|Industrial CHPs wood
         absolute: True
+        # Explicit electrical-efficiency limits; fractions, not percentages.
+        bounds: {min: 0.05, max: 0.30}
 
   biomass (CCS, BECCS):
     production volume:
       variable: Electricity generation|Wood|Biomass with CCS (BECCS)
     ecoinvent alias:
-      name: electricity production, at biomass-fired IGCC power plant, pre, pipeline 200km, storage 1000m
+      # Available lci-BIGCC inventory; post-combustion proxy approved 2026-09-28.
+      name: electricity production, at biomass-fired IGCC power plant, post, pipeline 200km, storage 1000m
       reference product: electricity, high voltage
       exists in original database: True
       regionalize: True
@@ -536,6 +597,8 @@ production pathways:
     efficiency:
       - variable: Efficiency of power plants (electric)|Wood|Industrial CHPs wood (CCS)
         absolute: True
+        # Explicit electrical-efficiency limits; fractions, not percentages.
+        bounds: {min: 0.05, max: 0.30}
 
   battery (large):
     production volume:
@@ -692,12 +755,20 @@ production pathways:
 
   biomethane (domestic):
     production volume:
-      variable: Domestic biogas production
+      variable: Domestic biogas production|Excluding wood gasification without CCS
     ecoinvent alias:
       name: market for biomethane, high pressure
       reference product: biomethane, high pressure
       exists in original database: True
       mask: vehicle grade
+
+  biomethane, wood gasification (domestic):
+    production volume:
+      variable: Domestic biogas production|Wood|Gasification
+    ecoinvent alias:
+      name: biomethane production, from wood gasification, STEM coproduct allocation
+      reference product: biomethane, high pressure
+      exists in original database: True
 
   synthetic natural gas (domestic):
     production volume:
@@ -784,18 +855,17 @@ production pathways:
     production volume:
       variable: Primary Energy Consumption|Wood|Wood from Forest (hard wood)
     ecoinvent alias:
-      name: market for wood chips, wet, measured as dry mass
-      reference product: wood chips, wet, measured as dry mass
+      name: market for wood chips, green, measured as dry mass
+      reference product: wood chips, green, measured as dry mass
       exists in original database: True
 
   biodiesel, wood, FT (domestic):
     production volume:
       variable: Domestic biodiesel production|Wood|Fischer Tropsch
     ecoinvent alias:
-      name: diesel production, synthetic, Fischer Tropsch process, hydrogen from wood gasification, energy allocation
+      name: diesel production, from wood, STEM coproduct allocation
       reference product: diesel, synthetic
       exists in original database: True
-      regionalize: True
 
   biodiesel, wood, FT w CCS (domestic):
     production volume:
@@ -1048,11 +1118,27 @@ production pathways:
 
   DH_CHP_wood:
     production volume:
-      variable: Heat generation from CHPs and heat plants|District heating|CHP|Wood|CHP Wood (for District Heating)
+      variable: Heat generation from CHPs and heat plants|District heating|CHP|Wood|CHP Wood (for District Heating)|CHP only
     ecoinvent alias:
       name: heat and power co-generation, wood chips, 6667 kW, state-of-the-art 2014
       reference product: heat, district or industrial, other than natural gas
       mask: renewable
+      exists in original database: True
+
+  DH_biodiesel_wood_coproduct:
+    production volume:
+      variable: Heat from domestic biodiesel production|Wood|Fischer Tropsch
+    ecoinvent alias:
+      name: heat production, from wood-to-biodiesel, STEM coproduct allocation
+      reference product: heat, district or industrial, other than natural gas
+      exists in original database: True
+
+  DH_biogas_wood_coproduct:
+    production volume:
+      variable: Heat from domestic biogas production|Wood|Gasification
+    ecoinvent alias:
+      name: heat production, from wood-to-biogas, STEM coproduct allocation
+      reference product: heat, district or industrial, other than natural gas
       exists in original database: True
 
   DH_CHP_hydrogen:
@@ -1982,6 +2068,7 @@ markets:
       - synthetic natural gas (import)
       - biomethane (import)
       - biomethane (domestic)
+      - biomethane, wood gasification (domestic)
       - synthetic natural gas (domestic)
 
     replaces:
@@ -2014,6 +2101,9 @@ markets:
         Carbon dioxide, fossil: 0.0
         Carbon dioxide, non-fossil: 1.944
       biomethane (domestic):
+        Carbon dioxide, fossil: 0.0
+        Carbon dioxide, non-fossil: 1.944
+      biomethane, wood gasification (domestic):
         Carbon dioxide, fossil: 0.0
         Carbon dioxide, non-fossil: 1.944
       synthetic natural gas (domestic):
@@ -2131,8 +2221,8 @@ markets:
       - wood (forest)
 
     replaces:
-      - name: market for wood chips, wet, measured as dry mass
-        product: wood chips, wet, measured as dry mass
+      - name: market for wood chips, green, measured as dry mass
+        product: wood chips, green, measured as dry mass
         location: CH
       - name: market for wood chips, dry, measured as dry mass
         product: wood chips, dry, measured as dry mass
@@ -2446,6 +2536,10 @@ markets:
       - biogas (services CHP)
       - gas (services CHP)
       - gas (services CHP fuel cell)
+      - waste incineration, fossil (electricity only)
+      - waste incineration, fossil (electricity only, CCS)
+      - waste incineration, non-fossil (electricity only)
+      - waste incineration, non-fossil (electricity only, CCS)
       - waste incineration, fossil (CHP)
       - waste incineration, fossil (industrial)
       - waste incineration, fossil (CHP, CCS)
@@ -2465,6 +2559,7 @@ markets:
       - hydrogen fuel cell (industrial CHP)
       - hydrogen fuel cell (services CHP)
       - biomass (DH)
+      - electricity, wood biogas coproduct
       - biomass (CHP)
       - biomass (CCS, BECCS)
       - biomass (CCS, industrial)
@@ -2596,6 +2691,8 @@ markets:
       - DH_CHP_fossil_waste
       - DH_CHP_fossil_waste_CCS
       - DH_CHP_wood
+      - DH_biodiesel_wood_coproduct
+      - DH_biogas_wood_coproduct
       - DH_CHP_hydrogen
       - DH_gas
       - DH_nuclear

@@ -115,6 +115,61 @@ def test_waste_uses_declared_combustion_efficiency_not_auxiliary_fuel():
     assert basis.efficiency(ds) == pytest.approx(0.06)
 
 
+def test_isolated_provider_uses_exact_source_allocation():
+    ds = generator()
+    ds["name"] = "generator_with_underscores_custom pathway"
+    ds["external scenario source"] = {
+        "name": "generator_with_underscores",
+        "reference product": "electricity",
+        "location": "GLO",
+    }
+    basis = FuelBasis(
+        [ds], {("generator_with_underscores", "electricity", "GLO"): 0.75}, energy
+    )
+    assert basis.efficiency(ds) == pytest.approx(0.3)
+    record = apply_absolute(ds, basis, 0.0001, rescale)
+    assert record["allocation_factor"] == 0.75
+    assert record["verified_physical_efficiency"] == pytest.approx(0.0001)
+    assert record["source"] == ds["external scenario source"]
+
+
+@pytest.mark.parametrize("target,expected", [(0.0001171587, 0.05), (0.306, 0.30)])
+def test_explicit_external_bounds_preserve_raw_target_and_allocation(target, expected):
+    ds = generator()
+    basis = FuelBasis([ds], {identity(ds): 0.75}, energy)
+    record = apply_absolute(
+        ds, basis, target, rescale, policy={"bounds": {"min": 0.05, "max": 0.30}}
+    )
+    assert record["stem_target_efficiency"] == target
+    assert record["applied_target_efficiency"] == expected
+    assert basis.efficiency(ds) == pytest.approx(expected)
+    assert record["allocation_factor"] == 0.75
+    assert (
+        record["efficiency_bounds"]["combined_efficiency_check"]["status"]
+        == "not_available"
+    )
+    assert ds["exchanges"][2]["amount"] == 1
+
+
+def test_sweet_bounds_are_explicit_and_do_not_include_fuel_cells_or_heat_pumps():
+    from pathlib import Path
+    import yaml
+
+    config = yaml.safe_load(
+        (Path(__file__).parents[1] / "configuration_file/config.yaml").read_text()
+    )
+    configured = {
+        name: entry["bounds"]
+        for name, pathway in config["production pathways"].items()
+        for entry in pathway.get("efficiency", [])
+        if "bounds" in entry
+    }
+    assert configured == {
+        name: {"min": 0.05, "max": 0.30}
+        for name in ("biomass (DH)", "biomass (CHP)", "biomass (CCS, industrial)")
+    }
+
+
 def electricity_converter():
     return {
         "name": "arbitrary electricity converter",

@@ -4,7 +4,9 @@ Scoped to external STEM transformations; source Brightway databases are read onl
 The ecoinvent production allocation factor is retained. Physical fuel demand is
 recovered as allocated fuel demand / allocation factor. A CCS wrapper's fuel
 basis is traced through its electricity/heat supplier, not inferred from kWh
-conversion alone. Absolute targets are never clipped or converted to trends.
+conversion alone. Optional external config bounds are applied by Premise's
+shared policy; original targets are retained in the audit and never converted
+to trends. No technology classification or implicit bounds are used.
 
 Explicitly filtered electricity inputs use output electricity / input electricity
 as their efficiency basis. Only those inputs are scaled; biosphere exchanges and
@@ -60,9 +62,13 @@ class FuelBasis:
         self.energy_for_exchange = energy_for_exchange
 
     def allocation(self, dataset):
-        name, product, location = identity(dataset)
-        name = name.split("_")[0]  # premise's pathway-specific duplicates
-        location = dataset.get("region mapping", {}).get(location, location)
+        source = dataset.get("external scenario source")
+        if source:
+            name, product, location = identity(source)
+        else:
+            name, product, location = identity(dataset)
+            name = name.split("_")[0]  # compatibility with older premise builds
+            location = dataset.get("region mapping", {}).get(location, location)
         return self.allocations.get((name, product, location), 1.0)
 
     def fuel_energy(self, dataset, visited=()):
@@ -123,9 +129,13 @@ class FuelBasis:
         return output / self.fuel_energy(dataset)
 
 
-def apply_absolute(dataset, basis, target, rescale):
+def apply_absolute(dataset, basis, target, rescale, policy=None, outputs=None):
+    from premise.efficiency_bounds import bound_external_efficiency
+
     if not math.isfinite(target) or target <= 0:
         raise ValueError(f"Invalid absolute efficiency: {target}")
+    requested = target
+    target, bounds_record = bound_external_efficiency(dataset, target, policy, outputs)
     before = basis.efficiency(dataset)
     factor = before / target
     for exchange in dataset["exchanges"]:
@@ -155,8 +165,11 @@ def apply_absolute(dataset, basis, target, rescale):
         "activity": dataset["name"],
         "product": dataset["reference product"],
         "location": dataset["location"],
+        "source": dataset.get("external scenario source"),
         "old_physical_efficiency": before,
-        "stem_target_efficiency": target,
+        "stem_target_efficiency": requested,
+        "applied_target_efficiency": target,
+        "efficiency_bounds": bounds_record,
         "verified_physical_efficiency": after,
         "scaling_factor": factor,
         "allocation_factor": basis.allocation(dataset),
@@ -274,9 +287,9 @@ def absolute_stem_efficiencies(source_db, audit_path):
         for dataset in [*database, *inventories]:
             name, product, _ = identity(dataset)
             by_alias.setdefault((name, product), []).append(dataset)
-        # premise tags a source before cloning it for another pathway. This
-        # overwrites the first pathway's efficiency with the last clone's.
-        # Rebind each final alias to its own configuration after cloning.
+        # Bind each final alias to its own configuration after cloning. This
+        # also supports older premise versions that tagged sources before
+        # cloning and could overwrite the first pathway's efficiency settings.
         for pathway, settings in configuration["production pathways"].items():
             alias = settings["ecoinvent alias"]
             candidates = by_alias.get(
@@ -295,6 +308,9 @@ def absolute_stem_efficiencies(source_db, audit_path):
                     "technosphere filters",
                     "biosphere filters",
                     "absolute efficiency",
+                    "efficiency bounds",
+                    "efficiency output data",
+                    "efficiency bounds audit",
                     "excludes technosphere",
                     "excludes biosphere",
                 ):
@@ -379,11 +395,19 @@ def absolute_stem_efficiencies(source_db, audit_path):
             )
 
         basis = FuelBasis(transformer.database, allocations, energy)
+        policies = [dataset.get("efficiency bounds", {}).get(v, {}) for v in active]
+        if any(p != policies[0] for p in policies):
+            raise ValueError(f"Conflicting external efficiency bounds: {policies}")
+        variable = next(iter(active))
         record = apply_absolute(
             dataset,
             basis,
             next(iter(active.values())),
             lambda exc, factor: rescale_exchange(exc, factor, remove_uncertainty=False),
+            policy=policies[0],
+            outputs=dataset.get("efficiency output data", {})
+            .get(variable, {})
+            .get(dataset["location"]),
         )
         record.update(year=transformer.year, variables=list(active))
         records.append(record)

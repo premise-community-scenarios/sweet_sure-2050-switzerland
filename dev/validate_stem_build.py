@@ -18,8 +18,10 @@ import yaml
 
 try:
     from dev.audit_pathways_package import audit
+    from dev.stem_fuel_cells import EFFICIENCY, RECOVERED, validate_recovered_series
 except ModuleNotFoundError:
     from audit_pathways_package import audit
+    from stem_fuel_cells import EFFICIENCY, RECOVERED, validate_recovered_series
 
 
 def validate(path):
@@ -31,6 +33,8 @@ def validate(path):
         ), f"Input changed since build: {resource['path']}"
     config = yaml.safe_load(Path(manifest["resources"]["config"]["path"]).read_text())
     frame = pd.read_csv(manifest["resources"]["scenario_data"]["path"])
+    if EFFICIENCY + RECOVERED in frame.variables.values:
+        validate_recovered_series(frame)
     data = frame[
         frame.scenario.eq(manifest["scenario"]) & frame.region.eq("CH")
     ].set_index("variables")
@@ -84,14 +88,31 @@ def validate(path):
                 assert np.isclose(
                     record["stem_target_efficiency"], target, rtol=1e-10, atol=0
                 )
-                assert np.isclose(
-                    record["verified_physical_efficiency"], target, rtol=1e-9, atol=0
+                bounds = efficiency.get("bounds")
+                applied = (
+                    min(max(target, bounds["min"]), bounds["max"]) if bounds else target
                 )
+                assert np.isclose(
+                    record["verified_physical_efficiency"], applied, rtol=1e-9, atol=0
+                )
+                if bounds:
+                    bounded = record["efficiency_bounds"]
+                    assert bounded["bounds"] == bounds
+                    assert bounded["clipped"] == (applied != target)
+                    assert np.isclose(
+                        bounded["requested_efficiency"], target, rtol=1e-10
+                    )
+                    assert np.isclose(
+                        bounded["applied_efficiency"], applied, rtol=1e-10
+                    )
                 efficiency_checks.append(
                     {
                         "year": year,
                         "pathway": pathway,
-                        "target": target,
+                        "requested_target": target,
+                        "target": applied,
+                        "configured_bounds": bounds,
+                        "clipped": applied != target,
                         "verified_at_adjustment": record[
                             "verified_physical_efficiency"
                         ],
@@ -321,6 +342,12 @@ def validate(path):
         and not re.search(r"Warning|warning", log),
         "note": "Efficiency checks verify each build-time adjustment against the STEM input. Waste combustion uses the declared inventory baseline; this is not an independent measurement of waste fuel. Matrix checks test linking and solvability, not all LCA modelling assumptions.",
     }
+    if manifest.get("heat_pump_adapter_sha256"):
+        try:
+            from dev.audit_heat_pumps import validate_heat_pumps
+        except ModuleNotFoundError:
+            from audit_heat_pumps import validate_heat_pumps
+        result["heat_pumps"] = validate_heat_pumps(path)
     output = path.with_suffix(".validation.json")
     output.write_text(json.dumps(result, indent=2) + "\n")
     print(

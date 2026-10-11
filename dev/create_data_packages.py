@@ -248,11 +248,23 @@ def run_build(args, plan, key):
             try:
                 from dev.stem_efficiency import absolute_stem_efficiencies
                 from dev.premise_compat import preserve_pathways_mappings
+                from dev.stem_heat_pumps import swiss_stem_heat_pumps
+                from dev.stem_wood_coproducts import wood_coproduct_inventories
             except ModuleNotFoundError:
                 from stem_efficiency import absolute_stem_efficiencies
                 from premise_compat import preserve_pathways_mappings
+                from stem_heat_pumps import swiss_stem_heat_pumps
+                from stem_wood_coproducts import wood_coproduct_inventories
             with absolute_stem_efficiencies(
                 args.source_db, args.output_dir / f"{name}.efficiencies.json"
+            ), swiss_stem_heat_pumps(
+                plan["resources"]["scenario_data"]["path"],
+                scenario,
+                args.output_dir / f"{name}.heat_pumps.json",
+            ), wood_coproduct_inventories(
+                plan["resources"]["scenario_data"]["path"],
+                scenario,
+                args.output_dir / f"{name}.wood_coproducts.json",
             ), preserve_pathways_mappings():
                 builder.create_datapackage(
                     name=name,
@@ -273,6 +285,12 @@ def run_build(args, plan, key):
                 ),
                 "pathways_adapter_sha256": file_hash(
                     Path(__file__).with_name("premise_compat.py")
+                ),
+                "heat_pump_adapter_sha256": file_hash(
+                    Path(__file__).with_name("stem_heat_pumps.py")
+                ),
+                "wood_coproduct_adapter_sha256": file_hash(
+                    Path(__file__).with_name("stem_wood_coproducts.py")
                 ),
                 "generated_at": datetime.now(timezone.utc).isoformat(),
                 "package": str(archive),

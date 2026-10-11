@@ -117,12 +117,20 @@ def test_build_uses_312_and_absolute_paths_and_records_provenance(args, monkeypa
     from contextlib import nullcontext
     from dev import stem_efficiency
     from dev import premise_compat
+    from dev import stem_heat_pumps
+    from dev import stem_wood_coproducts
 
     monkeypatch.setattr(
         stem_efficiency, "absolute_stem_efficiencies", lambda *args: nullcontext()
     )
     monkeypatch.setattr(
         premise_compat, "preserve_pathways_mappings", lambda: nullcontext()
+    )
+    monkeypatch.setattr(
+        stem_heat_pumps, "swiss_stem_heat_pumps", lambda *args: nullcontext()
+    )
+    monkeypatch.setattr(
+        stem_wood_coproducts, "wood_coproduct_inventories", lambda *args: nullcontext()
     )
     calls, project_changes = [], []
 

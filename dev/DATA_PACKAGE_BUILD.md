@@ -14,12 +14,14 @@ The IAM key is read from `PREMISE_KEY`, `--key`, or the existing notebook litera
 For a resumable batch of all 40 scenarios, use the premise environment:
 
 ```sh
-python dev/build_all_data_packages.py --workers 3
+python dev/build_all_data_packages.py --output-dir results/data_packages_next --workers 3
 ```
 
-The default output directory is `dev/data_packages_ei312_20260928`. Inputs and
-premise source are copied into it before the run, and each worker uses its own
-premise cache. `STATUS.md` and `progress.json` show progress. Each scenario keeps
+Choose a fresh output directory for a new batch. The default is
+`results/data_packages`.
+Inputs and premise source are copied into the output directory before the run,
+and each worker uses its own premise cache. `STATUS.md` and `progress.json` show
+progress. Each scenario keeps
 its build and validation logs under `scenarios/`; ZIPs appear in `packages/` only
 after matrix, efficiency, PV, native final-energy coverage, and NOx checks pass.
 Existing background warnings and missing STEM efficiency targets are recorded.
@@ -38,8 +40,18 @@ If a build reports dropped biosphere flows, its worker cache is quarantined and
 that worker stops. A later scenario cannot silently reuse that cache and pass
 validation just because the import warnings were absent from its log.
 
-The 2026-09-28 batch predates the biosphere migration correction and must be
-replaced. The corrected batch is `dev/data_packages_ei312_20260929_biosphere_fixed`.
+All generated packages, indicator results, and audit artifacts were removed on
+11 October 2026. Rebuild packages before running calculations or validation.
+Historical run paths elsewhere in this document describe the original work and
+are no longer available locally.
+
+The independent 2020 NOx reference matrices are retained as build inputs under
+`dev/reference_data/nox_baseline_2020/`, with their source and checksums recorded
+in `provenance.json`. The batch builder copies them into each new batch. These
+local reference inputs are ignored by Git.
+
+The 2026-09-28 batch predates the biosphere migration correction. Its first
+replacement was `dev/data_packages_ei312_20260929_biosphere_fixed`.
 The premise fix matches versioned biosphere UUIDs/full descriptors and updates
 replacement compartments. It also changes the inventory cache version; source
 ecoinvent caches remain reusable. The audit in `dev/audit_biosphere_imports.py`

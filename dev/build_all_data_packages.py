@@ -40,18 +40,22 @@ SCRIPTS = [
     "build_all_data_packages.py",
     "create_data_packages.py",
     "stem_efficiency.py",
+    "stem_heat_pumps.py",
+    "stem_wood_coproducts.py",
+    "stem_source_cache.py",
+    "stem_fuel_cells.py",
+    "validate_wood_coproducts.py",
+    "compare_heat_pump_inventories.py",
     "premise_compat.py",
     "validate_stem_build.py",
+    "audit_heat_pumps.py",
     "audit_pathways_package.py",
     "validate_package_coverage.py",
     "audit_gains_car_emissions.py",
 ]
 PREMISE_ROOT = ROOT.parent / "premise"
 TESTED_RUN = ROOT / "dev/smoke_sps1_ei312_20260928/mapping_fixed_run"
-NOX_BASELINE = (
-    ROOT
-    / "dev/smoke_sps1_ei312_20260928/complete_run/pathways_temp/inventories/remind/SSP2-PkBudg1000-SPS1_bas0/2020"
-)
+NOX_BASELINE = ROOT / "dev/reference_data/nox_baseline_2020"
 
 
 def now():
@@ -172,8 +176,10 @@ def reuse_tested(run, plan):
         ("create_data_packages.py", "build_script_sha256"),
         ("stem_efficiency.py", "efficiency_adapter_sha256"),
         ("premise_compat.py", "pathways_adapter_sha256"),
+        ("stem_heat_pumps.py", "heat_pump_adapter_sha256"),
+        ("stem_wood_coproducts.py", "wood_coproduct_adapter_sha256"),
     ]:
-        if file_hash(run.parents[1] / "software/dev" / name) != build[field]:
+        if file_hash(run.parents[1] / "software/dev" / name) != build.get(field):
             return False
     package = TESTED_RUN / f"{stem}.zip"
     if file_hash(package) != build["package_sha256"]:
@@ -188,7 +194,12 @@ def reuse_tested(run, plan):
     for relative, expected in premise_sources.items():
         if file_hash(run.parents[1] / "software" / relative) != expected:
             return False
-    for suffix in [".zip", ".efficiencies.json"]:
+    for suffix in [
+        ".zip",
+        ".efficiencies.json",
+        ".heat_pumps.json",
+        ".wood_coproducts.json",
+    ]:
         shutil.copy2(TESTED_RUN / f"{stem}{suffix}", run / f"{stem}{suffix}")
     for name in ["build.log", "unlinked.log"]:
         shutil.copy2(TESTED_RUN / name, run / name)
@@ -230,7 +241,31 @@ def check_inventory_import(run, cache):
         )
 
 
-def run_batch(output, state, workers, retry_failed, scenarios=None):
+def prune_worker_checkpoints(output, cache):
+    """Remove only disposable UUID stores from this batch's finished worker."""
+    expected_parent = (output / "worker_caches").resolve()
+    if cache.is_symlink() or cache.resolve().parent != expected_parent:
+        raise ValueError(f"Refusing cache cleanup outside this batch: {cache}")
+    if (cache / "IMPORT_FAILURES.json").exists():
+        raise InventoryImportFailure("Refusing to prune a quarantined cache")
+    directory = cache / "cached_files"
+    if directory.is_symlink():
+        raise ValueError(f"Refusing symlinked checkpoint directory: {directory}")
+    removed = []
+    for checkpoint in directory.glob("*.inventory-store"):
+        if not re.fullmatch(r"[0-9a-f]{32}\.inventory-store", checkpoint.name):
+            continue
+        if checkpoint.is_symlink() or not checkpoint.is_dir():
+            raise ValueError(f"Unexpected checkpoint type: {checkpoint}")
+        size = sum(p.stat().st_size for p in checkpoint.rglob("*") if p.is_file())
+        shutil.rmtree(checkpoint)
+        removed.append({"checkpoint": str(checkpoint), "bytes": size})
+    return removed
+
+
+def run_batch(
+    output, state, workers, retry_failed, scenarios=None, prune_checkpoints=False
+):
     key = resolve_key(None)
     verify_completed(output, state)
     selected = set(state["scenarios"] if scenarios is None else scenarios)
@@ -262,7 +297,11 @@ def run_batch(output, state, workers, retry_failed, scenarios=None):
         ):
             pending.put(scenario)
     state.update(
-        status="running", coordinator_pid=os.getpid(), workers=workers, resumed_at=now()
+        status="running",
+        coordinator_pid=os.getpid(),
+        workers=workers,
+        prune_checkpoints=prune_checkpoints,
+        resumed_at=now(),
     )
     coordinator_hash = file_hash(__file__)
     coordinator = output / "coordinators" / f"{coordinator_hash}.py"
@@ -397,6 +436,11 @@ def run_batch(output, state, workers, retry_failed, scenarios=None):
                 check_inventory_import(run, cache)
                 update(scenario, status="validating", reused_tested_package=reused)
                 execute("validate_stem_build.py", [package], "validation.log")
+                execute(
+                    "validate_wood_coproducts.py",
+                    [package],
+                    "wood_coproduct_validation.log",
+                )
                 update(scenario, status="coverage")
                 execute("validate_package_coverage.py", [package], "coverage.log")
                 update(scenario, status="nox")
@@ -426,10 +470,19 @@ def run_batch(output, state, workers, retry_failed, scenarios=None):
                     ".coverage.json",
                     ".audit.json",
                     ".efficiencies.json",
+                    ".heat_pumps.json",
+                    ".heat_pump_validation.json",
+                    ".wood_coproducts.json",
+                    ".wood_coproduct_validation.json",
                 ]:
                     shutil.copy2(
                         package.with_suffix(suffix), destination.with_suffix(suffix)
                     )
+                removed = (
+                    prune_worker_checkpoints(output, cache) if prune_checkpoints else []
+                )
+                if removed:
+                    write_json(run / "pruned_checkpoints.json", removed)
                 update(
                     scenario,
                     status="complete",
@@ -440,6 +493,7 @@ def run_batch(output, state, workers, retry_failed, scenarios=None):
                     child_pid=None,
                     validation_warnings=validation["findings_by_rule"],
                     missing_efficiency_targets=validation["missing_efficiency_targets"],
+                    pruned_checkpoint_bytes=sum(r["bytes"] for r in removed),
                 )
             except Exception as error:
                 update(
@@ -472,11 +526,16 @@ def run_batch(output, state, workers, retry_failed, scenarios=None):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--output-dir", type=Path, default=ROOT / "dev/data_packages_ei312_20260928"
+        "--output-dir", type=Path, default=ROOT / "results/data_packages"
     )
     parser.add_argument("--workers", type=int, choices=range(1, 5), default=3)
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--retry-failed", action="store_true")
+    parser.add_argument(
+        "--prune-checkpoints",
+        action="store_true",
+        help="Remove disposable worker scenario stores only after package validation; retain source caches, matrices and reports.",
+    )
     parser.add_argument(
         "--scenarios",
         nargs="+",
@@ -494,7 +553,14 @@ def main():
         if args.prepare_only:
             print(f"Prepared {len(state['scenarios'])} scenarios in {output}")
             return 0
-        return run_batch(output, state, args.workers, args.retry_failed, args.scenarios)
+        return run_batch(
+            output,
+            state,
+            args.workers,
+            args.retry_failed,
+            args.scenarios,
+            args.prune_checkpoints,
+        )
 
 
 if __name__ == "__main__":

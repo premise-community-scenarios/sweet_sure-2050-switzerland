@@ -1,0 +1,4 @@
+dash>=3.2,<4
+plotly>=6.3,<7
+pandas>=2.2,<3
+pyarrow>=18,<24

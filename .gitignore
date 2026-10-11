@@ -1,0 +1,22 @@
+# Local environments, Python caches, and editor state.
+.venv*/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.idea/
+.DS_Store
+
+# Generated runs retain their packages, reports, and frozen inputs locally.
+# Raw STEM workbooks and the canonical scenario inputs remain visible to Git.
+/results/
+/dev/data_packages_*/
+/dev/smoke_sps1_ei312_20260928/
+/export/
+/unlinked.log
+**/export/logs/
+/publication/**/unlinked.log
+
+# Local reference matrices required for the independent NOx validation.
+/dev/reference_data/nox_baseline_2020/
