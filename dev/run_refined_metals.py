@@ -26,10 +26,12 @@ if __package__:
     from .refined_metal_edges import characterize, independent_coefficients
     from .refined_metal_methods import digest, prepare
     from .verify_indicator_totals import solve_residuals
+    from .refine_inventory_solution import refine
 else:
     from refined_metal_edges import characterize, independent_coefficients
     from refined_metal_methods import digest, prepare
     from verify_indicator_totals import solve_residuals
+    from refine_inventory_solution import refine
 
 ROOT = Path(__file__).resolve().parents[1]
 YEARS = [2020, 2025, 2030, 2035, 2040, 2045, 2050]
@@ -89,6 +91,7 @@ def sources():
                 "scipy",
                 "pandas",
                 "clipspy",
+                "numba",
             ]
         },
         "source_roots": {k: str(v) for k, v in roots.items()},
@@ -104,6 +107,7 @@ def sources():
                 "refined_metal_edges.py",
                 "refined_metal_methods.py",
                 "verify_indicator_totals.py",
+                "refine_inventory_solution.py",
             ]
         },
     }
@@ -236,6 +240,10 @@ def calculate_year(package, year, demands, manifest, methods, runtime, output):
         for activity, amount in functional_units[r["variable"]].items():
             demand_matrix[lca.dicts.product[activity], c] += amount
     independent_supply = spsolve(independent_matrix, demand_matrix, use_umfpack=False)
+    supply, supply_refinement = refine(matrix, demand_matrix, supply)
+    independent_supply, independent_refinement = refine(
+        independent_matrix, demand_matrix, independent_supply
+    )
     _, error = solve_residuals(independent_matrix, independent_supply, demand_matrix)
     _, pathway_error = solve_residuals(matrix, supply, demand_matrix)
     if (
@@ -354,6 +362,8 @@ def calculate_year(package, year, demands, manifest, methods, runtime, output):
         "checks": checks,
         "rows": len(frame),
         "elapsed_seconds": time.monotonic() - start,
+        "supply_refinement": supply_refinement,
+        "independent_supply_refinement": independent_refinement,
         "outputs_sha256": {
             f"{year}.parquet": digest(output / f"{year}.parquet"),
             f"{year}_supply_routes.csv": digest(output / f"{year}_supply_routes.csv"),

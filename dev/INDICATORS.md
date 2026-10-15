@@ -9,8 +9,18 @@ approved inventory corrections documented below and checks all 101 Swiss
 final-energy suppliers. Results represent annual scenario demands with their
 full supply chains, not per-unit intensities or a sum over the time horizon.
 
+Use the integrated premise revision, which includes both the refreshed vehicle
+wrappers and the reviewed metals fixes. An isolated checkout keeps an existing
+premise workspace intact:
+
+```bash
+git -C ../premise fetch origin sweet-energy-equipment
+git -C ../premise worktree add ../premise-sweet-energy-equipment 9b3dea4
+```
+
 ```bash
 conda run -n premise python dev/build_all_data_packages.py \
+  --premise-root ../premise-sweet-energy-equipment \
   --output-dir results/sps_updated/build \
   --batch-scenarios SPS1_bas0 SPS2_bas0 SPS3_bas0 SPS4_bas0 \
   --workers 2 --prune-checkpoints
@@ -141,12 +151,15 @@ come from the updated source workbook and retain their distance basis through
 the GAINS adjustment.
 
 ```bash
-conda run -n premise python dev/update_vehicle_energy_inventories.py --write
+PYTHONPATH=../premise-sweet-energy-equipment conda run -n premise python \
+  dev/update_vehicle_energy_inventories.py --premise ../premise-sweet-energy-equipment --write
 conda run -n premise python dev/update_electric_boiler_inventories.py --write
 conda run -n premise python dev/update_aggregate_electric_inventories.py --write
 conda run -n premise python dev/update_stationary_energy_links.py --write
-conda run -n premise python dev/audit_vehicle_energy.py
+PYTHONPATH=../premise-sweet-energy-equipment conda run -n premise python \
+  dev/audit_vehicle_energy.py --premise ../premise-sweet-energy-equipment
 conda run -n premise python dev/build_all_data_packages.py \
+  --premise-root ../premise-sweet-energy-equipment \
   --output-dir results/sps_updated/build \
   --batch-scenarios SPS1_bas0 SPS2_bas0 SPS3_bas0 SPS4_bas0 \
   --workers 2 --prune-checkpoints
@@ -277,10 +290,32 @@ shared-magnet Nd/B inputs, motor magnet masses, and direct motor lithium inputs.
 A failure stops package collection and downstream indicator calculation. Source
 coefficients and their hash are retained in the frozen batch inputs.
 
-The fresh build and full downstream audit are in progress. The dashboard remains
-on the previous batch until the updated results pass all required checks.
-Numerical agreement alone does not establish physical validity or equipment
-completeness; all remaining proxies stay in the coverage register.
+All four rebuilt packages passed: 280 motor/magnet recipe checks, 6,776 vehicle
+equipment coefficients, 25,200 final vehicle biosphere comparisons, 56 CNG routing
+checks, 644 electric-boiler checks, 224 aggregate component checks, 2,828 Swiss
+final-energy endpoint checks and 140 corrected heat links. The GAINS audit passed
+4,368 NOx compartment comparisons. The 81 EF 3.1/RELICS indicators are complete:
+687,204 result rows, 2,268 independent annual totals, no unlinked uses and no
+non-finite results.
+
+The metal runner refines its supplies with three compensated-residual corrections
+against the unchanged matrix and demand vectors. This addresses sensitivity to
+sparse solver ordering without clipping signed flows or relaxing the existing
+material-result tolerances. Residuals use Dekker product-error recovery and
+Neumaier summation, compiled with Numba and without fast-math reassociation.
+This avoids assuming that NumPy `longdouble` has extra precision on Apple arm64.
+See the numerical background in [Ogita, Rump and Oishi (2005)](https://doi.org/10.1137/030601818).
+Tests compare cancellation and product-error cases against Decimal arithmetic;
+a real 6,565-result case agrees with separately refined UMFPACK/CSC solutions
+within 1.3e-10 kg. Each year retains its before/after residual diagnostics.
+The independent audit still constructs its own product boundary and uses UMFPACK;
+strict flags are rechecked on independently loaded matrices with SuperLU and the
+same tested residual arithmetic. Numba is required in the Pathways environment.
+
+The Edges calculations and downstream metal audit are in progress. The dashboard
+remains on the previous batch until these pass. Numerical agreement alone does
+not establish physical validity or equipment completeness; all remaining proxies
+stay in the coverage register.
 
 ### Independent metal-quantity audit, 12 October 2026
 

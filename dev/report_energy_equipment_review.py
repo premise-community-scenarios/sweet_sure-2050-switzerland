@@ -122,6 +122,35 @@ def render(base):
     recipes = pd.concat(recipes, ignore_index=True)
     assert recipes.passed.all(), "Motor/magnet recipe validation failed"
     recipes.to_csv(out / "motor_magnet_source_checks.csv", index=False)
+    nd_method = next(
+        m for m in methods if m["label"] == "Neodymium" and "definition" in m
+    )
+    nd_fraction = next(
+        p["factor"]
+        for p in nd_method["definition"]["products"]
+        if p["product"] == "neodymium oxide"
+    )
+    reference_motor_nd = 0.3148 * nd_fraction * (1.98 / 53)
+    vehicle_proof = json.loads(
+        next(
+            (base / "build/packages").glob("*-SPS1_bas0.vehicle_energy.json")
+        ).read_text()
+    )
+    car = next(
+        r
+        for r in vehicle_proof
+        if r["year"] == 2020
+        and r["wrapper"] == "electricity, used in passenger car vehicle"
+        and r["location"] == "CH"
+    )
+    motor = next(
+        e
+        for e in car["retained equipment"]
+        if e["supplier"][1] == "electric motor, electric passenger car"
+    )
+    assert car["source unit"] == "kilometer"
+    car_energy = car["purchased MJ per source service"]
+    lifetime_km = 1 / motor["vehicle per source service"]
 
     def table(frame):
         return frame.to_html(
@@ -147,8 +176,8 @@ body{{font:16px/1.55 system-ui,sans-serif;max-width:1240px;margin:35px auto;padd
 <section class="qualified"><h2>What the results establish</h2><p>The calculation is checked against original matrices and explicit equipment coefficients. The results describe selected refined-product deliveries under the documented inventory boundary. They do <strong>not</strong> establish complete physical system metal demand: several equipment technologies, component compositions and aggregate uses still rely on proxies or have coverage gaps.</p><p>Equipment necessary for energy conversion is included. Vehicle chassis, bodies, roads and general buildings are excluded. Upstream manufacturing remains included. These are scenario totals, not marginal policy additions, annual equipment sales, or primary/secondary supply shares. Element and alloy indicators may overlap and must not be added together.</p></section>
 <section><h2>Numerical verification</h2><p><strong>{escape(verification_status)}</strong> The seeded sample contains {len(sample):,} consumers. Every system and consumer result is also checked independently; strict precision flags are retained and rechecked with another solver.</p><details><summary>Original numerical checks, including initial flags</summary><pre>{escape(json.dumps(numerical, indent=2))}</pre></details><details><summary>Solver rechecks</summary><pre>{escape(json.dumps(solver, indent=2))}</pre></details><details><summary>Coefficient and old/new reconciliation checks</summary><pre>{escape(json.dumps(equipment, indent=2))}</pre></details></section>
 <section><h2>Corrected energy inventories</h2><p>Updated car, truck, bus and motorcycle service inventories supply the energy denominator and equipment lifetime allocation. Each transport wrapper consumes one MJ of its named purchased energy carrier; source auxiliary fuels are retained separately and disclosed. Charging losses are counted once; occupancy and payload cancel through the source service-to-vehicle allocation. Final non-fuel emissions follow the post-GAINS source, while fuel-derived emissions retain scenario accounting. CNG retains its physical compression process and uses Swiss scenario supplies.</p><p>Dedicated electric-boiler hardware is allocated from each scenario's installed capacity, annual electricity and lifetime. Industrial boiler material shares are provisional, and steel grades and cable/electronics splits remain uncertain. Static Swiss aggregate electricity shares include identified energy components and preserve uncovered residual demand. Tram and hydrogen-motorcycle coefficients use explicit vehicle-component proxies.</p></section>
-<section><h2>Motor and magnet coefficients</h2><p>{len(recipes):,} checks compare the exported motor and magnet coefficients with the original source inventory. The shared magnet retains 0.3148 kg neodymium oxide and 0.029 kg boric oxide per kg magnet. Motor magnet masses are retained, and whole-vehicle lithium observations are not added to motors. The earlier trial build failed these checks and was rejected. The rebuilt scenarios use premise's reviewed intensity units and component-scope preservation rules; unsupported years preserve source inputs. These checks cover the named recipes, not every material coefficient in every technology.</p></section>
-<section><h2>Worked equipment back-calculations</h2><p>SPS1 in 2050: the largest equipment branch for each shown consumer/material pair. Branch tonnes = annual PJ × 10⁹ × equipment input per MJ × refined-metal kg per equipment unit ÷ 1000. The last coefficient includes the equipment's full upstream supply chain; it is not its physical metal composition. These are individual branch contributions, not consumer totals, and different materials must not be added together. The complete branch table retains every equipment input and both endpoint years for all scenarios.</p><div class="scroll">{table(examples)}</div></section>
+<section><h2>Motor and magnet coefficients</h2><p>{len(recipes):,} checks compare the exported motor and magnet coefficients with the original source inventory. The shared magnet retains 0.3148 kg neodymium oxide and 0.029 kg boric oxide per kg magnet. Motor magnet masses are retained, and whole-vehicle lithium observations are not added to motors. The earlier trial build failed these checks and was rejected. The rebuilt scenarios use premise's reviewed intensity units and component-scope preservation rules; unsupported years preserve source inputs. These checks cover the named recipes, not every material coefficient in every technology. Generic motor aluminium and cobalt observations are available only for 2020; later years retain the original inventory. Trends can therefore reflect a change in coefficient basis as well as changes in the energy system.</p><p>A direct hand calculation for the source 53 kg passenger-car motor is 0.3148 × {nd_fraction:g} × (1.98 / 53) = <strong>{reference_motor_nd:.8f} kg Nd per kg motor</strong>: oxide per kg magnet × contained-Nd fraction × magnet per kg motor. Multiply by the motor kg/MJ and annual MJ to obtain this branch's contained-Nd delivery. Other upstream metal uses remain separate contributions in the full calculation.</p></section>
+<section><h2>Worked equipment back-calculations</h2><p>The source representative electric car in SPS1/2020 uses {car_energy:.6g} MJ/km ({car_energy * 100 / 3.6:.3f} kWh/100 km), with a {lifetime_km:,.0f} km lifetime and {motor['amount per vehicle']:.4f} kg motor. Its allocated motor input is {motor['amount per vehicle']:.4f} ÷ ({lifetime_km:,.0f} × {car_energy:.6g}) = <strong>{motor['amount per MJ']:.8g} kg motor/MJ</strong>. Later-year energy efficiencies alter this denominator; equipment is not added once per kilometre or allocated twice.</p><p>The table shows SPS1 in 2050: the largest equipment branch for each shown consumer/material pair. Branch tonnes = annual PJ × 10⁹ × equipment input per MJ × refined-metal kg per equipment unit ÷ 1000. The last coefficient includes the equipment's full upstream supply chain; it is not its physical metal composition. These are individual branch contributions, not consumer totals, and different materials must not be added together. The complete branch table retains every equipment input and both endpoint years for all scenarios.</p><div class="scroll">{table(examples)}</div></section>
 <section><h2>2050 old/new totals</h2><p>All numbers below are tonnes of the indicated element or alloy. The downloadable comparison includes every indicator and year. The endpoint attribution table separates demand, foreground coefficients, upstream intensities and added/removed suppliers; it is an accounting decomposition, not a causal policy estimate.</p><div class="scroll">{table(comparison)}</div></section>
 <section class="qualified"><h2>Assumption sensitivities</h2><p>Largest relative changes among selected materials in 2050. Each case changes one assumption and leaves central results unchanged. Steel-grade and electronics alternatives test undisclosed material classifications; they are not statistical confidence bounds. Li–S removal renormalizes remaining battery capacity shares. Different cases must not be summed.</p><div class="scroll">{table(effects)}</div></section>
 <section><h2>Heat-provider equipment paths</h2><p>Positive heat links are followed to identifiable equipment, preserving each native-unit coefficient and market share. Fuel and electricity supply chains are excluded from this coverage screen but remain in the full LCI. A path ending without identified hardware needs review; it does not establish zero equipment. Existing gas-engine proxies do not establish fuel-cell stack or reformer material quantities.</p><div class="scroll">{table(unresolved_heat)}</div><p><a href="heat_equipment_paths.parquet">All heat-provider equipment paths</a></p></section>

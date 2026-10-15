@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 from scipy.sparse.linalg import spsolve
 from audit_metal_quantities import Inventory, ROOT, digest, write_json
+from refine_inventory_solution import refine
 
 
 def run(base, output):
@@ -27,6 +28,7 @@ def run(base, output):
     regional = pd.read_parquet(output / "location_checks.parquet")
     systems = pd.read_parquet(output / "system_checks.parquet")
     rows = []
+    refinements = []
     for (scenario, year), group in initial.groupby(["scenario", "year"], sort=True):
         flags = group[~group.passed | ~group.forward_passed]
         region_flags = regional[
@@ -57,6 +59,8 @@ def run(base, output):
         x = spsolve(inv.A, rhs, use_umfpack=False)
         if x.ndim == 1:
             x = x[:, None]
+        x, diagnostic = refine(inv.A, rhs, x)
+        refinements.append({"scenario": scenario, "year": int(year), **diagnostic})
         manifest = json.loads(
             next(
                 (base / "indicators/scenarios" / scenario).glob("*.manifest.json")
@@ -116,9 +120,17 @@ def run(base, output):
             "max_absolute_difference_kg": max(
                 (abs(r["difference_kg"]) for r in rows), default=0
             ),
+            "residual_refinement": refinements,
+            "residual_helper_sha256": digest(
+                Path(__file__).with_name("refine_inventory_solution.py")
+            ),
         },
     )
     shutil.copy2(__file__, output / "audit_metal_solver_precision.py")
+    shutil.copy2(
+        Path(__file__).with_name("refine_inventory_solution.py"),
+        output / "refine_inventory_solution.py",
+    )
     if failures:
         raise ValueError(f"{failures} independent solver checks remain unresolved")
 
