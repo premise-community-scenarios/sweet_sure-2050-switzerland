@@ -9,12 +9,14 @@ approved inventory corrections documented below and checks all 101 Swiss
 final-energy suppliers. Results represent annual scenario demands with their
 full supply chains, not per-unit intensities or a sum over the time horizon.
 
-Use the integrated premise revision, which includes both the refreshed vehicle
-wrappers and the reviewed metals fixes. An isolated checkout keeps an existing
-premise workspace intact:
+To reproduce the accepted batch, use its recorded premise revision below,
+which includes both the refreshed vehicle wrappers and the reviewed metals
+fixes. That revision is retained in master's history; the temporary
+`sweet-energy-equipment` branch has been integrated and deleted. An isolated
+checkout keeps an existing premise workspace intact:
 
 ```bash
-git -C ../premise fetch origin sweet-energy-equipment
+git -C ../premise fetch origin master
 git -C ../premise worktree add ../premise-sweet-energy-equipment 9b3dea4
 ```
 
@@ -111,10 +113,13 @@ wrapper. The vehicle audit permits this only after proving that the wrapper is
 unreachable from every positive final-energy demand, traversing signed and
 substitution links too. It records each such inactive route; zero direct demand
 alone is insufficient, and the one-MJ and equipment checks still apply.
-The integrated premise checkout is commit
+The accepted batch's premise checkout is commit
 [`9b3dea4`](https://github.com/polca/premise/commit/9b3dea4) on
-`sweet-energy-equipment`. It combines the vehicle wrappers with master’s reviewed
+the former `sweet-energy-equipment` branch. It combines the vehicle wrappers with master’s reviewed
 metal-intensity units, component-scope preservation and observation-year checks.
+Premise master now includes the battery-cache correction `b844a9d` and selective
+equipment integration `927dd38`. New builds should use that integrated master
+with a new output directory; the existing frozen batch predates these fixes.
 The wrapper-only commit `9220e93` lacks those metals fixes and must not be used
 alone for this workflow. Pass `--premise-root /path/to/checkout` to freeze an
 isolated checkout without changing the active sibling workspace.
