@@ -42,6 +42,13 @@ SCRIPTS = [
     "stem_efficiency.py",
     "stem_heat_pumps.py",
     "stem_wood_coproducts.py",
+    "stem_vehicle_energy.py",
+    "stem_electric_boilers.py",
+    "stem_stationary_energy.py",
+    "audit_electric_boiler_package.py",
+    "audit_aggregate_electric_package.py",
+    "audit_vehicle_energy_package.py",
+    "audit_stationary_energy_package.py",
     "stem_source_cache.py",
     "stem_fuel_cells.py",
     "validate_wood_coproducts.py",
@@ -68,15 +75,22 @@ def write_json(path, value):
     temporary.replace(path)
 
 
-def prepare(output):
+def prepare(output, batch_scenarios=None):
     state_path = output / "progress.json"
     if state_path.exists():
         state = json.loads(state_path.read_text())
+        if batch_scenarios is not None and set(batch_scenarios) != set(
+            state["plan"]["scenarios"]
+        ):
+            raise ValueError(
+                "Frozen batch scenario selection changed; use a new output directory"
+            )
         for resource in state["plan"]["resources"].values():
             if file_hash(resource["path"]) != resource["sha256"]:
                 raise ValueError("Frozen batch inputs changed; refusing to resume")
         return state
-    plan = build_plan(parse_args(["--output-dir", str(output)]))
+    selection = ["--scenarios", *batch_scenarios] if batch_scenarios else []
+    plan = build_plan(parse_args(["--output-dir", str(output), *selection]))
     if any((output / name).exists() for name in ["inputs", "software", "packages"]):
         raise ValueError(
             "Incomplete batch setup already exists; inspect it before reusing this directory"
@@ -115,6 +129,7 @@ def prepare(output):
                 str(inputs / "datapackage.json"),
                 "--output-dir",
                 str(output),
+                *selection,
             ]
         )
     )
@@ -178,6 +193,9 @@ def reuse_tested(run, plan):
         ("premise_compat.py", "pathways_adapter_sha256"),
         ("stem_heat_pumps.py", "heat_pump_adapter_sha256"),
         ("stem_wood_coproducts.py", "wood_coproduct_adapter_sha256"),
+        ("stem_vehicle_energy.py", "vehicle_energy_adapter_sha256"),
+        ("stem_electric_boilers.py", "electric_boiler_adapter_sha256"),
+        ("stem_stationary_energy.py", "stationary_energy_adapter_sha256"),
     ]:
         if file_hash(run.parents[1] / "software/dev" / name) != build.get(field):
             return False
@@ -437,9 +455,41 @@ def run_batch(
                 update(scenario, status="validating", reused_tested_package=reused)
                 execute("validate_stem_build.py", [package], "validation.log")
                 execute(
+                    "audit_vehicle_energy_package.py",
+                    [package],
+                    "vehicle_validation.log",
+                )
+                execute(
+                    "audit_electric_boiler_package.py",
+                    [
+                        package,
+                        "--scenario-data",
+                        state["plan"]["resources"]["scenario_data"]["path"],
+                    ],
+                    "electric_boiler_validation.log",
+                )
+                execute(
+                    "audit_aggregate_electric_package.py",
+                    [
+                        package,
+                        "--workbook",
+                        state["plan"]["resources"]["inventories"]["path"],
+                    ],
+                    "aggregate_electric_validation.log",
+                )
+                execute(
                     "validate_wood_coproducts.py",
                     [package],
                     "wood_coproduct_validation.log",
+                )
+                execute(
+                    "audit_stationary_energy_package.py",
+                    [
+                        package,
+                        "--workbook",
+                        state["plan"]["resources"]["inventories"]["path"],
+                    ],
+                    "stationary_routing_validation.log",
                 )
                 update(scenario, status="coverage")
                 execute("validate_package_coverage.py", [package], "coverage.log")
@@ -454,6 +504,9 @@ def run_batch(
                         matrix_dir,
                         "--output",
                         run / "gains_car_audit.json",
+                        "--vehicle-workbook",
+                        output
+                        / "software/premise/data/additional_inventories/lci-pass_cars.xlsx",
                     ],
                     "gains_car_audit.log",
                 )
@@ -474,6 +527,16 @@ def run_batch(
                     ".heat_pump_validation.json",
                     ".wood_coproducts.json",
                     ".wood_coproduct_validation.json",
+                    ".vehicle_energy.json",
+                    ".vehicle_checks.csv",
+                    ".vehicle_validation.json",
+                    ".electric_boilers.json",
+                    ".electric_boiler_checks.csv",
+                    ".electric_boiler_validation.json",
+                    ".aggregate_electric_checks.csv",
+                    ".aggregate_electric_validation.json",
+                    ".stationary_routing_checks.csv",
+                    ".stationary_routing_validation.json",
                 ]:
                     shutil.copy2(
                         package.with_suffix(suffix), destination.with_suffix(suffix)
@@ -532,6 +595,11 @@ def main():
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--retry-failed", action="store_true")
     parser.add_argument(
+        "--batch-scenarios",
+        nargs="+",
+        help="Define a complete batch containing only these scenarios (frozen on first run).",
+    )
+    parser.add_argument(
         "--prune-checkpoints",
         action="store_true",
         help="Remove disposable worker scenario stores only after package validation; retain source caches, matrices and reports.",
@@ -549,7 +617,7 @@ def main():
             fcntl.flock(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             raise SystemExit("This batch already has a running coordinator")
-        state = prepare(output)
+        state = prepare(output, args.batch_scenarios)
         if args.prepare_only:
             print(f"Prepared {len(state['scenarios'])} scenarios in {output}")
             return 0

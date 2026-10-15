@@ -6,7 +6,7 @@ Description
 
 This is a repository containing a data package that implements the projections of the 
 TIMES model for Switzerland (STEM) within the life-cycle assessment (LCA) database ecoinvent.
-Projections are implemented for the scenarios **SPS1** and **SPS4**, developed within SFOE's SWEET-SURE program.
+Projections are implemented for the scenarios **SPS1–SPS4**, developed within SFOE's SWEET-SURE program.
 
 This data package is meant to be used in `premise` in addition to a global IAM scenario, to provide 
 refined projections at the country level. `premise` can export the result as a data package for `pathways`,
@@ -33,8 +33,20 @@ Alvaro Jose Hahn Menacho, Romain Sacchi, Christian Bauer, Evangelos Panos, Russe
 Ecoinvent database compatibility
 --------------------------------
 
+- ecoinvent 3.12 cut-off (current build workflow)
 - ecoinvent 3.11 cut-off
 - ecoinvent 3.10 cut-off
+
+For the four base-scenario Pathways packages, 16 EF 3.1 headline categories,
+65 RELICS indicators, 60 Edges refined-element inputs, five separate alloy-mass
+indicators and the local interactive dashboard, see
+[the current indicator workflow](dev/INDICATORS.md) and
+[dashboard instructions](dashboard/README.md).
+
+The current inventories allocate energy-specific vehicle components, boilers and
+documented aggregate electricity equipment over lifetime energy use. The
+[equipment audit workflow](dev/INDICATORS.md#updated-vehicles-and-energy-specific-equipment)
+records the excluded common structures, remaining proxies and coverage gaps.
 
 
 License

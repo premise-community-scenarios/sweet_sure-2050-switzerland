@@ -122,3 +122,21 @@ def test_residual_accounts_for_internal_flows_and_detects_inaccurate_equations()
     assert backward < 1e-15
     _, bad = solve_residuals(matrix, np.array([1.0, 2.0]), demand)
     assert bad > 0.1
+
+
+def test_single_separate_demand_does_not_broadcast_residuals(tmp_path):
+    manifest_path = make_case(tmp_path)
+    demands = tmp_path / "results_demands.csv"
+    pd.read_csv(demands).iloc[:1].to_csv(demands, index=False)
+    raw = tmp_path / "results.gzip"
+    frame = pd.read_parquet(raw)
+    frame["value"] = 294.0  # x = [3, 6], score = (4*3 + 5*6)*7
+    frame.to_parquet(raw)
+    manifest = json.loads(manifest_path.read_text())
+    manifest["raw_sha256"] = sha256(raw)
+    manifest_path.write_text(json.dumps(manifest))
+    verify(manifest_path, [2020], solver="superlu", demand_mode="separate")
+    report = json.loads((tmp_path / "results_independent_validation.json").read_text())
+    assert report["checks"][0]["independent_score"] == 294
+    with pytest.raises(ValueError, match="shapes differ"):
+        solve_residuals(csr_matrix(np.eye(2)), np.ones(2), np.ones((2, 1)))

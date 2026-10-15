@@ -154,8 +154,8 @@
             "path": "inventories/lci-sweet_sure.xlsx",
             "profile": "data-resource",
             "name": "inventories",
-            "format": "csv",
-            "mediatype": "text/csv",
+            "format": "xlsx",
+            "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             "encoding": "utf-8",
             "schema": {
                 "fields": [

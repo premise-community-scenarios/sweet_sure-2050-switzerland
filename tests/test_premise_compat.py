@@ -37,6 +37,10 @@ def test_metals_provenance_is_not_exported_as_activity_suppliers():
         "metals": {
             "material decisions": [decision],
             "material update metrics": {"changed": 3},
+            "applied market shares": {"CH": {"copper": 1}},
+            "market diagnostics": [{"reason": "no projection"}],
+            "resource diagnostics": [{"flow": "Copper"}],
+            "methodology": {"boundary": "primary extraction"},
             "transformed activities": [
                 {"name": "steel production", "reference product": "steel", "unit": "kg"}
             ],
@@ -46,3 +50,8 @@ def test_metals_provenance_is_not_exported_as_activity_suppliers():
     assert set(result["metals"]) == {"transformed activities"}
     assert mapping["metals"]["material decisions"] == [decision]
     assert mapping["metals"]["material update metrics"] == {"changed": 3}
+
+
+def test_unknown_metadata_is_an_explicit_error_instead_of_a_silent_omission():
+    with pytest.raises(ValueError, match="metals/new diagnostic"):
+        snapshot_mappings({"metals": {"new diagnostic": {"message": "unknown"}}})

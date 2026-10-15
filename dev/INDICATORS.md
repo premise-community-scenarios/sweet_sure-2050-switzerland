@@ -1,9 +1,437 @@
 # SWEET-SURE indicators with Pathways
 
-All generated packages, indicator results, and audit artifacts were removed on
-11 October 2026. The dated paths and findings below document historical work;
-the referenced files are no longer available locally. Rebuild packages and
-recalculate indicators before running the dashboard or result-dependent audits.
+## SPS base scenarios: EF 3.1 and RELICS
+
+The current workflow builds `SPS1_bas0`, `SPS2_bas0`, `SPS3_bas0` and `SPS4_bas0`
+using ecoinvent 3.12 cutoff and REMIND `SSP2-PkBudg1000`. Each package contains
+2020–2050 in five-year steps; 2045 inputs are interpolated. It retains the
+approved inventory corrections documented below and checks all 101 Swiss
+final-energy suppliers. Results represent annual scenario demands with their
+full supply chains, not per-unit intensities or a sum over the time horizon.
+
+```bash
+conda run -n premise python dev/build_all_data_packages.py \
+  --output-dir results/sps_updated/build \
+  --batch-scenarios SPS1_bas0 SPS2_bas0 SPS3_bas0 SPS4_bas0 \
+  --workers 2 --prune-checkpoints
+conda run -n pathways python dev/run_indicator_batch.py results/sps_updated/build \
+  --output-dir results/sps_updated/indicators --method-set ef31-relics --workers 2
+.venv-dashboard/bin/python -m dashboard.app --results results/sps_updated/indicators
+```
+
+The builder requires the existing Brightway project `ecoinvent-3.12-cutoff`,
+its matching biosphere database, a sibling `premise` checkout, encrypted IAM
+access, and the retained local NOx reference matrices described in
+`dev/reference_data/nox_baseline_2020/provenance.json`. Set `PREMISE_KEY` in the
+environment if needed. A fresh build freezes inputs and software. Reruns verify
+their hashes; use `--retry-failed` to retry a failed build. `--batch-scenarios`
+defines the complete batch, whereas `--scenarios` selects workers within an
+existing batch. Use a new output directory when changing inputs or method sets.
+
+The selected 81 indicators are the **16 EF v3.1 headline categories**, including
+long-term emissions, and **all 65 RELICS resource-extraction indicators**. EF
+climate/toxicity subdivisions and the separate `no LT` methods are excluded.
+No normalization, weighting, or cross-indicator single score is calculated.
+The old six-indicator workflow remains available with `--method-set legacy`.
+
+Pathways' ecoinvent 3.12 CF file did not contain RELICS. `indicator_methods.py`
+adds it only to the batch's frozen Pathways copy, using the upstream mapping in
+`configuration_file/relics_mapping.yaml` (RELICS commit
+`4af9d62847c2762002bafbaaa447454b02614736`, copied without changes; BSD license in
+`configuration_file/RELICS-LICENSE`). Matching follows `relics.utils.add_relics`:
+case-insensitive flow-name prefix and exact compartment. Factors and native
+kilogram units are retained, including compound-specific rules. Every method
+must match at least one flow in every package/year; the full matched flow lists
+must agree. Unmatched aliases are recorded individually rather than silently
+discarding an entire indicator. Bundled EF factors are retained unchanged;
+every EF characterization-flow identity must exist in every package/year index.
+
+Generated files, kept locally under the Git-ignored `results/sps_updated/`, include:
+
+- `build/packages/`: four validated Pathways ZIPs, with build and validation metadata.
+- `indicators/method_registry.json`: full method tuples, units, display conversions,
+  source hashes and RELICS flow matches for every package/year.
+- `indicators/indicator_totals.csv`: 2,268 annual totals (4 × 7 × 81).
+- `indicators/df_final.parquet`, `.csv`, `.xlsx`: 687,204 rows covering all
+  scenarios, years, 101 energy uses, indicators and three contribution regions.
+- `indicators/scenarios/`: raw Pathways results, demand tables and independent
+  matrix checks for each scenario.
+- `indicators/completion_summary.json`: combined coverage, validation and hashes.
+
+The pipeline checks all 2,268 annual totals using a separate SuperLU matrix
+calculation of each final-energy demand. Sparse Pathways exports omit zeros;
+complete result-array coordinates are recorded before export, and the final
+tables restore explicit zeros for inactive uses and zero-valued indicators.
+The dashboard verifies the final table and method-registry hashes before loading.
+It offers family/indicator selection, scenario comparisons, signed contributions,
+fixed-2020 percentage changes and CSV/SVG downloads. See `dashboard/README.md`.
+
+## Edges refined-metal and alloy inputs
+
+### Updated vehicles and energy-specific equipment
+
+The accepted boundary includes lifetime-attributed batteries, chargers, motors,
+powertrains, fuel systems and dedicated energy infrastructure. It excludes
+vehicle chassis, bodies, roads and general buildings; ordinary upstream
+manufacturing remains included. Results are scenario totals, not marginal policy
+additions or annual equipment sales. Primary/secondary shares are deferred.
+
+The updated premise inventories are authoritative: Medium passenger car,
+40-tonne truck, 13 m single-deck urban bus and 11–35 kW motorcycle. Native
+3.5-tonne vehicles replace car proxies for light duty, except compressed gas,
+which uses an explicitly documented Van proxy. Native coaches replace urban
+buses where available. Rail uses locomotive components, excluding the common
+shell, wagons and tracks; freight-locomotive equipment remains a passenger-rail
+proxy. Remaining proxies and coverage gaps are recorded per final-energy use.
+Passenger and freight rail both have explicit CH endpoints; regional fallbacks
+must not bypass the Swiss SPS electricity or hydrogen mix. Native freight
+shunting diesel is retained as a separate auxiliary and routed through Swiss
+SPS supply. Its relevance to passenger-rail and tram proxies is unresolved;
+the review quantifies its upstream metal effect separately. The one-MJ reference
+is the named final-energy carrier, not the sum of that carrier and auxiliaries.
+The wrapper implementation is in premise commit
+[`9220e93`](https://github.com/polca/premise/commit/9220e93) on `trals`; use that
+commit or a descendant containing `premise.vehicle_energy_use` when rebuilding.
+
+`update_vehicle_energy_inventories.py` rebuilds both the SWEET workbook and
+premise's `lci-final-energy.xlsx`. Each retained exchange is divided by purchased
+MJ per source service unit; source production links already allocate lifetime
+and payload/occupancy. Grid energy includes charging losses once. Hydrogen
+compression is an auxiliary input outside the hydrogen denominator. The
+motorcycle's documented replacement pack, omitted from its source production
+exchange, is included as an explicit correction. Supplier identifiers are
+migrated from their source ecoinvent version to the workbook's declared version.
+
+The scenario adapter propagates updated regional energy and equipment, retains
+Swiss SPS fuel supply, and preserves CNG compression per kg delivered through a
+dedicated process supplied by the cubic-metre SPS gas market. Alternative-fuel supplier shares are retained, while mass is normalized with
+fuel-specific heating values: ethanol 26.5 MJ/kg, FAME 38 MJ/kg, FT diesel
+43 MJ/kg, and methane 47.5 MJ/kg. Delivered vehicle-grade natural gas retains
+46.5 MJ/kg and its source compression recipe. This corrects inherited gasoline-
+like ethanol quantities and inconsistent biodiesel quantities. Combustion CO2
+uses the corresponding per-MJ factor while retaining fossil/biogenic shares.
+Other exhaust factors remain a representative powertrain proxy. Distance-based
+emissions are refreshed after GAINS; fuel-derived emissions retain scenario fuel
+accounting. Import cache keys include vehicle and final-energy workbook hashes.
+Passenger-BEV validation treats the inherited 10–35 kWh/100 km band as a
+plausibility warning: future Mini vehicles can fall below it after IAM scaling.
+Positive finite electricity, kWh input units and a positive vehicle-km reference
+remain mandatory; no inventory is clipped to the heuristic range.
+
+```bash
+conda run -n premise python dev/update_vehicle_energy_inventories.py --write
+conda run -n premise python dev/update_electric_boiler_inventories.py --write
+conda run -n premise python dev/update_aggregate_electric_inventories.py --write
+conda run -n premise python dev/update_stationary_energy_links.py --write
+conda run -n premise python dev/audit_vehicle_energy.py
+conda run -n premise python dev/build_all_data_packages.py \
+  --output-dir results/sps_updated/build \
+  --batch-scenarios SPS1_bas0 SPS2_bas0 SPS3_bas0 SPS4_bas0 \
+  --workers 2 --prune-checkpoints
+conda run -n pathways python dev/run_indicator_batch.py results/sps_updated/build \
+  --output-dir results/sps_updated/indicators --method-set ef31-relics --workers 2
+conda run -n pathways python dev/run_refined_metals.py \
+  --base-results results/sps_updated/indicators \
+  --packages results/sps_updated/build/packages \
+  --output results/sps_updated/refined_metals \
+  --equipment-coverage results/sps_updated/vehicle_audit/equipment_coverage.csv
+```
+
+The independent workbook audit reconstructs equipment from original service and
+production exchanges. Exported matrices are checked against scenario-specific
+back-calculations. The dashboard carries the 101-pathway coverage register;
+unresolved coverage is not zero demand. The Swiss Federal Office of Energy's
+[end-use analysis](https://pubdb.bfe.admin.ch/de/publication/download/12358) and
+[2020 appliance analysis](https://pubdb.bfe.admin.ch/de/publication/download/10742)
+provide evidence for equipment composition and utilization. Energy shares alone
+do not establish metal coefficients or lifetime throughput.
+
+### Dedicated electric heating and aggregate electricity equipment
+
+Four distinct boiler endpoints use published hardware specifications: CTC EL9
+for residential space heat, Høiax Connected 200 for water heat, CTC EL42 for
+services, and Osby EL500 Eco for industry. Sources, document hashes, declared
+material masses, and material-class proxies are in
+[`electric_boiler_equipment.yaml`](../configuration_file/electric_boiler_equipment.yaml).
+The industrial model is a provisional resistance hot-water boiler: its mass and
+power are measured, while material shares and lifetime are transferred proxies.
+It is not a verified industrial steam/electrode technology mix. Undisclosed steel
+grades, cables/electronics, assembly energy and installation remain limitations.
+The unidentified 8.6–14% mass in CTC declarations is left explicitly unmodelled;
+it is not assigned a fictitious plastic or metal composition. Electronics use a
+generic control-unit proxy, with passive-components and cable alternatives tested
+separately.
+
+For each scenario/year, equipment units per final MJ are:
+
+```text
+installed_GW × 1,000,000 / unit_kW / life_years / (annual_electricity_PJ × 1e9)
+```
+
+The existing `GWth/yr.` CSV label is interpreted as installed capacity; separate
+capacity-addition variables are excluded. The original export formulas select
+`VAR_CAP`; the review checks their stock and energy values independently for all
+four scenarios and seven output years. Capacity and energy are independently
+interpolated in 2045. An idle stock with zero energy is not attributed to energy
+consumption that year. This allocation is a steady-utilization lifetime proxy,
+not a cohort retirement model or annual capital demand.
+
+Industry, services and household “other electricity” now have distinct component
+mixes. Swiss 2020 end-use shares are held fixed, with heating excluded where it
+already has its own endpoint. Identifiable electrical materials from appliance
+LCIs, a published industrial motor bill of materials, and a CFL lighting proxy
+are allocated over lifetime electricity. Unresolved categories retain their
+energy shares: known equipment is never scaled up to fill them. Household appliance
+housings and unseparated structural materials are excluded. This is partial
+functional-component coverage, not complete appliance coverage. Static shares,
+old motor/CFL technology, missing ICT and appliance component detail are explicit
+in [`aggregate_electric_equipment.yaml`](../configuration_file/aggregate_electric_equipment.yaml).
+
+The legacy whole-tram input has been replaced by a freight-locomotive component
+proxy. Hydrogen motorcycles use fuel-cell-car components per MJ because no native
+inventory exists; the former undocumented size divisor and misleading battery-
+motorcycle specifications are removed. These proxies do not establish accurate
+vehicle-specific intensities. Fuel-cell vehicle buffer batteries also retain the
+source nominal-kWh MIX proxy, which may not reproduce high-power pack masses.
+Hydrogen rail quantities include lifetime replacements; a large fuel-cell input
+is in units of 1 kW, not a count of complete locomotives.
+
+After completing the build and indicators, run the new audits:
+
+```bash
+conda run -n pathways python dev/audit_metal_quantities.py \
+  --results results/sps_updated/refined_metals \
+  --base-results results/sps_updated/indicators \
+  --packages results/sps_updated/build/packages \
+  --output results/sps_updated/metal_audit
+conda run -n pathways python dev/audit_metal_solver_precision.py \
+  --base results/sps_updated --output results/sps_updated/metal_audit
+conda run -n pathways python dev/review_energy_equipment.py
+conda run -n pathways python dev/report_energy_equipment_review.py
+```
+
+The review records every first-tier equipment calculation at 2020/2050, checks
+chemical factors and heat-pump electricity balances, and reconciles old/new
+changes into demand, foreground coefficients, upstream intensities, and added or
+removed suppliers. Separate, unapplied sensitivities cover battery Li–S shares,
+boiler lifetimes, undisclosed steel grades, and cable/electronics mappings. These
+are assumption tests, not statistical confidence intervals. Numerical validation
+cannot certify physical completeness where inventory coverage remains unresolved.
+The heat-path screen separately records identifiable hardware through positive
+heat-provider links, excluding fuel and electricity supply chains from this
+screen only. Paths without identified equipment need review; they are not zero
+equipment. Existing fuel-cell CHP endpoints use gas-engine hardware proxies, so
+stack and reformer quantities remain unresolved. The current offline report is
+`results/sps_updated/metal_audit/audit_report.html`; `results/sps_base/` remains the
+previous batch used for the comparison.
+
+All 101 final-energy endpoints are required to have CH activities. The two
+gas-driven heat-pump aliases and services biomethane are explicitly regionalized;
+gas heat pumps still retain the legacy gas-boiler equipment proxy. Five SWEET
+heat links that bypassed already configured CH providers are routed to those
+providers after external-scenario regionalization, without changing heat quantities.
+The workbook retains importable source locations and records the intended
+Swiss links; `stem_stationary_energy.py` requires unique providers before applying
+them. `audit_stationary_energy_package.py`
+checks these locations and coefficients in every exported year. This fixes
+Swiss supply routing without claiming that the remaining technology proxies
+represent complete physical equipment inventories.
+
+### Independent metal-quantity audit, 12 October 2026
+
+This historical audit concerns the original packages. Its proposed glider
+addition has been superseded: exclusion of chassis is intentional under the
+accepted boundary. Its numerical sensitivities apply to the original inventory.
+
+The local [audit report](../results/sps_base/metal_audit_20261012/audit_report.html)
+separates numerical agreement from inventory validity. It covers all 183,820
+consumer–material totals, 1,820 annual totals, 301 reproducibly sampled consumers,
+104 detailed supply-chain traces and 2,828 checks against original STEM demands.
+The 168 product–indicator factor calculations and 32 endpoint electric-heat-pump
+electricity balances pass. A separate SuperLU calculation rechecks every strict
+UMFPACK flag; 82 very small precision flags remain recorded. The largest annual
+relative difference above 1 kg is 0.00715%, for tin in SPS2/2040.
+
+The totals are **not certified as complete physical system metal demand**.
+The historical foreground omits electric heavy-truck operating electricity;
+appliance and boiler
+coverage also varies. Passenger-car and truck battery formulas disagree with
+documented lifetime/energy assumptions, and some transport modes use car proxies.
+The report gives source cells, worked back-calculations and separate, unapplied
+sensitivities. For example, missing truck electricity adds 1.95% to SPS1/2050
+system copper; the car formula discrepancy affects system lithium by about 6%.
+Lifetime-attributed inputs are distinct from annual equipment purchases.
+
+Reproduce using the Pathways environment, in this order:
+
+```bash
+python dev/audit_metal_quantities.py
+python dev/audit_metal_coefficients.py
+python dev/audit_metal_boundary_review.py
+python dev/audit_metal_solver_precision.py
+python dev/report_metal_audit.py
+python -m pytest -q tests/test_audit_metal_quantities.py
+```
+
+The original packages, scientific results and dashboard values remain unchanged.
+Audit outputs are Git-ignored under `results/sps_base/metal_audit_20261012/`;
+reproducible scripts are under `dev/`. The user subsequently clarified
+lifetime-attributed metal use with energy-specific equipment coverage as the
+acceptance criterion. The historical inventories do not meet that requirement. The audit excludes
+primary/secondary shares and does not choose replacement vehicle assumptions.
+
+### Calculation scope and workflow
+
+The extension's goal is to track selected refined materials throughout the full
+supply chains of all four SPS baseline scenarios, with direct refining/recycling
+deliveries and market deliveries treated consistently. The user selected both
+contained-metal factors for selected compounds and separate whole-alloy mass
+indicators where elemental composition is not fixed. The completed extension
+must satisfy these acceptance criteria:
+
+1. Audit product identities across all 28 package/year indices; use explicit
+   product lists, units, documented contents or chemical formulas, and record
+   unavailable elements and excluded forms without treating them as zeros.
+2. Apply the actual Edges rule engine to the original Pathways matrices and
+   demands. Exclude internal transfers within each material boundary, preserve
+   signed activity credits, and retain original EF 3.1 and RELICS values exactly.
+3. Verify direct, market, secondary-supply, loss and conversion cases on small
+   networks; independently assemble and solve the full matrices, checking each
+   final-energy demand, annual total and contribution decomposition.
+4. Retain method JSON, resolved factors, coverage, source/input hashes and
+   per-year verification records. Explain inventory anomalies and interpretation
+   limits separately from numerical verification.
+5. Integrate all indicators, units and limits into the local dashboard; verify
+   filters, material locations, exports, definitions and mobile layout in a browser.
+6. Preserve final packages and unrelated work; remove only this extension's
+   temporary caches after verification. Source commits and pushes are authorized
+   for the subsequent inventory-remediation work.
+
+The mapping in `configuration_file/refined_metal_inputs.yaml` defines **60
+element indicators and five alloy indicators**, based on 167 distinct reference
+products. The former includes metals and selected metalloids/nonmetals used in
+metal-related supply chains (e.g. boron, silicon and selenium). The five alloy
+groups are aluminium alloys, iron and steel alloys, ferronickel, ferrosilicon and
+magnesium alloys. These extend the original 81 indicators to **146**.
+
+For each indicator, let P be its selected reference-product set and f(p) its
+contained-element fraction (or 1 for whole-alloy mass). For a negative,
+off-diagonal technosphere coefficient A[i,j], count
+`f(product_i) × (−A[i,j]) × supply[j]` only when `product_i ∈ P` and
+`product_j ∉ P`. Other edges have factor zero. This counts deliveries leaving
+the selected production/distribution boundary, irrespective of the supplier's
+activity name. For example, copper refining → market → wire counts market →
+wire; refining → wire counts the direct edge. Market → market and lithium
+carbonate → selected lithium hydroxide receive zero factors. Distribution losses
+upstream of the boundary do not inflate the mass delivered at its exit.
+
+The implementation generates exact supplier product/unit rules, with more
+specific zero-valued consumer rules for internal products. `EdgeLCIA` applies
+the actual CLIPS matching and characterization. Its external-matrix adapter uses
+Pathways matrix identities; Edges does not import or alter Brightway databases.
+Empty edge domains are verified as explicit zero results. Positive off-diagonal
+technosphere entries are outputs/credits rather than consumption edges and are
+not counted. Negative solved activity scales remain signed. Production diagonals
+are never delivery edges, including a source lithium-recycling activity whose
+reference-production coefficient is −1; its signed activity and characterized
+deliveries are recorded in every affected validation file.
+
+`dev/run_refined_metals.py` loads matrices with Pathways and solves the exact saved
+101 final-energy demands with its Brightway backend. Saved demands are checked
+against package scenario data, mappings and the PJ-to-MJ conversion. A separate
+pandas/SciPy path reassembles the CSV matrix, selects edges independently and
+solves every demand with SuperLU. It checks each method/demand result, matrix
+identity, solver backward error, geographic sums and direct-versus-market sums.
+Locations refer to the **consuming activity** at each counted delivery. Regions
+retain the original CH / REMIND EUR+NEU excluding CH / RoW definitions.
+The supply-route audit classifies names starting `market for ` or
+`market group for ` as market suppliers; all other supplier names are in its
+direct-supplier column. This diagnostic classification does not affect matching
+or the total, which uses reference products regardless of activity names.
+
+```bash
+conda run -n pathways python dev/run_refined_metals.py
+# Resume only with identical input and software hashes:
+conda run -n pathways python dev/run_refined_metals.py --resume
+conda run -n pathways python -m pytest \
+  tests/test_refined_metal_edges.py tests/test_refined_metal_methods.py -q
+.venv-dashboard/bin/python -m dashboard.app
+.venv-dashboard/bin/python -m pytest tests/test_dashboard.py -q
+.venv-dashboard/bin/python dashboard/browser_smoke.py
+```
+
+The runner requires the completed original batch and all four packages. Its
+default output is `results/sps_base/refined_metals`; use `--output` for a new
+mapping or software revision. `--scenarios SPS1_bas0 --years 2020` runs a pilot
+without publishing a combined completion summary. The local runtime uses its
+own cache; Brightway may still create its normal import-time log file.
+
+The combined table has **1,238,664 rows**, including **551,460** new material rows.
+There are **1,820** new annual indicator checks and **183,820** new per-demand
+checks, bringing the combined annual check count to **4,088**. Outputs include:
+
+- `df_final.parquet`, `df_final.csv`, `indicator_totals.csv`: complete dashboard
+  data; the original 81 indicators are copied without recalculation or rounding.
+- `refined_metal_results.parquet` and `supply_routes.csv`: new material results
+  and signed direct/market supplier contributions.
+- `method_registry.json`, `methods/*.json`, `refined_metal_inputs.yaml` and
+  `product_coverage.json`: resolved methods, factors, all-index coverage and the
+  complete unselected-product catalogue.
+- `scenarios/<scenario>/<year>_validation.json`, demand copies and
+  `independent_checks.csv`: numerical evidence and source-inventory flags.
+- `provenance.json`, `software/`, `completion_summary.json`: input/software
+  checksums, script snapshots and combined checks. Inherited scenario summaries
+  describe the original 81 methods; new checks are stored per year.
+- Local `product_documentation.json` and `candidate_products.json`: reviewed
+  ecoinvent metadata and exploratory candidate records. These remain Git-ignored.
+
+The mass factors use the [CIAAW 2024 abridged atomic weights](https://ciaaw.org/abridged-atomic-weights.htm),
+source product documentation, or explicit product compositions. Ordinary LiOH
+is anhydrous; battery-grade LiOH uses the monohydrate mass basis of the premise
+inventory and [Kelly et al. (2021)](https://www.osti.gov/servlets/purl/1868964).
+Cobalt sulfate retains the premise inventory's explicit 0.38 kg Co/kg product.
+CAS/name evidence resolves inconsistent source prose for chromium trioxide,
+silane and lithium sulfate. Unspecified praseodymium oxide uses nominal Pr6O11;
+the mapping explicitly records this assumption and its alternative-form effect.
+[Lutetium oxide](https://pubchem.ncbi.nlm.nih.gov/compound/159406) is included as
+Lu2O3; the coverage validator rejects an absent-element claim when matching
+candidate products exist. An initial incomplete mapping was superseded before
+any combined results were produced.
+
+These are **model-attributed deliveries**, not unique physical atoms, retained
+equipment stocks or primary extraction. Allocated inventories, recycling loops
+and transitions through unselected forms can prevent a physical mass-balance
+interpretation. A small signed value can reflect solver roundoff; values are not
+silently clipped. Generic alloys have variable composition, and material
+indicators can overlap: never sum their values into a total metal footprint.
+Iron's elemental/chemical indicator excludes generic steel; use the separate
+iron-and-steel alloy indicator for bulk ferrous product mass. Selected compounds
+are a defined subset, not all chemicals containing an element. Mixed rare-earth
+oxides without a verified split remain outside the quantified subset, while
+selected separated oxides downstream are counted. Ores, concentrates, scrap,
+waste and downstream components are outside the selected boundary.
+
+The registry reports unavailable elements rather than inventing factors. In
+particular, uranium product units mix contained-U and compound conventions;
+RELICS uranium extraction remains available, but there is no new refined-U
+indicator. Numerical agreement does not resolve the original **8,260 inventory
+warning instances** or the explicitly recorded material assumptions. Product
+semantics and allocation follow the [ecoinvent product documentation](https://support.ecoinvent.org/activities-products)
+and [cutoff system model](https://support.ecoinvent.org/system-models).
+
+Terminology was cross-checked against the local LCA wiki's
+`core/concepts/elementary-and-intermediate-flows.md` (ILCD/ecoinvent contexts;
+source IDs `ilcd-2010`, `ecoinvent-kb-glossary`) and
+`ecoinvent/knowledge/system-models.md` (source IDs
+`ecoinvent-kb-system-models`, `ecoinvent-kb-activities-products`). The primary
+ecoinvent pages linked above were consulted for the product and allocation
+claims; the new product boundary is a study-specific definition.
+
+## Historical batches
+
+Earlier generated packages, indicator results and audit artifacts were removed
+on 11 October 2026. The dated paths and findings below document historical work;
+those referenced outputs are no longer available locally.
 
 ## End-to-end audit of the September 2026 batch
 

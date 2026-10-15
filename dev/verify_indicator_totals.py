@@ -24,6 +24,10 @@ def solve_residuals(matrix, supply, demand):
     Normwise backward error scales each functional unit by its matrix, supply
     and demand magnitudes, including zero-demand rows in the residual norm.
     """
+    if supply.shape != demand.shape:
+        raise ValueError(
+            "Supply and demand shapes differ; refusing residual broadcasting"
+        )
     error = np.abs(matrix @ supply - demand)
     relative = float(np.max(error) / max(float(np.max(np.abs(demand))), 1e-300))
     matrix_norm = float(abs(matrix).sum(axis=1).max())
@@ -123,6 +127,10 @@ def verify(manifest_path, years, rtol=1e-8, solver="umfpack", demand_mode="summe
                 if solver == "superlu"
                 else splu(matrix).solve(demand)
             )
+            # SciPy squeezes a single-column RHS to a vector. Restore the
+            # requested shape before subtraction or summing demand columns.
+            if demand.ndim == 2 and supply.ndim == 1:
+                supply = supply[:, None]
             residual, backward_error = solve_residuals(matrix, supply, demand)
             if (
                 not np.isfinite(supply).all()
@@ -181,7 +189,10 @@ def verify(manifest_path, years, rtol=1e-8, solver="umfpack", demand_mode="summe
                         "solve_normwise_backward_error": backward_error,
                     }
                 )
-            print(f"Verified all six indicators independently for {year}", flush=True)
+            print(
+                f"Verified all {len(manifest['calculation']['methods'])} indicators independently for {year}",
+                flush=True,
+            )
     destination = directory / f"{stem}_independent_validation.json"
     destination.write_text(
         json.dumps(

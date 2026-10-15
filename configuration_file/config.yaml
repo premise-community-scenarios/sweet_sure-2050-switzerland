@@ -1419,7 +1419,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in Services sectors|Electricity|Electric boiler
     ecoinvent alias:
-      name: electricity, used in industrial electric boiler
+      name: electricity, used in services electric boiler
       reference product: electricity, low voltage
       exists in original database: True
 
@@ -1435,7 +1435,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in Services sectors|Electricity|Other electric appliances
     ecoinvent alias:
-      name: electricity, used in industrial electric processes
+      name: electricity, used in services electric appliances
       reference product: electricity, low voltage
       exists in original database: True
 
@@ -1462,6 +1462,7 @@ production pathways:
       name: heat production, biomethane, at boiler condensing modulating <100kW
       reference product: heat, central or small-scale, biomethane
       exists in original database: True
+      regionalize: True
 
   FE_services_CHP_gas:
     production volume:
@@ -1564,7 +1565,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in Residential sector|Electricity|Water heating|Electric boiler
     ecoinvent alias:
-      name: electricity, used in residential electric boiler
+      name: electricity, used in residential electric water heater
       reference product: electricity, low voltage
       exists in original database: True
 
@@ -1615,6 +1616,7 @@ production pathways:
       name: natural gas, burned in residential natural gas boiler <100kW
       reference product: heat
       exists in original database: True
+      regionalize: True
 
   FE_residential_water_heating_gas:
     production volume:
@@ -1631,6 +1633,7 @@ production pathways:
       name: natural gas, burned in residential natural gas boiler <100kW
       reference product: heat
       exists in original database: True
+      regionalize: True
 
   FE_residential_space_heating_coal:
     production volume:
@@ -1829,7 +1832,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in coaches|Hydrogen
     ecoinvent alias:
-      name: hydrogen, used in single deck coach or urban bus
+      name: hydrogen, used in dedicated coach
       reference product: heat
       exists in original database: True
 
@@ -1837,7 +1840,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in coaches|Motor Diesel
     ecoinvent alias:
-      name: diesel, burned in single deck coach or urban bus
+      name: diesel, burned in dedicated coach
       reference product: heat
       exists in original database: True
 
@@ -1845,7 +1848,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in coaches|Motor Gas
     ecoinvent alias:
-      name: compressed gas, burned in single deck coach or urban bus
+      name: compressed gas, burned in dedicated coach
       reference product: heat
       exists in original database: True
 
@@ -1893,7 +1896,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in light duty vehicles|Motor Diesel
     ecoinvent alias:
-      name: diesel, burned in passenger car vehicle
+      name: diesel, burned in light duty vehicle
       reference product: heat
       exists in original database: True
 
@@ -1901,7 +1904,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in light duty vehicles|Motor Gasoline
     ecoinvent alias:
-      name: petrol, burned in passenger car vehicle
+      name: petrol, burned in light duty vehicle
       reference product: heat
       exists in original database: True
 
@@ -1909,7 +1912,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in light duty vehicles|Electricity
     ecoinvent alias:
-      name: electricity, used in passenger car vehicle
+      name: electricity, used in light duty vehicle
       reference product: electricity, low voltage
       exists in original database: True
 
@@ -1917,7 +1920,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in light duty vehicles|Hydrogen
     ecoinvent alias:
-      name: hydrogen, used in passenger car vehicle
+      name: hydrogen, used in light duty vehicle
       reference product: heat
       exists in original database: True
 
@@ -1925,7 +1928,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in light duty vehicles|Motor Gas
     ecoinvent alias:
-      name: compressed gas, burned in passenger car vehicle
+      name: compressed gas, burned in light duty vehicle
       reference product: heat
       exists in original database: True
 
@@ -1941,7 +1944,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in heavy duty vehicles|Motor Gasoline
     ecoinvent alias:
-      name: petrol, burned in passenger car vehicle
+      name: petrol, burned in heavy duty vehicle
       reference product: heat
       exists in original database: True
 
@@ -1981,7 +1984,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in other transport|Electricity|Freight electric rail
     ecoinvent alias:
-      name: electricity, used in passenger train
+      name: electricity, used in freight train
       reference product: electricity, high voltage
       exists in original database: True
 
@@ -1997,7 +2000,7 @@ production pathways:
     production volume:
       variable: Fuel consumption in other transport|Hydrogen|Freight hydrogen rail
     ecoinvent alias:
-      name: hydrogen, used in a fuel cell in a passenger train
+      name: hydrogen, used in a fuel cell in a freight train
       reference product: heat
       exists in original database: True
 

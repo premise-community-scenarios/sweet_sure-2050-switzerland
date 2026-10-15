@@ -23,7 +23,7 @@ import warnings
 import numpy as np
 import pandas as pd
 
-DEFAULT_YEARS = [2020, 2025, 2030, 2035, 2040, 2050]
+DEFAULT_YEARS = [2020, 2025, 2030, 2035, 2040, 2045, 2050]
 METHODS = {
     "EN15804+A2 - Core impact categories and indicators - climate change: total (EF v3.0 - IPCC 2013) - global warming potential (GWP100)": (
         "climate change",
@@ -87,8 +87,11 @@ def sector_for_variable(variable: str) -> str:
     raise ValueError(f"No sector mapping for {variable!r}")
 
 
-def aggregate_results(raw: pd.DataFrame, europe: set[str]) -> pd.DataFrame:
+def aggregate_results(
+    raw: pd.DataFrame, europe: set[str], methods=None, demands=None
+) -> pd.DataFrame:
     """Apply the notebook's sector/geography grouping without dropping impacts."""
+    methods = METHODS if methods is None else methods
     required = set(GROUP_COLUMNS) - {"sector"}
     required.add("value")
     if missing := required - set(raw.columns):
@@ -97,7 +100,7 @@ def aggregate_results(raw: pd.DataFrame, europe: set[str]) -> pd.DataFrame:
         raise ValueError("Missing result coordinates or values")
     if not np.isfinite(raw["value"]).all():
         raise ValueError("Non-finite LCIA results")
-    if unknown := set(raw["impact_category"]) - METHODS.keys():
+    if unknown := set(raw["impact_category"]) - methods.keys():
         raise ValueError(f"Unknown LCIA methods: {sorted(unknown)}")
     df = raw.loc[raw["value"].ne(0)].copy()
     df["sector"] = df["variable"].map(sector_for_variable)
@@ -114,8 +117,31 @@ def aggregate_results(raw: pd.DataFrame, europe: set[str]) -> pd.DataFrame:
         before.values, after.values, rtol=1e-10, atol=1e-8
     ):
         raise ValueError("Indicator totals changed during aggregation")
-    grouped["unit"] = grouped["impact_category"].map(lambda m: METHODS[m][1])
-    grouped["impact_category"] = grouped["impact_category"].map(lambda m: METHODS[m][0])
+    if demands is not None:
+        # Explicit zeros retain inactive energy uses and zero-valued metals.
+        # Only validated demand coordinates and calculated methods enter this grid.
+        coordinates = raw[["model", "scenario", "region"]].drop_duplicates()
+        grid = coordinates.merge(
+            pd.DataFrame(demands)[["year", "variable"]].drop_duplicates(), how="cross"
+        )
+        grid = grid.merge(pd.DataFrame({"impact_category": list(methods)}), how="cross")
+        grid = grid.merge(
+            pd.DataFrame({"location": ["CH", "EU wo CH", "RoW"]}), how="cross"
+        )
+        grid["sector"] = grid.variable.map(sector_for_variable)
+        grouped = grid.merge(
+            grouped,
+            on=GROUP_COLUMNS,
+            how="outer",
+            validate="one_to_one",
+            indicator=True,
+        )
+        if grouped["_merge"].eq("right_only").any():
+            raise ValueError("Result coordinates are outside the validated demand grid")
+        grouped = grouped.drop(columns="_merge")
+        grouped["value"] = grouped.value.fillna(0.0)
+    grouped["unit"] = grouped["impact_category"].map(lambda m: methods[m][1])
+    grouped["impact_category"] = grouped["impact_category"].map(lambda m: methods[m][0])
     return grouped
 
 
@@ -236,14 +262,33 @@ def check_inputs(p, years: list[int], variables: list[str]) -> list[dict]:
 
 
 def validate_result_coverage(
-    raw: pd.DataFrame, demands: list[dict], years: list[int]
+    raw: pd.DataFrame,
+    demands: list[dict],
+    years: list[int],
+    methods=None,
+    calculated_coordinates=None,
 ) -> dict:
     if not np.isfinite(raw["value"]).all():
         raise ValueError("Non-finite LCIA results")
-    expected = {(year, method) for year in years for method in METHODS}
+    methods = METHODS if methods is None else methods
+    expected = {(year, method) for year in years for method in methods}
     actual = set(raw[["year", "impact_category"]].itertuples(index=False, name=None))
-    if missing := expected - actual:
-        raise ValueError(f"Missing year/indicator results: {sorted(missing)}")
+    if actual - expected:
+        raise ValueError("Unexpected year/indicator coordinates")
+    zero_pairs = expected - actual
+    # Pathways' sparse parquet intentionally omits zeros. Permit them only when
+    # the dense calculation array independently established complete coverage.
+    calculated = set()
+    if calculated_coordinates is not None:
+        calculated = {
+            (year, method)
+            for year in calculated_coordinates["years"]
+            for method in calculated_coordinates["methods"]
+        }
+        if calculated != expected:
+            raise ValueError("Incomplete calculated year/indicator coordinates")
+    if zero_pairs - calculated:
+        raise ValueError(f"Missing year/indicator results: {sorted(zero_pairs)}")
     active = {
         (row["year"], row["variable"]) for row in demands if row["scenario_demand"] > 0
     }
@@ -261,6 +306,7 @@ def validate_result_coverage(
         "unlinked_variables": 0,
         "active_variable_years": len(active),
         "year_indicator_combinations": len(expected),
+        "zero_year_indicator_combinations": len(zero_pairs),
         "nonfinite_results": 0,
         "aggregation_preserves_totals": True,
     }
@@ -292,7 +338,12 @@ def run(args, output: Path) -> None:
     import pathways
     from indicator_coverage import prepare_package, export_impact_omissions
 
-    unavailable = set(METHODS) - set(get_lcia_method_names(args.ecoinvent_version))
+    registry, methods = None, METHODS
+    if args.method_registry:
+        from indicator_methods import load_registry
+
+        registry, methods = load_registry(args.method_registry)
+    unavailable = set(methods) - set(get_lcia_method_names(args.ecoinvent_version))
     if unavailable:
         raise ValueError(
             f"Unavailable ecoinvent {args.ecoinvent_version} LCIA methods: {unavailable}"
@@ -303,6 +354,10 @@ def run(args, output: Path) -> None:
     )
     europe = (europe | {"EUR", "NEU"}) - {"CH"}
     cf_file = DATA_DIR / f"lcia_ei{args.ecoinvent_version.replace('.', '')}.json"
+    if registry and registry["cf_sha256"] != sha256(cf_file):
+        raise ValueError(
+            "Method registry does not match the Pathways characterization factors"
+        )
     versions = {
         name: metadata.version(name)
         for name in ("numpy", "pandas", "scipy", "bw2calc", "bw2data", "premise")
@@ -324,13 +379,17 @@ def run(args, output: Path) -> None:
             "package_sha256": sha256(package),
             "ecoinvent_version": args.ecoinvent_version,
             "years": args.years,
-            "methods": list(METHODS),
+            "methods": list(methods),
             "region": "CH",
             "variable_prefix": "EXT - 0 - FE",
             "use_distributions": 0,
             "aggregate_by": ["act_category"],
+            "demand_cutoff": 0.0,
             "cf_sha256": sha256(cf_file),
             "working_package_sha256": coverage["working_sha256"],
+            "method_registry_sha256": (
+                sha256(args.method_registry) if registry else None
+            ),
         }
         previous = (
             json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
@@ -382,7 +441,8 @@ def run(args, output: Path) -> None:
                 "package_build": build,
                 "coverage": coverage,
                 "europe_locations": sorted(europe),
-                "methods": METHODS,
+                "methods": methods,
+                "method_registry": registry,
                 "multiprocessing": args.multiprocessing,
                 "notes": [
                     "Scenario-weighted annual final-energy impacts, not per-unit intensities.",
@@ -424,21 +484,26 @@ def run(args, output: Path) -> None:
                 manifest["variables"] = variables
                 write_json(manifest_path, manifest)
                 print(
-                    f"Calculating {len(variables)} variables, {len(METHODS)} indicators, {len(args.years)} years",
+                    f"Calculating {len(variables)} variables, {len(methods)} indicators, {len(args.years)} years",
                     flush=True,
                 )
                 p.calculate(
-                    methods=list(METHODS),
+                    methods=list(methods),
                     regions=["CH"],
                     scenarios=p.scenarios.pathway.values.tolist(),
                     variables=variables,
                     years=args.years,
                     multiprocessing=args.multiprocessing,
                     use_distributions=0,
+                    demand_cutoff=0.0,
                     aggregate_by=["act_category"],
                 )
                 if not np.isfinite(p.lca_results.values).all():
                     raise ValueError("Non-finite Pathways result array")
+                manifest["result_coordinates"] = {
+                    "years": [int(y) for y in p.lca_results.year.values],
+                    "methods": [str(m) for m in p.lca_results.impact_category.values],
+                }
                 p.export_results(filename=str(raw_path.with_suffix("")))
                 manifest["raw_sha256"] = sha256(raw_path)
                 manifest["status"] = "calculated"
@@ -450,8 +515,10 @@ def run(args, output: Path) -> None:
                 write_json(manifest_path, manifest)
                 raise
         raw = pd.read_parquet(raw_path)
-        validation = validate_result_coverage(raw, demands, args.years)
-        df = aggregate_results(raw, europe)
+        validation = validate_result_coverage(
+            raw, demands, args.years, methods, manifest.get("result_coordinates")
+        )
+        df = aggregate_results(raw, europe, methods, demands if registry else None)
         export_tables(df, output, stem, not args.no_html)
         export_impact_omissions(raw, coverage, output, stem)
         manifest.update(
@@ -484,6 +551,11 @@ def main(argv=None) -> None:
     parser.add_argument("--output-dir", type=Path, default=Path("results/indicators"))
     parser.add_argument("--years", nargs="+", type=int, default=DEFAULT_YEARS)
     parser.add_argument(
+        "--method-registry",
+        type=Path,
+        help="Frozen registry matching the active Pathways CF file",
+    )
+    parser.add_argument(
         "--ecoinvent-version", choices=["3.10", "3.11", "3.12"], default="3.12"
     )
     parser.add_argument(
@@ -508,6 +580,8 @@ def main(argv=None) -> None:
     args = parser.parse_args(argv)
     args.packages = [p.expanduser().resolve(strict=True) for p in args.packages]
     args.config = args.config.expanduser().resolve(strict=True)
+    if args.method_registry:
+        args.method_registry = args.method_registry.expanduser().resolve(strict=True)
     if len({p.stem for p in args.packages}) != len(args.packages):
         parser.error("Package names must be unique within a run")
     args.years = sorted(set(args.years))

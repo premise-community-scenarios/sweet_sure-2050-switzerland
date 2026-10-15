@@ -47,10 +47,25 @@ def test_completed_zip_must_retain_its_checksum(tmp_path):
         batch.verify_completed(tmp_path, state)
 
 
+def test_resume_cannot_change_the_scope_of_a_selected_batch(tmp_path):
+    state = {"plan": {"scenarios": ["SPS1_bas0", "SPS2_bas0"], "resources": {}}}
+    batch.write_json(tmp_path / "progress.json", state)
+    assert batch.prepare(tmp_path, ["SPS2_bas0", "SPS1_bas0"]) == state
+    with pytest.raises(ValueError, match="scenario selection changed"):
+        batch.prepare(tmp_path, ["SPS1_bas0", "SPS4_bas0"])
+
+
 def test_workers_isolate_caches_and_retry_only_failed_scenario(tmp_path, monkeypatch):
     (tmp_path / "packages").mkdir()
     state = {
-        "plan": {"model": "remind", "pathway": "test"},
+        "plan": {
+            "model": "remind",
+            "pathway": "test",
+            "resources": {
+                "scenario_data": {"path": str(tmp_path / "scenario_data.csv")},
+                "inventories": {"path": str(tmp_path / "inventories.xlsx")},
+            },
+        },
         "software_hashes": {},
         "scenarios": {
             name: {"status": "pending", "attempts": 0} for name in ["one", "two"]
@@ -88,6 +103,16 @@ def test_workers_isolate_caches_and_retry_only_failed_scenario(tmp_path, monkeyp
                     ".heat_pump_validation.json",
                     ".wood_coproducts.json",
                     ".wood_coproduct_validation.json",
+                    ".vehicle_energy.json",
+                    ".vehicle_checks.csv",
+                    ".vehicle_validation.json",
+                    ".electric_boilers.json",
+                    ".electric_boiler_checks.csv",
+                    ".electric_boiler_validation.json",
+                    ".aggregate_electric_checks.csv",
+                    ".aggregate_electric_validation.json",
+                    ".stationary_routing_checks.csv",
+                    ".stationary_routing_validation.json",
                 ]:
                     batch.write_json(
                         cwd / f"{stem}{suffix}",

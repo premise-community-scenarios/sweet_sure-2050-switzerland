@@ -1,27 +1,55 @@
 # SWEET-SURE results explorer
 
-An entirely local Dash app for the validated October 2026 indicator results.
+An entirely local Dash app for validated Pathways indicator results.
 Every chart uses years on the X axis. The app reads the existing results and
 does not recalculate inventories or indicators.
 
-Generated results were deleted on 11 October 2026. Recalculate and export a
-validated indicator batch before starting the dashboard.
+The default batch is `results/sps_updated/refined_metals`: four SPS base scenarios,
+seven years (2020–2050), 16 EF 3.1 headline categories, all 65 RELICS indicators,
+60 refined-element inputs and five separate alloy-mass indicators (146 total).
+To regenerate it, follow [the indicator workflow](../dev/INDICATORS.md).
 
 From the repository root:
 
 ```bash
 python3 -m venv .venv-dashboard
 .venv-dashboard/bin/python -m pip install -r dashboard/requirements.txt
-.venv-dashboard/bin/python -m dashboard.app --results /path/to/indicator-batch
+.venv-dashboard/bin/python -m dashboard.app
 ```
 
 Open **http://127.0.0.1:8050**. Override the port with `--port 8051` or select
 another completed batch with `--results /path/to/indicator-batch`.
 
-The app starts with the four baseline scenarios and climate change. Select
-any of the 40 scenarios, six indicators, four sectors, three contribution
-locations or 101 final-energy uses. Clear the final-energy dropdown to include
+The app starts with the four baseline scenarios and EF 3.1 climate change. Select
+a method family and indicator, four sectors, three contribution locations or
+101 final-energy uses. RELICS is displayed in tonnes while retaining kilograms
+in the downloadable native values. Clear the final-energy dropdown to include
 all uses. An empty scenario, sector or location selection shows an empty chart.
+
+The **Refined-metal inputs** family reports tonnes of contained element in
+explicitly selected refined products; **Alloy inputs** reports tonnes of whole
+alloy product. Both include direct suppliers and markets, excluding transfers
+between selected forms of the same indicator. The scope notice and expandable
+product list explain each boundary and factor. A JSON definition download carries
+the product list, factors, sources and coverage gaps. These quantities can overlap
+across indicators and must not be summed. Their location filter identifies the
+consuming activity at the counted delivery, not the mining or refining origin.
+
+The [current equipment and metal audit](../results/sps_updated/metal_audit/audit_report.html)
+checks sampled consumers, all system totals, exported equipment coefficients and
+the changes from the previous batch. Updated vehicle inventories now set the
+purchased-energy denominator and lifetime equipment allocation, including truck
+operating electricity. Dedicated boilers and partial aggregate electricity
+component mixes are included.
+
+The boundary includes energy-specific equipment and its upstream manufacture.
+Vehicle bodies, chassis, roads and general buildings are excluded. Quantities
+are lifetime-attributed scenario totals, not annual equipment sales or marginal
+policy additions. Numerical agreement does not certify complete physical metal
+demand: boiler materials, transport proxies, fuel-cell CHP proxies and unresolved
+aggregate equipment remain documented limitations. The expandable coverage
+register and CSV/JSON exports carry this boundary. Primary/secondary shares are
+not inferred. The previous `results/sps_base/` batch is retained for comparison.
 
 - **Scenario comparison:** one line per scenario, with annual impacts or signed
   percentage changes from the fixed 2020 baseline.
@@ -32,14 +60,15 @@ all uses. An empty scenario, sector or location selection shows an empty chart.
 - **Period summary:** annual endpoint values and change relative to the absolute
   first-year value. Percentage changes from zero remain undefined.
 - **Exports:** the current plotted series as CSV, including original units and
-  values; an SVG image is available from the chart toolbar.
+  values, quantity basis, selected products, location basis and limitations;
+  an SVG image is available from the chart toolbar.
 
-Data come from the selected batch's `toby_export/` directory. The legacy default
-`results/indicators_ei312_20261001/` was removed; use `--results` for a new batch.
-The app checks the dense CSV against its recorded SHA256 hash, units and complete
-scenario/year grid. This export has exactly the same impacts as `df_final.parquet`
-and also explicitly records inactive uses as zero. Data stay on the local computer;
-no Toby access or upload is involved. Styles and JavaScript are served locally.
+Data come from the selected batch's `df_final.parquet` and `method_registry.json`.
+The app checks their SHA256 hashes, units, independent-check count and complete
+scenario/year/indicator/energy-use/location grid. Inactive uses and zero-valued
+indicators are explicit zeros. Negative contributions retain their signs.
+Older six-indicator batches with a validated `toby_export/` remain supported.
+Data stay on the local computer. Styles and JavaScript are served locally.
 
 Numerical and browser checks:
 
@@ -51,9 +80,10 @@ PLAYWRIGHT_BROWSERS_PATH=.venv-dashboard/browsers .venv-dashboard/bin/python -m 
 .venv-dashboard/bin/python dashboard/browser_smoke.py
 ```
 
-The numerical checks compare all 1,680 plotted annual totals with the validated
+The numerical checks compare all 4,088 plotted annual totals with the validated
 indicator totals. Browser screenshots and the interaction report are saved under
-`results/indicators_ei312_20261001/dashboard_preview/`.
+`results/sps_updated/refined_metals/dashboard_preview/`. The browser script accepts
+`--results` for the artifact directory and `--url` for another running app.
 
 Built with [Dash callbacks](https://dash.plotly.com/basic-callbacks),
 [dropdowns](https://dash.plotly.com/dash-core-components/dropdown) and

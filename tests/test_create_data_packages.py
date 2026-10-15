@@ -119,6 +119,7 @@ def test_build_uses_312_and_absolute_paths_and_records_provenance(args, monkeypa
     from dev import premise_compat
     from dev import stem_heat_pumps
     from dev import stem_wood_coproducts
+    from dev import stem_vehicle_energy, stem_electric_boilers, stem_stationary_energy
 
     monkeypatch.setattr(
         stem_efficiency, "absolute_stem_efficiencies", lambda *args: nullcontext()
@@ -131,6 +132,15 @@ def test_build_uses_312_and_absolute_paths_and_records_provenance(args, monkeypa
     )
     monkeypatch.setattr(
         stem_wood_coproducts, "wood_coproduct_inventories", lambda *args: nullcontext()
+    )
+    monkeypatch.setattr(
+        stem_vehicle_energy, "swiss_vehicle_energy", lambda *args: nullcontext()
+    )
+    monkeypatch.setattr(
+        stem_electric_boilers, "swiss_electric_boilers", lambda *args: nullcontext()
+    )
+    monkeypatch.setattr(
+        stem_stationary_energy, "swiss_stationary_energy", lambda: nullcontext()
     )
     calls, project_changes = [], []
 

@@ -76,11 +76,13 @@ def read_build_packages(build):
     return summary_path, packages
 
 
-def prepare(build, output):
+def prepare(build, output, method_set="legacy"):
     summary_path, packages = read_build_packages(build)
     signature_path = output / "inputs.json"
     if signature_path.exists():
         signature = json.loads(signature_path.read_text())
+        if signature.get("method_set", "legacy") != method_set:
+            raise ValueError("Frozen indicator method set changed")
         if signature["build_summary_sha256"] != digest(summary_path):
             raise ValueError("Package build summary has changed")
         for name, checksum in signature["snapshot_sha256"].items():
@@ -97,6 +99,7 @@ def prepare(build, output):
         "verify_indicator_totals.py",
         "SWEET-SURE - indicators generation.ipynb",
         "run_indicator_batch.py",
+        "indicator_methods.py",
     ):
         shutil.copy2(Path(__file__).parent / name, scripts / name)
     pathways = Path(importlib.util.find_spec("pathways").origin).parent
@@ -108,13 +111,29 @@ def prepare(build, output):
     shutil.copy2(
         build / "inputs/configuration_file/config.yaml", output / "config.yaml"
     )
-    files = list(software.rglob("*")) + [output / "config.yaml"]
+    method_files = []
+    if method_set == "ef31-relics":
+        from indicator_methods import freeze_methods
+
+        source = Path(__file__).resolve().parents[1] / "configuration_file"
+        for name in ("relics_mapping.yaml", "RELICS-LICENSE"):
+            shutil.copy2(source / name, output / name)
+            method_files.append(output / name)
+        freeze_methods(
+            software / "pathways/data/lcia_ei312.json",
+            output / "relics_mapping.yaml",
+            packages,
+            output,
+        )
+        method_files.append(output / "method_registry.json")
+    files = list(software.rglob("*")) + [output / "config.yaml"] + method_files
     signature = {
         "created_at": now(),
         "build": str(build),
         "build_summary_path": str(summary_path),
         "build_summary_sha256": digest(summary_path),
         "years": YEARS,
+        "method_set": method_set,
         "python": sys.executable,
         "pathways_original_source": str(pathways),
         "snapshot_sha256": {
@@ -133,6 +152,8 @@ def combine(output, entries):
     import pandas as pd
 
     frames, reports = [], []
+    methods = None
+    variables = None
     for entry in entries:
         folder = output / "scenarios" / entry["scenario"]
         stem = "results_" + Path(entry["package"]).stem
@@ -146,11 +167,38 @@ def combine(output, entries):
             raise ValueError("Package does not match batch inputs")
         if digest(folder / f"{stem}.gzip") != manifest["raw_sha256"]:
             raise ValueError("Raw result checksum mismatch")
-        if len(validation["checks"]) != 6 * len(YEARS):
+        current_methods = manifest["calculation"]["methods"]
+        if methods is None:
+            methods = current_methods
+            variables = manifest["variables"]
+        elif methods != current_methods or variables != manifest["variables"]:
+            raise ValueError("Methods or energy variables differ between scenarios")
+        expected_checks = {(year, method) for year in YEARS for method in methods}
+        actual_checks = {(c["year"], c["method"]) for c in validation["checks"]}
+        if actual_checks != expected_checks or len(validation["checks"]) != len(
+            expected_checks
+        ):
             raise ValueError("Incomplete independent verification")
         frame = pd.read_parquet(folder / f"{stem}_indicators.parquet")
+        exported_totals = frame.groupby(["year", "impact_category"]).value.sum()
+        for check in validation["checks"]:
+            label, unit = manifest["methods"][check["method"]]
+            if set(frame.loc[frame.impact_category.eq(label), "unit"]) != {unit}:
+                raise ValueError(f"Incorrect exported unit: {label}")
+            np.testing.assert_allclose(
+                exported_totals.loc[check["year"], label],
+                check["pathways_score"],
+                rtol=1e-10,
+                atol=1e-8,
+            )
         frames.append(frame)
         warnings = json.loads((folder / "warnings.json").read_text())
+        inventory_report = Path(entry["package"]).with_suffix(".validation.json")
+        inventory_warnings = (
+            json.loads(inventory_report.read_text())["findings_by_rule"]
+            if inventory_report.exists()
+            else None
+        )
         reports.append(
             {
                 "scenario": entry["scenario"],
@@ -162,6 +210,16 @@ def combine(output, entries):
                 ),
                 "python_warnings": len(warnings["python_warnings"]),
                 "logging_warnings": len(warnings["logging_warnings"]),
+                "inventory_findings_by_rule": inventory_warnings,
+                "inventory_warning_count": (
+                    sum(
+                        r["count"]
+                        for r in inventory_warnings
+                        if r["severity"] == "warning"
+                    )
+                    if inventory_warnings is not None
+                    else None
+                ),
             }
         )
     df = pd.concat(frames, ignore_index=True)
@@ -177,7 +235,7 @@ def combine(output, entries):
         ["model", "scenario", "region", "year", "impact_category", "unit"],
         as_index=False,
     ).value.sum()
-    if len(totals) != len(entries) * len(YEARS) * 6:
+    if len(totals) != len(entries) * len(YEARS) * len(methods):
         raise ValueError("Incomplete combined indicator totals")
     totals.to_csv(output / "indicator_totals.csv", index=False)
     write_json(
@@ -186,7 +244,15 @@ def combine(output, entries):
             "finished_at": now(),
             "scenarios": len(entries),
             "years": YEARS,
-            "indicators": 6,
+            "indicators": len(methods),
+            "variables": variables,
+            "scenario_names": sorted(df.scenario.unique().tolist()),
+            "method_registry": (
+                "method_registry.json"
+                if (output / "method_registry.json").exists()
+                else None
+            ),
+            "dense": (output / "method_registry.json").exists(),
             "rows": len(df),
             "independent_checks": len(totals),
             "unlinked_variables": sum(
@@ -194,6 +260,11 @@ def combine(output, entries):
             ),
             "nonfinite_results": 0,
             "packages": reports,
+            "inventory_warning_count": (
+                sum(r["inventory_warning_count"] for r in reports)
+                if all(r["inventory_warning_count"] is not None for r in reports)
+                else None
+            ),
             "outputs_sha256": {
                 p.name: digest(p)
                 for p in (
@@ -201,6 +272,11 @@ def combine(output, entries):
                     output / "df_final.csv",
                     output / "df_final.xlsx",
                     output / "indicator_totals.csv",
+                    *(
+                        [output / "method_registry.json"]
+                        if (output / "method_registry.json").exists()
+                        else []
+                    ),
                 )
             },
         },
@@ -212,6 +288,9 @@ def main():
     parser.add_argument("build", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--workers", type=int, default=2)
+    parser.add_argument(
+        "--method-set", choices=["legacy", "ef31-relics"], default="legacy"
+    )
     args = parser.parse_args()
     if args.workers < 1:
         parser.error("workers must be positive")
@@ -219,7 +298,7 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     with (output / ".batch.lock").open("w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        entries = prepare(args.build.resolve(), output)
+        entries = prepare(args.build.resolve(), output, args.method_set)
         path = output / "progress.json"
         state = (
             json.loads(path.read_text())
@@ -287,6 +366,10 @@ def main():
                     "--no-html",
                     "--resume",
                 ]
+                if args.method_set == "ef31-relics":
+                    command.extend(
+                        ["--method-registry", str(output / "method_registry.json")]
+                    )
                 with (folder / "calculation.log").open("a") as log:
                     subprocess.run(
                         command,

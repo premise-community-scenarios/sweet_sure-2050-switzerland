@@ -1,5 +1,6 @@
 """Exercise real Dash callbacks, signed charts, CSV download and mobile layout."""
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -11,8 +12,14 @@ ROOT = Path(__file__).resolve().parents[1]
 os.environ.setdefault(
     "PLAYWRIGHT_BROWSERS_PATH", str(ROOT / ".venv-dashboard/browsers")
 )
-OUT = ROOT / "results/indicators_ei312_20261001/dashboard_preview"
-OUT.mkdir(exist_ok=True)
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument(
+    "--results", type=Path, default=ROOT / "results/sps_updated/refined_metals"
+)
+parser.add_argument("--url", default="http://127.0.0.1:8050")
+args = parser.parse_args()
+OUT = args.results / "dashboard_preview"
+OUT.mkdir(parents=True, exist_ok=True)
 errors = []
 
 
@@ -43,18 +50,92 @@ with sync_playwright() as p:
             else None
         ),
     )
-    page.goto("http://127.0.0.1:8050", wait_until="networkidle")
+    page.goto(args.url, wait_until="networkidle")
     wait_traces(page, 4)
     years = page.locator("#trend .js-plotly-plot").evaluate("el => el.data[0].x")
     assert years == [2020, 2025, 2030, 2035, 2040, 2045, 2050]
     page.screenshot(path=str(OUT / "desktop.png"), full_page=True)
-    page.get_by_role("button", name="All 40", exact=True).click()
-    wait_traces(page, 40)
+    page.get_by_role("button", name="All 4", exact=True).click()
+    wait_traces(page, 4)
     page.get_by_role("button", name="Baselines", exact=True).click()
     wait_traces(page, 4)
-    dropdown(page, "indicator", "Land occupation")
+    dropdown(page, "method-family", "RELICS")
     page.wait_for_function(
-        "document.querySelector('#chart-title').textContent === 'Land occupation'"
+        "document.querySelector('#chart-title').textContent === 'Aluminium'"
+    )
+    dropdown(page, "indicator", "Copper")
+    page.wait_for_function(
+        "document.querySelector('#chart-title').textContent === 'Copper' && document.querySelector('#trend .js-plotly-plot')?.layout?.yaxis?.title?.text === 'tonnes'"
+    )
+    page.screenshot(path=str(OUT / "relics.png"), full_page=True)
+    with page.expect_download() as download_info:
+        page.get_by_role("button", name="↓ Download CSV", exact=True).click()
+    download_info.value.save_as(str(OUT / "relics_download.csv"))
+    relics = pd.read_csv(OUT / "relics_download.csv")
+    assert set(relics.native_unit) == {"kilogram"}
+    assert set(relics.display_unit) == {"tonnes"}
+    assert (relics.value - relics.display_value * 1000).abs().max() < 1e-6
+    dropdown(page, "method-family", "Refined-metal inputs")
+    page.wait_for_function(
+        "document.querySelector('#method-scope').textContent.includes('contained aluminium')"
+    )
+    dropdown(page, "indicator", "Copper")
+    page.wait_for_function(
+        "document.querySelector('#trend .js-plotly-plot')?.layout?.yaxis?.title?.text === 'tonnes Cu'"
+    )
+    assert "consuming activity" in page.locator("#location-help").inner_text()
+    assert "do not add" in page.locator("#method-scope").inner_text()
+    page.screenshot(path=str(OUT / "refined_copper.png"), full_page=True)
+    with page.expect_download() as download_info:
+        page.get_by_role("button", name="↓ Download CSV", exact=True).click()
+    download_info.value.save_as(str(OUT / "refined_copper_download.csv"))
+    copper = pd.read_csv(OUT / "refined_copper_download.csv")
+    assert set(copper.native_unit) == {"kg Cu"}
+    assert set(copper.display_unit) == {"tonnes Cu"}
+    assert (copper.value - copper.display_value * 1000).abs().max() < 1e-6
+    assert copper.selected_products.str.contains("copper, cathode").all()
+    assert copper.location_basis.str.contains("consuming activity").all()
+    assert copper.energy_equipment_boundary.str.contains("vehicle chassis/body").all()
+    assert copper.energy_equipment_interpretation.str.contains(
+        "unresolved equipment coverage"
+    ).all()
+    page.locator("#method-details summary").click()
+    with page.expect_download() as download_info:
+        page.get_by_role("button", name="↓ Download definition", exact=True).click()
+    download_info.value.save_as(str(OUT / "copper_definition.json"))
+    definition = json.loads((OUT / "copper_definition.json").read_text())
+    assert definition["method"]["definition"]["kind"] == "contained_metal"
+    assert "Uranium" in definition["coverage_gaps"]
+    assert len(definition["energy_equipment_boundary"]["coverage"]) == 101
+    dropdown(page, "method-family", "Alloy inputs")
+    page.wait_for_function(
+        "document.querySelector('#chart-title').textContent === 'Aluminium alloys'"
+    )
+    dropdown(page, "indicator", "Iron and steel alloys")
+    page.wait_for_function(
+        "document.querySelector('#chart-title').textContent === 'Iron and steel alloys' && document.querySelector('#trend .js-plotly-plot')?.layout?.yaxis?.title?.text === 'tonnes alloy'"
+    )
+    assert "no elemental composition" in page.locator("#method-scope").inner_text()
+    page.locator("#method-details summary").click()
+    page.screenshot(path=str(OUT / "steel_alloys.png"), full_page=True)
+    with page.expect_download() as download_info:
+        page.get_by_role("button", name="↓ Download CSV", exact=True).click()
+    download_info.value.save_as(str(OUT / "alloy_download.csv"))
+    alloy = pd.read_csv(OUT / "alloy_download.csv")
+    assert set(alloy.native_unit) == {"kg alloy"}
+    assert set(alloy.display_unit) == {"tonnes alloy"}
+    assert alloy.quantity_basis.eq("whole alloy product mass").all()
+    page.locator("#view label").filter(has_text="Contributions").click()
+    dropdown(page, "breakdown", "Contribution location")
+    wait_traces(page, 4)
+    assert "consuming activity" in page.locator("#location-help").inner_text()
+    page.get_by_role("button", name="Reset", exact=True).click()
+    page.wait_for_function(
+        "document.querySelector('#chart-title').textContent === 'Climate change'"
+    )
+    dropdown(page, "indicator", "Land use")
+    page.wait_for_function(
+        "document.querySelector('#chart-title').textContent === 'Land use'"
     )
     page.locator("#view label").filter(has_text="Contributions").click()
     page.wait_for_function(
@@ -103,7 +184,7 @@ with sync_playwright() as p:
     download.save_as(str(OUT / "download.csv"))
     df = pd.read_csv(OUT / "download.csv")
     assert len(df) == 28 and df.series.nunique() == 4
-    assert set(df.year) == set(years) and set(df.native_unit) == {"kg CO2-eq."}
+    assert set(df.year) == set(years) and set(df.native_unit) == {"kg CO2-Eq"}
     assert set(df.display_unit) == {"Mt CO₂-eq."}
     assert df.selected_locations.eq("CH; EU wo CH; RoW").all()
     for box in page.locator("#sectors input").all():
@@ -119,6 +200,15 @@ with sync_playwright() as p:
         "document.documentElement.scrollWidth <= window.innerWidth"
     ), "Mobile page overflows horizontally"
     page.screenshot(path=str(OUT / "mobile.png"), full_page=True)
+    dropdown(page, "method-family", "Refined-metal inputs")
+    page.wait_for_function(
+        "document.querySelector('#method-scope').textContent.includes('contained aluminium')"
+    )
+    page.wait_for_timeout(500)
+    assert page.evaluate(
+        "document.documentElement.scrollWidth <= window.innerWidth"
+    ), "Metal scope overflows mobile viewport"
+    page.screenshot(path=str(OUT / "mobile_metals.png"), full_page=True)
     assert not errors, errors
     browser.close()
 
@@ -127,8 +217,14 @@ report = {
     "checks": [
         "four baseline traces",
         "year X axis",
-        "all 40 scenarios",
-        "indicator switch",
+        "all four scenarios",
+        "EF and RELICS family switches and reset",
+        "RELICS kilogram-to-tonne display and CSV",
+        "refined-metal family, contained-metal units and CSV scope",
+        "downloaded metal definition and coverage gaps",
+        "separate alloy-mass units and CSV",
+        "material consumption location contributions",
+        "EF indicator switch",
         "sector contributions",
         "top 10 plus other uses",
         "undefined zero baseline",
@@ -137,6 +233,7 @@ report = {
         "CSV download",
         "empty selection",
         "mobile layout",
+        "mobile metal scope layout",
     ],
     "browser_errors": errors,
 }

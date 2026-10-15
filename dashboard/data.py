@@ -1,6 +1,6 @@
 """Read validated results and aggregate them without changing their units or signs."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import hashlib
 import json
 from pathlib import Path
@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_RESULTS = ROOT / "results/indicators_ei312_20261001"
+DEFAULT_RESULTS = ROOT / "results/sps_base/refined_metals"
 INDICATORS = {
     "climate change": ("Climate change", "kg CO2-eq.", 1e9, "Mt CO₂-eq."),
     "land occupation": ("Land occupation", "square meter-year", 1e6, "km²·year"),
@@ -62,32 +62,82 @@ def percent_change(values, baseline):
 class ResultStore:
     frame: pd.DataFrame
     directory: Path
+    indicators: dict = field(default_factory=lambda: dict(INDICATORS))
+    method_metadata: dict = field(default_factory=dict)
+    coverage_metadata: dict = field(default_factory=dict)
 
     @classmethod
     def load(cls, directory=DEFAULT_RESULTS):
         directory = Path(directory).resolve()
         summary = json.loads((directory / "completion_summary.json").read_text())
-        export = json.loads((directory / "toby_export/export_summary.json").read_text())
-        source = directory / "toby_export/premise_prem1_all_scenarios.csv"
-        expected = export["files_sha256"][source.name]
-        if digest(source) != expected:
-            raise ValueError("Result checksum differs from the validated export")
-        if not export["csv_roundtrip_exact"] or export["preview"]:
-            raise ValueError("A complete, validated export is required")
-        frame = pd.read_csv(source, float_precision="round_trip").rename(
-            columns={"impact": "impact_category"}
-        )
+        indicators, method_metadata, coverage_metadata = dict(INDICATORS), {}, {}
+        if summary.get("method_registry"):
+            source = directory / "df_final.parquet"
+            registry_path = directory / summary["method_registry"]
+            for path in (source, registry_path):
+                if digest(path) != summary["outputs_sha256"][path.name]:
+                    raise ValueError(
+                        "Result checksum differs from the validated export"
+                    )
+            if (
+                not summary.get("dense")
+                or summary["nonfinite_results"]
+                or summary["unlinked_variables"]
+            ):
+                raise ValueError("A complete, validated export is required")
+            coverage_metadata = json.loads(registry_path.read_text())
+            registry = coverage_metadata["methods"]
+            method_metadata = {r["indicator"]: r for r in registry}
+            indicators = {
+                r["indicator"]: (
+                    r["label"],
+                    r["unit"],
+                    r["display_divisor"],
+                    r["display_unit"],
+                )
+                for r in registry
+            }
+            if (
+                len(indicators) != len(registry)
+                or len(indicators) != summary["indicators"]
+            ):
+                raise ValueError("Duplicate or missing method metadata")
+            frame = pd.read_parquet(source)
+            if set(frame.scenario) != set(summary["scenario_names"]) or set(
+                frame.variable
+            ) != set(summary["variables"]):
+                raise ValueError("Unexpected scenarios or energy uses")
+            if summary["independent_checks"] != summary["scenarios"] * len(
+                summary["years"]
+            ) * len(indicators):
+                raise ValueError("Incomplete independent validation")
+        else:
+            export = json.loads(
+                (directory / "toby_export/export_summary.json").read_text()
+            )
+            source = directory / "toby_export/premise_prem1_all_scenarios.csv"
+            if digest(source) != export["files_sha256"][source.name]:
+                raise ValueError("Result checksum differs from the validated export")
+            if not export["csv_roundtrip_exact"] or export["preview"]:
+                raise ValueError("A complete, validated export is required")
+            frame = pd.read_csv(source, float_precision="round_trip").rename(
+                columns={"impact": "impact_category"}
+            )
         keys = [c for c in frame if c != "value"]
-        if frame.duplicated(keys).any() or not np.isfinite(frame.value).all():
+        if (
+            frame.isna().any().any()
+            or frame.duplicated(keys).any()
+            or not np.isfinite(frame.value).all()
+        ):
             raise ValueError("Duplicated or nonfinite result coordinates")
         if (
             frame.scenario.nunique() != summary["scenarios"]
             or sorted(frame.year.unique()) != summary["years"]
         ):
             raise ValueError("Incomplete scenario/year coverage")
-        if set(frame.impact_category) != set(INDICATORS):
+        if set(frame.impact_category) != set(indicators):
             raise ValueError("Unexpected impact categories")
-        for indicator, (_, unit, _, _) in INDICATORS.items():
+        for indicator, (_, unit, _, _) in indicators.items():
             if set(frame.loc[frame.impact_category.eq(indicator), "unit"]) != {unit}:
                 raise ValueError(f"Unexpected unit for {indicator}")
         if set(frame.region) != {"CH"} or frame.model.nunique() != 1:
@@ -97,14 +147,28 @@ class ResultStore:
             frame.scenario.nunique()
             * frame.year.nunique()
             * frame.variable.nunique()
-            * 6
+            * len(indicators)
             * 3
         )
         if len(frame) != expected_rows or set(frame.location) != set(LOCATIONS):
             raise ValueError("Incomplete dense result grid")
+        coordinate_keys = [
+            "model",
+            "scenario",
+            "region",
+            "year",
+            "variable",
+            "impact_category",
+            "location",
+        ]
+        if (
+            frame.duplicated(coordinate_keys).any()
+            or frame.groupby("variable").sector.nunique().max() != 1
+        ):
+            raise ValueError("Duplicated coordinates or inconsistent sector mapping")
         for column in frame.select_dtypes("object"):
             frame[column] = frame[column].astype("category")
-        return cls(frame, directory)
+        return cls(frame, directory, indicators, method_metadata, coverage_metadata)
 
     @property
     def scenarios(self):
@@ -161,14 +225,15 @@ def aggregate_series(frame, mode="compare", breakdown="sector", focus=None, top_
     return result
 
 
-def prepare_chart(series, indicator, years, scale):
+def prepare_chart(series, indicator, years, scale, indicators=None):
     """Keep native values for CSV and display-scaled values for plotting."""
     result = series.copy()
-    result["native_unit"] = INDICATORS[indicator][1]
-    result["display_value"] = result.value / INDICATORS[indicator][2]
-    result["display_unit"] = INDICATORS[indicator][3]
+    indicators = INDICATORS if indicators is None else indicators
+    result["native_unit"] = indicators[indicator][1]
+    result["display_value"] = result.value / indicators[indicator][2]
+    result["display_unit"] = indicators[indicator][3]
     result["plot_value"] = result.display_value
-    result["plot_unit"] = INDICATORS[indicator][3]
+    result["plot_unit"] = indicators[indicator][3]
     undefined = []
     if scale == "change" and not result.empty:
         baseline = result.loc[result.year.eq(2020)].set_index("series").value

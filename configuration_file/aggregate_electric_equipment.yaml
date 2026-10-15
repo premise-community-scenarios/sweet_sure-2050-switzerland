@@ -1,0 +1,38 @@
+version: 1
+boundary: Energy conversion components only; appliance housings, structural frames, buildings and distribution networks excluded.
+interpretation: Static representative equipment per lifetime MJ; Swiss 2020 energy shares are held constant to 2050, not projected technology shares.
+sources:
+  swiss_enduse:
+    url: https://pubdb.bfe.admin.ch/de/publication/download/12358
+    locator: Tables 23, 24, 28 and 32, 2020 columns; space/water/process heating excluded from industry/services other electricity.
+  swiss_appliances:
+    url: https://pubdb.bfe.admin.ch/de/publication/download/10742
+    locator: Sections 3.1.3, 3.2 and 3.5; 2020 stock consumption, 214 kWh/year refrigerator, 255 washer, 203 dishwasher. Later editions revise historical values.
+  abb_motor:
+    url: https://library.e.abb.com/public/6d5d9840ca2fa0f3c1256d63003e98bf/EPD%20M3JP180GB.pdf
+    locator: Page 1; M3JP 180MLB, 22 kW shaft output, 93.1% efficiency, 15 years, 5000 hours/year; product material table, excluding wooden packaging.
+profiles:
+  industry:
+    pathway: FE_industry_process_FE_other_electric
+    name: electricity, used in industrial electric processes
+    energy_PJ: {lighting: 6.5, motor: 36.1, unresolved_ICT: 1.3, unresolved_other: 2.7}
+    limitations:
+      - Drives and HVAC motors share a 22 kW industrial induction-motor archetype; load factors, ratings, controls and technology shares are unresolved.
+      - Lighting uses a 10 W CFL inventory, 10000 operating hours; LED transition is not modelled.
+      - ICT and other residual uses have no added equipment; their demand remains included and is not interpreted as zero equipment use.
+  services:
+    pathway: FE_services_other_electric
+    name: electricity, used in services electric appliances
+    energy_PJ: {lighting: 10.9, motor: 29.1, unresolved_ICT: 9.4, unresolved_other: 3.8}
+    limitations:
+      - Swiss end-use shares include agriculture; motors use an industrial archetype, not a measured services equipment mix.
+      - Lighting uses a 10 W CFL inventory; ICT and other residual equipment remain gaps.
+  residential:
+    pathway: FE_residential_FE_other_electric
+    name: electricity, used in residential electric appliances
+    energy_PJ: {lighting: 5.0, refrigerator: 5.6, washer: 4.5, dishwasher: 2.1, unresolved_HVAC: 4.2, unresolved_ICT: 6.0, unresolved_other: 8.4, unresolved_cooking: 8.2}
+    limitations:
+      - Refrigerator, washer and dishwasher additions contain identifiable copper, cables and circuit boards only. Undifferentiated metal masses are not assigned to motors or heaters.
+      - Refrigerator represents freezing too; washer represents washing and drying. These proxies do not cover complete functional equipment.
+      - Appliance lifetimes use the source inventories, respectively 10, 10 and 12.5 years; Swiss stock energy use sets lifetime throughput.
+      - Lighting uses a CFL proxy. HVAC, ICT, cooking and residual equipment remain gaps.

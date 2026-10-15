@@ -48,9 +48,10 @@ def short_series(value):
     return value.capitalize() if value in SECTORS else value
 
 
-def make_figure(frame, mode, scale, indicator):
+def make_figure(frame, mode, scale, indicator, indicators=None):
     fig = go.Figure()
-    unit = "% change from 2020" if scale == "change" else INDICATORS[indicator][3]
+    indicators = INDICATORS if indicators is None else indicators
+    unit = "% change from 2020" if scale == "change" else indicators[indicator][3]
     if frame.empty:
         fig.add_annotation(
             text="Select at least one scenario, sector and location.",
@@ -184,8 +185,54 @@ def summary_table(frame, years, indicator):
     )
 
 
+def indicator_context(metadata):
+    """Keep the plotted quantity and its coverage attached to CSV exports."""
+    definition = metadata.get("definition", {})
+    kind = definition.get("kind")
+    return {
+        "quantity_basis": (
+            "contained element in selected refined products"
+            if kind == "contained_metal"
+            else (
+                "whole alloy product mass"
+                if kind == "alloy_mass"
+                else "characterized life-cycle inventory"
+            )
+        ),
+        "location_basis": (
+            "consuming activity at the counted material delivery"
+            if kind
+            else "inventory activity contribution location"
+        ),
+        "selected_products": "; ".join(
+            p["product"] for p in definition.get("products", [])
+        ),
+        "coverage_limit": metadata.get("limitation", ""),
+        "interpretation": metadata.get("interpretation", ""),
+    }
+
+
 def create_app(results_dir=DEFAULT_RESULTS):
     store = ResultStore.load(results_dir)
+    indicators = store.indicators
+    families = {
+        key: store.method_metadata.get(key, {}).get("family", "Original indicators")
+        for key in indicators
+    }
+    default_indicator = next(
+        (k for k in indicators if k.endswith("climate change")), next(iter(indicators))
+    )
+    default_family = families[default_indicator]
+    material_count = sum(v == "Refined-metal inputs" for v in families.values())
+    alloy_count = sum(v == "Alloy inputs" for v in families.values())
+
+    def indicator_options(family):
+        return [
+            {"label": v[0], "value": k}
+            for k, v in indicators.items()
+            if families[k] == family
+        ]
+
     app = Dash(
         __name__,
         assets_folder=str(Path(__file__).parent / "assets"),
@@ -234,7 +281,7 @@ def create_app(results_dir=DEFAULT_RESULTS):
                             html.Div(
                                 [
                                     html.Div(
-                                        "ENVIRONMENTAL FOOTPRINT", className="eyebrow"
+                                        "ENVIRONMENT & RESOURCES", className="eyebrow"
                                     ),
                                     html.H1("Results explorer"),
                                     html.P(
@@ -248,10 +295,10 @@ def create_app(results_dir=DEFAULT_RESULTS):
                                     html.Strong(str(len(scenarios))),
                                     html.Span("scenarios"),
                                     html.B("·"),
-                                    html.Strong("7"),
+                                    html.Strong(str(len(store.years))),
                                     html.Span("years"),
                                     html.B("·"),
-                                    html.Strong("6"),
+                                    html.Strong(str(len(indicators))),
                                     html.Span("indicators"),
                                 ],
                                 className="dataset-stats",
@@ -274,14 +321,21 @@ def create_app(results_dir=DEFAULT_RESULTS):
                                         ],
                                         className="sidebar-heading",
                                     ),
-                                    label("Impact indicator", "indicator"),
+                                    label("Method family", "method-family"),
+                                    dcc.Dropdown(
+                                        id="method-family",
+                                        options=[
+                                            {"label": f, "value": f}
+                                            for f in dict.fromkeys(families.values())
+                                        ],
+                                        value=default_family,
+                                        clearable=False,
+                                    ),
+                                    label("Indicator", "indicator"),
                                     dcc.Dropdown(
                                         id="indicator",
-                                        options=[
-                                            {"label": v[0], "value": k}
-                                            for k, v in INDICATORS.items()
-                                        ],
-                                        value="climate change",
+                                        options=indicator_options(default_family),
+                                        value=default_indicator,
                                         clearable=False,
                                     ),
                                     html.Div(
@@ -295,7 +349,7 @@ def create_app(results_dir=DEFAULT_RESULTS):
                                                         className="text-button",
                                                     ),
                                                     html.Button(
-                                                        "All 40",
+                                                        f"All {len(scenarios)}",
                                                         id="all-scenarios",
                                                         className="text-button",
                                                     ),
@@ -333,6 +387,7 @@ def create_app(results_dir=DEFAULT_RESULTS):
                                     ),
                                     html.P(
                                         "Where impacts occur across the supply chain.",
+                                        id="location-help",
                                         className="field-help",
                                     ),
                                     label("Final-energy uses", "variables"),
@@ -382,7 +437,7 @@ def create_app(results_dir=DEFAULT_RESULTS):
                                                 "DATA BASIS", className="eyebrow"
                                             ),
                                             html.P(
-                                                "Annual impacts of Swiss final-energy demand."
+                                                "Annual indicators of Swiss final-energy demand."
                                             ),
                                             html.P(
                                                 "ecoinvent 3.12 cutoff · REMIND SSP2-PkBudg1000",
@@ -439,7 +494,7 @@ def create_app(results_dir=DEFAULT_RESULTS):
                                                         id="scale",
                                                         options=[
                                                             {
-                                                                "label": "Annual impact",
+                                                                "label": "Annual value",
                                                                 "value": "absolute",
                                                             },
                                                             {
@@ -526,6 +581,29 @@ def create_app(results_dir=DEFAULT_RESULTS):
                                             html.P(
                                                 id="chart-note", className="chart-note"
                                             ),
+                                            html.Div(
+                                                id="method-scope",
+                                                className="method-scope",
+                                            ),
+                                            html.Details(
+                                                [
+                                                    html.Summary(
+                                                        "Selected products and factors"
+                                                    ),
+                                                    html.Div(id="method-products"),
+                                                    html.Button(
+                                                        "↓ Download definition",
+                                                        id="definition-button",
+                                                        className="download-button",
+                                                    ),
+                                                    dcc.Download(
+                                                        id="definition-download"
+                                                    ),
+                                                ],
+                                                id="method-details",
+                                                className="about",
+                                                style={"display": "none"},
+                                            ),
                                         ],
                                         className="chart-card",
                                     ),
@@ -565,7 +643,7 @@ def create_app(results_dir=DEFAULT_RESULTS):
                                                 "‘EU wo CH’ follows REMIND EUR + NEU excluding Switzerland, rather than political EU membership. The 2045 package uses interpolated scenario inputs."
                                             ),
                                             html.P(
-                                                "Percentage change = 100 × (value − 2020 value) / |2020 value|. A zero baseline has no defined percentage change. The period table always shows annual impacts and compares its first and last displayed years."
+                                                "Percentage change = 100 × (value − 2020 value) / |2020 value|. A zero baseline has no defined percentage change. The period table always shows annual values and compares its first and last displayed years."
                                             ),
                                             html.P(
                                                 "Contributions use signed, stacked bars and a net-total line. The final-energy breakdown preserves all uses: the ten largest by absolute contribution across all years are shown separately, and the rest are summed as ‘Other uses’."
@@ -574,7 +652,80 @@ def create_app(results_dir=DEFAULT_RESULTS):
                                                 "The approved industrial gas fuel-cell proxy and configured wood-CHP efficiency bounds are retained. Downloaded CSVs include native values and display units."
                                             ),
                                             html.P(
-                                                f"Validated batch: {store.directory.name}. All 1,680 annual indicator checks passed."
+                                                "EF 3.1 includes the 16 main impact categories and long-term emissions. RELICS reports 65 resource-extraction indicators in kilograms, displayed in tonnes. Indicators retain their own units and are not combined into a single score."
+                                                if store.method_metadata
+                                                else "Each indicator retains its own method and unit."
+                                            ),
+                                            html.P(
+                                                f"Refined-metal inputs cover {material_count} elements in selected refined products, including selected compounds converted to contained metal. {alloy_count} separate alloy indicators report whole alloy mass. Direct refining and recycling deliveries and market deliveries are included. Transfers between selected forms of the same indicator are excluded. These are model-attributed deliveries, not primary extraction or metal retained in equipment. Metal and alloy indicators can overlap: do not add them together."
+                                                if any(
+                                                    "definition" in m
+                                                    for m in store.method_metadata.values()
+                                                )
+                                                else ""
+                                            ),
+                                            html.P(
+                                                "Coverage gaps (not zero consumption): "
+                                                + "; ".join(
+                                                    f"{k}: {v}"
+                                                    for k, v in store.coverage_metadata.get(
+                                                        "unavailable_elements", {}
+                                                    ).items()
+                                                )
+                                                if store.coverage_metadata.get(
+                                                    "unavailable_elements"
+                                                )
+                                                else ""
+                                            ),
+                                            html.P(
+                                                store.coverage_metadata.get(
+                                                    "energy_equipment_boundary", {}
+                                                ).get("definition", "")
+                                            ),
+                                            html.P(
+                                                store.coverage_metadata.get(
+                                                    "energy_equipment_boundary", {}
+                                                ).get("interpretation", "")
+                                            ),
+                                            html.Details(
+                                                [
+                                                    html.Summary(
+                                                        "Energy equipment coverage and remaining proxies"
+                                                    ),
+                                                    html.Ul(
+                                                        [
+                                                            html.Li(
+                                                                f"{r['pathway']}: {r['status']}. {r['basis']}"
+                                                            )
+                                                            for r in store.coverage_metadata.get(
+                                                                "energy_equipment_boundary",
+                                                                {},
+                                                            ).get("coverage", [])
+                                                        ]
+                                                    ),
+                                                ]
+                                            )
+                                            if store.coverage_metadata.get(
+                                                "energy_equipment_boundary"
+                                            )
+                                            else None,
+                                            html.Ul(
+                                                [
+                                                    html.Li(limit)
+                                                    for limit in store.coverage_metadata.get(
+                                                        "coverage_limits", []
+                                                    )
+                                                ]
+                                            ),
+                                            html.P(
+                                                f"Validated batch: {store.directory.name}. All {summary['independent_checks']:,} annual indicator checks passed."
+                                            ),
+                                            html.P(
+                                                f"The inventory reports retain {summary.get('inventory_warning_count', 0):,} warning instances across scenarios and years, including CO₂ balances, electricity efficiencies and metals assumptions. Numerical agreement checks calculation consistency; these modelling warnings remain in the package validation reports."
+                                                if summary.get(
+                                                    "inventory_warning_count"
+                                                )
+                                                else ""
                                             ),
                                         ],
                                         className="about",
@@ -597,45 +748,73 @@ def create_app(results_dir=DEFAULT_RESULTS):
 
     @app.callback(
         Output("scenarios", "value"),
-        Output("indicator", "value"),
+        Output("method-family", "value"),
         Output("sectors", "value"),
         Output("locations", "value"),
         Output("years", "value"),
         Output("view", "value"),
         Output("scale", "value"),
+        Output("breakdown", "value"),
         Input("baselines", "n_clicks"),
         Input("all-scenarios", "n_clicks"),
         Input("reset", "n_clicks"),
-        State("indicator", "value"),
+        State("method-family", "value"),
         State("sectors", "value"),
         State("locations", "value"),
         State("years", "value"),
         State("view", "value"),
         State("scale", "value"),
+        State("breakdown", "value"),
         prevent_initial_call=True,
     )
     def presets(
-        _baseline, _all, _reset, indicator, sectors, locations, years, view, scale
+        _baseline,
+        _all,
+        _reset,
+        family,
+        sectors,
+        locations,
+        years,
+        view,
+        scale,
+        breakdown,
     ):
         if ctx.triggered_id == "reset":
             return (
                 defaults,
-                "climate change",
+                default_family,
                 SECTORS,
                 LOCATIONS,
                 [store.years[0], store.years[-1]],
                 "compare",
                 "absolute",
+                "sector",
             )
         return (
             (scenarios if ctx.triggered_id == "all-scenarios" else defaults),
-            indicator,
+            family,
             sectors,
             locations,
             years,
             view,
             scale,
+            breakdown,
         )
+
+    @app.callback(
+        Output("indicator", "options"),
+        Output("indicator", "value"),
+        Input("method-family", "value"),
+        Input("reset", "n_clicks"),
+        State("indicator", "value"),
+    )
+    def choose_method(family, _reset, current):
+        if ctx.triggered_id == "reset":
+            family, current = default_family, default_indicator
+        choices = indicator_options(family)
+        valid = {o["value"] for o in choices}
+        selected = current if current in valid else choices[0]["value"]
+        return choices, selected
 
     @app.callback(
         Output("variables", "options"),
@@ -702,8 +881,8 @@ def create_app(results_dir=DEFAULT_RESULTS):
     ):
         filtered = store.select(indicator, selected, sectors, locations, variables)
         series = aggregate_series(filtered, view, breakdown, focus)
-        frame, undefined = prepare_chart(series, indicator, years, scale)
-        title = INDICATORS[indicator][0]
+        frame, undefined = prepare_chart(series, indicator, years, scale, indicators)
+        title = indicators[indicator][0]
         subtitle = (
             (
                 f"{len(selected or [])} scenarios"
@@ -717,7 +896,7 @@ def create_app(results_dir=DEFAULT_RESULTS):
                 else f"{len(variables)} selected uses"
             )
         )
-        note = "Annual scenario-weighted impacts. Click a legend label to hide a series; double-click to isolate it."
+        note = "Annual scenario-weighted values. Click a legend label to hide a series; double-click to isolate it."
         if scale == "change":
             note = "Change = 100 × (value − 2020 value) / |2020 value|. The baseline stays at 2020 when the year range changes."
         elif view == "contributions":
@@ -734,17 +913,24 @@ def create_app(results_dir=DEFAULT_RESULTS):
                 selected_sectors="; ".join(sectors or []),
                 selected_locations="; ".join(locations or []),
                 selected_variables="; ".join(variables or []) or "all",
+                energy_equipment_boundary=store.coverage_metadata.get(
+                    "energy_equipment_boundary", {}
+                ).get("definition", ""),
+                energy_equipment_interpretation=store.coverage_metadata.get(
+                    "energy_equipment_boundary", {}
+                ).get("interpretation", ""),
+                **indicator_context(store.method_metadata.get(indicator, {})),
             )
             .replace({np.nan: None})
             .to_dict("records")
         )
         return (
-            make_figure(frame, view, scale, indicator),
+            make_figure(frame, view, scale, indicator, indicators),
             title,
             subtitle,
             note,
             summary_table(frame, years, indicator),
-            f"Annual impacts in {INDICATORS[indicator][3]} · change relative to |{years[0]} value|",
+            f"Annual results in {indicators[indicator][3]} · change relative to |{years[0]} value|",
             f"{frame.series.nunique()} series",
             notice,
             records,
@@ -763,6 +949,94 @@ def create_app(results_dir=DEFAULT_RESULTS):
             "sweet_sure_selection.csv",
             index=False,
             float_format="%.17g",
+        )
+
+    @app.callback(
+        Output("method-scope", "children"),
+        Output("method-products", "children"),
+        Output("method-details", "style"),
+        Output("location-help", "children"),
+        Input("indicator", "value"),
+    )
+    def describe_method(indicator):
+        metadata = store.method_metadata.get(indicator, {})
+        definition = metadata.get("definition")
+        if not definition:
+            return (
+                [],
+                [],
+                {"display": "none"},
+                "Inventory contributions across the supply chain.",
+            )
+        is_alloy = definition["kind"] == "alloy_mass"
+        basis = (
+            "Tonnes of alloy product; no elemental composition is inferred."
+            if is_alloy
+            else f"Tonnes of contained {definition['name'].lower()} in the selected refined products."
+        )
+        scope = [
+            html.Strong(basis),
+            html.P(
+                "Includes direct suppliers and markets. Internal transfers between selected forms are excluded. Metal and alloy indicators can overlap; do not add them together."
+            ),
+            html.P(metadata["limitation"]),
+        ]
+        if store.coverage_metadata.get("energy_equipment_boundary"):
+            scope.append(
+                html.P(
+                    "Lifetime-attributed energy equipment; vehicle chassis, bodies and roads are excluded. Equipment coverage remains partial for some uses; see the coverage register below."
+                )
+            )
+        if definition["name"] == "Lithium" and summary.get(
+            "refined_metal_validation", {}
+        ).get("source_inventory_flags"):
+            scope.append(
+                html.P(
+                    "Inventory note: a lithium-recycling supplier has negative reference production. Its original signs are retained; the validation report records its activity and contribution."
+                )
+            )
+        products = [
+            html.P(
+                "Factors are kilograms of contained element per kilogram of product."
+                if not is_alloy
+                else "Each factor is one kilogram of alloy per kilogram of product."
+            ),
+            html.Ul(
+                [
+                    html.Li(f"{p['product']}: {p['factor']:.8g} — {p['basis']}")
+                    for p in definition["products"]
+                ]
+            ),
+            html.P(metadata["interpretation"]),
+        ]
+        return (
+            scope,
+            products,
+            {},
+            "Location of the consuming activity at the counted delivery; not the metal’s mining or refining origin.",
+        )
+
+    @app.callback(
+        Output("definition-download", "data"),
+        Input("definition-button", "n_clicks"),
+        State("indicator", "value"),
+        prevent_initial_call=True,
+    )
+    def download_definition(_clicks, indicator):
+        payload = {
+            "method": store.method_metadata[indicator],
+            "boundary": store.coverage_metadata.get("boundary"),
+            "sources": store.coverage_metadata.get("sources", []),
+            "coverage_gaps": store.coverage_metadata.get("unavailable_elements", {}),
+            "coverage_limits": store.coverage_metadata.get("coverage_limits", []),
+            "energy_equipment_boundary": store.coverage_metadata.get(
+                "energy_equipment_boundary", {}
+            ),
+        }
+        return dict(
+            content=json.dumps(payload, indent=2),
+            filename="sweet_sure_indicator_definition.json",
+            type="application/json",
         )
 
     return app

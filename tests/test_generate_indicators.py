@@ -12,7 +12,12 @@ import yaml
 
 DEV = Path(__file__).resolve().parents[1] / "dev"
 sys.path.insert(0, str(DEV))
-from generate_indicators import METHODS, aggregate_results, sector_for_variable
+from generate_indicators import (
+    METHODS,
+    aggregate_results,
+    sector_for_variable,
+    validate_result_coverage,
+)
 from indicator_coverage import digest, notebook_sectors, prepare_package
 
 
@@ -58,6 +63,29 @@ def test_aggregation_retains_negative_impacts_all_sectors_and_water_units():
     assert set(result.unit) == {"m3"}
     assert set(result.sector) == {"services"}
     assert result.value.sum() == sample_results().value.sum()
+
+
+def test_zero_methods_require_calculated_coordinates_and_survive_dense_export():
+    raw = sample_results()
+    method = raw.impact_category.iloc[0]
+    methods = {method: ("EF test", "m3"), "RELICS test": ("RELICS test", "kilogram")}
+    demands = [
+        {"year": 2050, "variable": raw.variable.iloc[0], "scenario_demand": 4},
+        {"year": 2050, "variable": "EXT - 0 - FE_bus_hydrogen", "scenario_demand": 0},
+    ]
+    with pytest.raises(ValueError, match="Missing year/indicator"):
+        validate_result_coverage(raw, demands, [2050], methods)
+    result = validate_result_coverage(
+        raw, demands, [2050], methods, {"years": [2050], "methods": list(methods)}
+    )
+    assert result["zero_year_indicator_combinations"] == 1
+    dense = aggregate_results(raw, {"DE", "FR"}, methods, demands)
+    assert len(dense) == 2 * 2 * 3
+    assert dense.loc[dense.impact_category.eq("RELICS test"), "value"].eq(0).all()
+    assert (
+        dense.loc[dense.variable.eq("EXT - 0 - FE_bus_hydrogen"), "value"].eq(0).all()
+    )
+    assert dense.value.sum() == raw.value.sum()
 
 
 @pytest.mark.parametrize("invalid", [np.nan, np.inf, -np.inf])

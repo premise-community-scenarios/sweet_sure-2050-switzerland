@@ -6,6 +6,10 @@ from contextlib import contextmanager
 NON_ACTIVITY_MAPPING_FIELDS = {
     ("metals", "material decisions"),
     ("metals", "material update metrics"),
+    ("metals", "applied market shares"),
+    ("metals", "market diagnostics"),
+    ("metals", "resource diagnostics"),
+    ("metals", "methodology"),
 }
 
 
@@ -24,7 +28,7 @@ def snapshot_mappings(mapping):
                         key: dataset[key]
                         for key in ("name", "reference product", "unit")
                     }
-                except KeyError as error:
+                except (KeyError, TypeError) as error:
                     raise ValueError(
                         f"Incomplete Pathways mapping: {sector}/{variable}"
                     ) from error

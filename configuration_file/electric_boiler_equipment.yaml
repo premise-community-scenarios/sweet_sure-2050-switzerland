@@ -1,0 +1,100 @@
+version: 1
+boundary: Dedicated electric heating equipment only; building fabric and heat-distribution networks excluded.
+interpretation: Lifetime-attributed equipment per MJ of final electricity; capacity additions are not used.
+sources:
+  ctc_bvd:
+    url: https://ctc.no/file-download/a9a26013a5c285864d4ad53326bec18c.pdf
+    sha256: 8b279c4c47d0e0c1c239d98dea2952f67fade9527b9fcec1e38bd8e0bc6c423a
+    locator: BVD-0045 to BVD-0047, 2022-01-10, material declarations and 20–25 year technical life
+  ctc_manual:
+    url: https://ctc.se/file-download/97d743f2ce1f34e17d2586fda373f7de.pdf
+    sha256: 27c305afaf9e86a445d278b409566a064093ccf6831bc3a7fdb837d533c3b23e
+    locator: Section 3; EL 9 net mass 9.3 kg, EL 42 net mass 33 kg; element EN 1.4404, tube EN 1.4301
+  osby:
+    url: https://www.rskdatabasen.se/infoDocs/PROD/PROD_1185_6203841.pdf
+    sha256: 1e9642102af02575a2afbbccd23659c9f0209d37aa560749d621a7b9e75ade52
+    locator: Last page, 2022-11-25; EL 500 Eco, 504 kW, 410 kg excluding water
+  hoiax:
+    url: https://www.epd-global.com/getfile.php/13185680-1741664700/EPDer/Byggevarer/NEPD-5319-4616_Hoiax-Connected-200-Water-Heater.pdf
+    sha256: bbddfb20515951d3843fb36eadc721c8f32b5b603ba28ab6792d229e24f3d979
+    locator: Pages 3–4; Connected 200, 190 L, 2 kW, 31 kg, 17 year reference life
+materials:
+  stainless: market for steel, chromium steel 18/8
+  low_alloy: market for steel, low-alloyed
+  brass: market for brass
+  electronics: market for electronics, for control units
+  rubber: market for synthetic rubber
+  plastic: market for polypropylene, granulate
+  insulation: market for polyurethane, rigid foam
+  bitumen: market for bitumen seal
+  paper: market for paper, woodfree, uncoated
+profiles:
+  residential_space:
+    model: CTC EL 9
+    name: electricity, used in residential electric boiler
+    power_kW: 9
+    mass_kg: 9.3
+    lifetime_years: 20
+    lifetime_range: [20, 25]
+    material_fractions: {stainless: 0.577, brass: 0.041, electronics: 0.207, rubber: 0.089, unmodelled: 0.086}
+    source_ids: [ctc_bvd, ctc_manual]
+    limitations:
+      - EU resistance-flow heater proxy; Swiss installed technology mix is unknown.
+      - Steel group represented by 18/8 stainless; actual steel grades and their split are not disclosed.
+      - Cable/electronics mass uses generic control-unit electronics; unidentified 8.6% remains unmodelled. The control-unit composition is an LCI proxy, not a measured split.
+      - Installation, circulation pump and manufacturing assembly energy are not quantified by the declaration.
+    pathway: FE_residential_space_heating_electric_boiler
+    capacity_variable: Space and water heat boiler capacity in Residential sector|Space heating|Electricty|Electric boiler
+    energy_variable: Fuel consumption in Residential sector|Electricity|Space heating|Electric boiler
+  residential_water:
+    model: Høiax Connected 200, 190 L
+    name: electricity, used in residential electric water heater
+    power_kW: 2
+    mass_kg: 31.01
+    lifetime_years: 17
+    lifetime_range: [17, 25]
+    materials_kg: {stainless: 20.43, brass: 0.68, plastic: 4.69, insulation: 4.55, electronics: 0.52, bitumen: 0.01, paper: 0.13}
+    source_ids: [hoiax]
+    limitations:
+      - Norwegian storage-water-heater proxy; declared rounded material masses sum to 31.01 kg versus 31 kg nominal.
+      - Steel aggregate represented by 18/8 stainless; stainless/mild-steel split and resistance-alloy composition are unresolved.
+      - Plastics, insulation and electronics use generic PP, PU foam and control-unit electronics LCI proxies.
+      - Packaging, manufacturing assembly energy and end-of-life are not reconstructed from EPD impact scores.
+    pathway: FE_residential_water_heating_electric_boiler
+    capacity_variable: Space and water heat boiler capacity in Residential sector|Water heating|Electricty|Electric boiler
+    energy_variable: Fuel consumption in Residential sector|Electricity|Water heating|Electric boiler
+  services:
+    model: CTC EL 42
+    name: electricity, used in services electric boiler
+    power_kW: 42
+    mass_kg: 33
+    lifetime_years: 20
+    lifetime_range: [20, 25]
+    material_fractions: {stainless: 0.581, brass: 0.011, electronics: 0.242, rubber: 0.026, unmodelled: 0.14}
+    source_ids: [ctc_bvd, ctc_manual]
+    limitations:
+      - EU resistance-flow heater proxy; Swiss installed technology mix is unknown.
+      - Steel group represented by 18/8 stainless; actual steel grades and their split are not disclosed.
+      - Cable/electronics mass uses generic control-unit electronics; unidentified 14% remains unmodelled.
+      - Installation, circulation pump and manufacturing assembly energy are not quantified by the declaration.
+    pathway: FE_services_electric_boiler
+    capacity_variable: Space water and process heat boiler capacity in Services sectors|Electricity|Electric boiler
+    energy_variable: Fuel consumption in Services sectors|Electricity|Electric boiler
+  industry:
+    model: Osby Parca EL 500 Eco, 504 kW
+    name: electricity, used in industrial electric boiler
+    power_kW: 504
+    mass_kg: 410
+    lifetime_years: 20
+    lifetime_range: [20, 30]
+    material_fractions: {low_alloy: 0.581, brass: 0.011, electronics: 0.242, rubber: 0.026, unmodelled: 0.14}
+    source_ids: [osby, ctc_bvd]
+    limitations:
+      - Published industrial hot-water-boiler mass and power; material fractions and 20-year life are transferred from CTC EL 42 as explicit engineering proxies.
+      - Industrial steam/electrode-boiler composition and Swiss technology shares remain unresolved; this is a provisional resistance-boiler archetype.
+      - Steel-plate group uses low-alloy steel; stainless-steel substitution must be reported as a sensitivity.
+      - Cable/electronics use a generic control-unit electronics proxy; unidentified 14% remains unmodelled. No elemental metal fractions are invented.
+      - Installation, circulation pump, manufacturing assembly energy and end-of-life remain unquantified.
+    pathway: FE_industry_process_electric_boiler
+    capacity_variable: Process and space heating capacity in industry sectors|Electricity|Electric boiler
+    energy_variable: Fuel consumption in industry sectors|Electricity|Electric boiler

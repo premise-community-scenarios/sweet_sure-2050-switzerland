@@ -1,0 +1,234 @@
+name: refined-metal-inputs
+version: 2
+scope: Selected refined elemental metals, commodity compounds, and separate alloy product masses.
+boundary: Count selected products delivered to activities whose reference product is outside the same indicator's selected product set. Internal distribution and conversion receive zero factors.
+interpretation: Model-attributed gross deliveries at the selected product boundary; signed activity credits are retained. These indicators are not physical stock balances, primary extraction, or quantities retained in final equipment. Metal and alloy indicators can overlap and must not be added together.
+composition_policy: Nominal elemental purity for elemental products; documented contents or chemical stoichiometry for selected compounds. No inferred composition for generic alloys. Products not listed are outside this explicit boundary and are reported in the coverage inventory.
+atomic_weights_source: https://ciaaw.org/abridged-atomic-weights.htm
+atomic_weights_version: Abridged standard atomic weights 2024, nominal values
+atomic_weights: {H: 1.0080, Li: 6.94, Be: 9.0122, B: 10.81, C: 12.011, N: 14.007, O: 15.999, F: 18.998, Na: 22.990, Mg: 24.305, Al: 26.982, Si: 28.085, P: 30.974, S: 32.06, Cl: 35.45, K: 39.098, Ca: 40.078, Sc: 44.956, Ti: 47.867, V: 50.942, Cr: 51.996, Mn: 54.938, Fe: 55.845, Co: 58.933, Ni: 58.693, Cu: 63.546, Zn: 65.38, Ga: 69.723, As: 74.922, Se: 78.971, Sr: 87.62, Y: 88.906, Zr: 91.222, Nb: 92.906, Mo: 95.95, Ru: 101.07, Rh: 102.91, Pd: 106.42, Ag: 107.87, Cd: 112.41, In: 114.82, Sn: 118.71, Sb: 121.76, Te: 127.60, Ba: 137.33, La: 138.91, Ce: 140.12, Pr: 140.91, Nd: 144.24, Sm: 150.36, Eu: 151.96, Gd: 157.25, Tb: 158.93, Dy: 162.50, Ho: 164.93, Er: 167.26, Tm: 168.93, Yb: 173.05, Lu: 174.97, Hf: 178.49, Ta: 180.95, W: 183.84, Re: 186.21, Ir: 192.22, Pt: 195.08, Au: 196.97, Hg: 200.59, Pb: 207.2, U: 238.03}
+sources:
+  - {id: ecoinvent-products, url: 'https://support.ecoinvent.org/activities-products', note: Product identity and supplier/consumer semantics; local 3.12 product_information records supply chemical identities and stated compositions.}
+  - {id: ecoinvent-system-model, url: 'https://support.ecoinvent.org/system-models', note: Allocated cutoff inventory interpretation; intermediate flows are not an unallocated physical material balance.}
+  - {id: premise-lithium, path: 'premise/data/additional_inventories/lci-lithium.xlsx', doi: '10.1016/j.resconrec.2021.105762', note: Battery-grade lithium hydroxide represents LiOH.H2O; ordinary lithium hydroxide represents anhydrous LiOH.}
+  - {id: premise-cobalt, path: 'premise/data/additional_inventories/lci-cobalt.xlsx', note: Cobalt sulfate inventory explicitly uses 0.38 kg Co per kg CoSO4.}
+  - {id: lithium-primary-study, url: 'https://www.osti.gov/servlets/purl/1868964', note: Kelly et al. 2021 distinguishes carbonate and hydroxide monohydrate.}
+  - {id: chromium-cas, url: 'https://pubchem.ncbi.nlm.nih.gov/compound/Chromium-trioxide', note: CAS 1333-82-0 confirms CrO3; the local product paragraph incorrectly describes Cr2O3.}
+  - {id: manganese-cas, url: 'https://pubchem.ncbi.nlm.nih.gov/compound/Manganese-sulphate', note: CAS 7785-87-7 confirms MnSO4.}
+  - {id: silane-cas, url: 'https://webbook.nist.gov/cgi/cbook.cgi?ID=7803-62-5', note: CAS 7803-62-5 confirms SiH4; the local product paragraph abbreviates it incorrectly as Si.}
+  - {id: lutetium-oxide, url: "https://pubchem.ncbi.nlm.nih.gov/compound/159406", note: Lu2O3 identity for the refined oxide product.}
+  - {id: praseodymium-oxide, url: 'https://pubchem.ncbi.nlm.nih.gov/compound/159413', note: Nominal Pr6O11 convention for unspecified commercial praseodymium oxide.}
+indicators:
+  - name: Aluminium
+    symbol: Al
+    products:
+      aluminium, primary, ingot: {factor: 1, basis: nominal elemental metal}
+      aluminium, primary, liquid: {factor: 1, basis: nominal elemental metal}
+      aluminium hydroxide: {formula: AlH3O3}
+      aluminium oxide, metallurgical: {formula: Al2O3}
+      aluminium oxide, non-metallurgical: {formula: Al2O3}
+      aluminium chloride: {formula: AlCl3}
+      aluminium fluoride: {formula: AlF3}
+    limitation: Generic cast and wrought alloys are measured separately in product mass; their aluminium content is not inferred.
+  - name: Antimony
+    symbol: Sb
+    products: {antimony: {factor: 1, basis: nominal elemental metal}}
+  - name: Arsenic
+    symbol: As
+    products: {7N Arsenic: {factor: 1, basis: nominal elemental metalloid}}
+  - name: Barium
+    symbol: Ba
+    products: {barium carbonate: {formula: BaCO3}, barium hydroxide: {formula: BaH2O2}, barium oxide: {formula: BaO}, barium sulfide: {formula: BaS}}
+  - name: Beryllium
+    symbol: Be
+    products: {beryllium: {factor: 1, basis: nominal elemental metal}, beryllium hydroxide: {factor: 0.2095, basis: ecoinvent product_information states 20.95 percent Be}}
+  - name: Boron
+    symbol: B
+    products: {boron carbide: {formula: B4C}, boron trifluoride: {formula: BF3}}
+    limitation: Selected industrial boron compounds only; mineral borates and boric acid are outside this boundary.
+  - name: Cadmium
+    symbol: Cd
+    products:
+      cadmium: {factor: 1, basis: nominal elemental metal}
+      cadmium, semiconductor-grade: {factor: 1, basis: nominal elemental metal}
+      cadmium chloride, semiconductor-grade: {formula: CdCl2}
+      cadmium sulfide, semiconductor-grade: {formula: CdS}
+      cadmium telluride, semiconductor-grade: {formula: CdTe}
+  - name: Calcium
+    symbol: Ca
+    products: {'calcium carbonate, precipitated': {formula: CaCO3}, calcium chloride: {formula: CaCl2}}
+    limitation: Selected refined chemicals only; limestone, lime, cement and other mineral products are excluded.
+  - name: Cerium
+    symbol: Ce
+    products: {cerium oxide: {factor: 0.8141, basis: ecoinvent product_information states 81.41 percent Ce}}
+  - name: Chromium
+    symbol: Cr
+    products:
+      chromium: {factor: 1, basis: nominal elemental metal}
+      chromium trioxide, flakes: {formula: CrO3, basis: 'Product name and CAS 1333-82-0 verified against PubChem; local Cr2O3 prose conflicts with both identifiers'}
+      ferrochromium, high-carbon, 55% Cr: {factor: 0.55, basis: explicit reference-product composition}
+      ferrochromium, high-carbon, 68% Cr: {factor: 0.68, basis: explicit reference-product composition}
+    limitation: Chromium already contained in recycled steel is not inferred; steel is available separately as product mass.
+  - name: Cobalt
+    symbol: Co
+    products:
+      cobalt: {factor: 1, basis: nominal elemental metal}
+      cobalt acetate: {factor: 0.3329, basis: ecoinvent Co_content_cobalt_acetate parameter}
+      cobalt carbonate: {factor: 0.4955, basis: ecoinvent Co_content_cobalt_carbonate parameter}
+      cobalt hydroxide: {factor: 0.634, basis: ecoinvent product_information and Co_content_cobalt_hydroxide parameter}
+      cobalt oxide: {factor: 0.7865, basis: ecoinvent product_information and Co_content_cobalt_oxide parameter}
+      cobalt sulfate: {factor: 0.38, basis: premise-cobalt inventory explicitly normalizes to kg CoSO4}
+      cobalt(II) chloride, anhydrous: {formula: CoCl2}
+  - name: Copper
+    symbol: Cu
+    products:
+      copper, cathode: {factor: 1, basis: nominal elemental metal}
+      copper carbonate: {formula: CuCO3}
+      copper oxide: {formula: CuO}
+      copper sulfate: {formula: CuSO4}
+    limitation: Anodes, concentrates and scrap are upstream of the boundary; wire and foil are downstream. Metal embedded in directly supplied finished components is outside the selected commodity boundary.
+  - {name: Dysprosium, symbol: Dy, products: {dysprosium oxide: {formula: Dy2O3}}}
+  - {name: Erbium, symbol: Er, products: {erbium oxide: {formula: Er2O3}}}
+  - {name: Europium, symbol: Eu, products: {europium oxide: {formula: Eu2O3}}}
+  - {name: Gadolinium, symbol: Gd, products: {gadolinium oxide: {formula: Gd2O3}}}
+  - name: Gallium
+    symbol: Ga
+    products: {'gallium, high-grade': {factor: 1, basis: nominal elemental metal}, 'gallium, low-grade': {factor: 1, basis: nominal elemental metal}, gallium chloride: {formula: GaCl3}}
+  - {name: Gold, symbol: Au, products: {gold: {factor: 1, basis: nominal elemental metal}}}
+  - {name: Hafnium, symbol: Hf, products: {hafnium sponge: {factor: 1, basis: nominal elemental metal}, hafnium tetrachloride: {formula: HfCl4}}}
+  - {name: Holmium, symbol: Ho, products: {holmium oxide: {formula: Ho2O3}}}
+  - {name: Indium, symbol: In, products: {indium: {factor: 1, basis: nominal elemental metal}}}
+  - {name: Iridium, symbol: Ir, products: {iridium: {factor: 1, basis: nominal elemental metal}}}
+  - name: Iron
+    symbol: Fe
+    products: {iron: {factor: 1, basis: nominal elemental metal}, iron(II) chloride: {formula: FeCl2}}
+    limitation: This elemental/chemical subset excludes iron contained in generic alloys. Use the separate Iron and steel alloys indicator for bulk ferrous materials.
+  - {name: Lanthanum, symbol: La, products: {lanthanum oxide: {factor: 0.8527, basis: ecoinvent product_information states 85.27 percent La}}}
+  - {name: Lead, symbol: Pb, products: {lead: {factor: 1, basis: nominal elemental metal}}}
+  - name: Lithium
+    symbol: Li
+    products:
+      lithium: {factor: 1, basis: nominal elemental metal}
+      lithium metal: {factor: 1, basis: nominal elemental metal}
+      lithium carbonate: {formula: Li2CO3}
+      lithium carbonate, battery grade: {formula: Li2CO3}
+      lithium hydroxide: {formula: LiHO, basis: ecoinvent product_information explicitly identifies LiOH}
+      lithium hydroxide, battery grade: {formula: LiH3O2, basis: 'premise-lithium: LiOH.H2O, Kelly et al. 2021'}
+      lithium chloride: {formula: LiCl}
+      lithium fluoride: {formula: LiF}
+      lithium hydride: {formula: LiH}
+      lithium nitrate: {formula: LiNO3}
+      lithium sulfate: {formula: Li2SO4, basis: 'Neutral lithium sulfate for CAS 10377-48-7; local LiSO4 prose lacks the second Li atom'}
+    limitation: Battery active materials, electrolyte salts and foil are downstream; precipitated/washed carbonate intermediates and brines are upstream.
+  - {name: Lutetium, symbol: Lu, products: {lutetium oxide: {formula: Lu2O3, basis: "Lutetium(III) oxide; PubChem CID 159406"}}}
+  - name: Magnesium
+    symbol: Mg
+    products: {magnesium: {factor: 1, basis: nominal elemental metal}, magnesium hydroxide: {formula: MgH2O2}, magnesium oxide: {formula: MgO}, magnesium sulfate: {formula: MgSO4}}
+  - name: Manganese
+    symbol: Mn
+    products:
+      manganese: {factor: 1, basis: nominal elemental metal}
+      manganese carbonate: {formula: MnCO3}
+      manganese dioxide: {formula: MnO2}
+      manganese sulfate: {formula: MnSO4}
+      manganese(III) oxide: {formula: Mn2O3}
+      ferromanganese, high-coal, 74.5% Mn: {factor: 0.745, basis: explicit reference-product composition}
+  - {name: Mercury, symbol: Hg, products: {mercury: {factor: 1, basis: nominal elemental metal}}}
+  - {name: Molybdenum, symbol: Mo, products: {molybdenum: {factor: 1, basis: nominal elemental metal}, molybdenum trioxide: {formula: MoO3}}}
+  - {name: Neodymium, symbol: Nd, products: {neodymium oxide: {factor: 0.8574, basis: ecoinvent product_information states 85.74 percent Nd}}}
+  - name: Nickel
+    symbol: Ni
+    products: {'nickel, class 1': {factor: 1, basis: nominal elemental metal}, nickel sulfate: {formula: NiSO4}, 'nickel carbonate, anhydrous, at plant': {formula: NiCO3}}
+    limitation: Ferronickel has a variable documented nickel fraction and is measured separately as alloy mass; nickel in recycled steel is not inferred.
+  - {name: Niobium, symbol: Nb, products: {'ferroniobium, 66% Nb': {factor: 0.66, basis: explicit reference-product composition}}}
+  - {name: Palladium, symbol: Pd, products: {palladium: {factor: 1, basis: nominal elemental metal}}}
+  - {name: Platinum, symbol: Pt, products: {platinum: {factor: 1, basis: nominal elemental metal}}}
+  - name: Potassium
+    symbol: K
+    products: {potassium carbonate: {formula: K2CO3}, potassium hydroxide: {formula: KHO}, 'potassium chloride, industrial grade': {formula: KCl}}
+    limitation: Selected refined chemical commodities only; bulk fertilizer grades and ores are excluded.
+  - {name: Praseodymium, symbol: Pr, products: {praseodymium oxide: {formula: Pr6O11, basis: nominal commercial praseodymium oxide Pr6O11; mixed Pr-Nd oxides excluded}}, limitation: 'Oxidation state is unspecified in local metadata; Pr6O11 is an explicit convention. A Pr2O3 convention would increase the contained-Pr factor by about 3.2 percent.'}
+  - {name: Rhenium, symbol: Re, products: {rhenium: {factor: 1, basis: nominal elemental metal reference product}}}
+  - {name: Rhodium, symbol: Rh, products: {rhodium: {factor: 1, basis: nominal elemental metal}}}
+  - {name: Ruthenium, symbol: Ru, products: {ruthenium: {factor: 1, basis: nominal elemental metal}}}
+  - {name: Samarium, symbol: Sm, products: {samarium oxide: {formula: Sm2O3}}}
+  - {name: Scandium, symbol: Sc, products: {scandium oxide: {formula: Sc2O3}}}
+  - {name: Selenium, symbol: Se, products: {selenium: {factor: 1, basis: nominal elemental metalloid}}}
+  - name: Silicon
+    symbol: Si
+    products:
+      silicon, metallurgical grade: {factor: 1, basis: nominal elemental metalloid}
+      silicon, electronics grade: {factor: 1, basis: nominal elemental metalloid}
+      silicon, solar grade: {factor: 1, basis: nominal elemental metalloid}
+      silicon, solar grade, for photovoltaics: {factor: 1, basis: nominal elemental metalloid}
+      silicon, solar grade, fluidized bed reactor: {factor: 1, basis: nominal elemental metalloid}
+      silicon, solar grade, modified siemens process: {factor: 1, basis: nominal elemental metalloid}
+      silicon, solar grade, recycled: {factor: 1, basis: nominal elemental metalloid}
+      silicon, solar grade, siemens process, simulated data: {factor: 1, basis: nominal elemental metalloid}
+      silicon tetrachloride: {formula: SiCl4}
+      silicon tetrahydride: {formula: SiH4, basis: 'Product name and CAS 7803-62-5 verified against NIST; local Si prose omits hydrogen'}
+      silicon carbide: {formula: SiC}
+    limitation: Crystalline wafers/ingots are downstream; silica is upstream. Ferrosilicon is a separate alloy-mass indicator.
+  - {name: Silver, symbol: Ag, products: {silver: {factor: 1, basis: nominal elemental metal}}}
+  - name: Sodium
+    symbol: Na
+    products:
+      sodium: {factor: 1, basis: nominal elemental metal}
+      sodium hydroxide, without water, in 50% solution state: {formula: NaHO, basis: ecoinvent reference flow is dry active substance; do not multiply by solution concentration}
+      sodium carbonate: {formula: Na2CO3, optional: true}
+      soda ash, light: {formula: Na2CO3, optional: true}
+      soda ash, dense: {formula: Na2CO3, optional: true}
+      sodium bicarbonate: {formula: NaHCO3}
+      sodium chloride, powder: {formula: NaCl}
+    limitation: Selected commodity forms only; brines and other downstream specialty salts are outside the boundary.
+  - {name: Strontium, symbol: Sr, products: {strontium carbonate: {formula: SrCO3}}}
+  - {name: Tantalum, symbol: Ta, products: {'tantalum powder, capacitor-grade': {factor: 1, basis: nominal elemental metal}}}
+  - name: Tellurium
+    symbol: Te
+    products: {'tellurium, semiconductor-grade': {factor: 1, basis: nominal elemental metalloid}, 'cadmium telluride, semiconductor-grade': {formula: CdTe}}
+  - {name: Terbium, symbol: Tb, products: {terbium oxide: {formula: Tb4O7}}}
+  - {name: Thulium, symbol: Tm, products: {thulium oxide: {formula: Tm2O3}}}
+  - {name: Tin, symbol: Sn, products: {tin: {factor: 1, basis: nominal elemental metal}, tin dioxide: {formula: SnO2}, tin (IV) chloride: {formula: SnCl4}}}
+  - name: Titanium
+    symbol: Ti
+    products:
+      titanium: {factor: 1, basis: nominal elemental metal}
+      titanium sponge: {factor: 1, basis: nominal elemental metal}
+      titanium, triple-melt: {factor: 1, basis: nominal elemental metal}
+      titanium dioxide: {formula: TiO2}
+      titanium tetrachloride: {formula: TiCl4}
+  - {name: Tungsten, symbol: W, products: {tungsten carbide powder: {factor: 0.939, basis: ecoinvent product_information states 93.90 percent W}}}
+  - {name: Vanadium, symbol: V, products: {vanadium pentoxide: {formula: V2O5}}}
+  - {name: Ytterbium, symbol: Yb, products: {ytterbium oxide: {formula: Yb2O3}}}
+  - {name: Yttrium, symbol: Y, products: {yttrium oxide: {formula: Y2O3}}}
+  - {name: Zinc, symbol: Zn, products: {zinc: {factor: 1, basis: nominal elemental metal}, zinc oxide: {formula: ZnO}, zinc sulfide: {formula: ZnS}, zinc monosulfate: {formula: ZnSO4}}}
+  - name: Zirconium
+    symbol: Zr
+    products: {zirconium oxide: {formula: ZrO2}, 'zirconium sponge, nuclear-grade': {factor: 1, basis: nominal elemental metal}, zirconium tetrachloride: {formula: ZrCl4}}
+alloy_indicators:
+  - name: Aluminium alloys
+    products: ['aluminium, cast alloy', 'aluminium, wrought alloy', 'aluminium, primary, cast alloy slab from continuous casting', 'aluminium alloy, AlLi', 'aluminium alloy, AlMg3', 'aluminium alloy, metal matrix composite']
+  - name: Iron and steel alloys
+    products: ['pig iron', 'cast iron', 'steel, 3.2% silicon alloy, for grain oriented electrical steel', 'steel, bearing, 100% scrap', 'steel, carbon, 100% scrap', 'steel, case hardening, 100% scrap', 'steel, chromium steel 18/8', 'steel, chromium steel 18/8, hot rolled', 'steel, high strength low alloy, 100% scrap', 'steel, low-alloyed', 'steel, low-alloyed, hot rolled', 'steel, structural, 100% scrap', 'steel, unalloyed', 'steel, weathering A, 100% scrap', 'steel, weathering B, 100% scrap', 'iron-nickel-chromium alloy']
+  - name: Ferronickel
+    products: [ferronickel]
+  - name: Ferrosilicon
+    products: [ferrosilicon]
+  - name: Magnesium alloys
+    products: ['magnesium-alloy, AZ91', 'magnesium-alloy, AZ91, diecast']
+unavailable_elements:
+  Bismuth: No identified refined product in the scenario package indices.
+  Germanium: Only concentrate identified; its variable content and upstream stage do not support a refined-metal indicator.
+  Osmium: No identified separate refined product in the scenario package indices.
+  Rubidium: No identified separate refined product in the scenario package indices.
+  Thallium: No identified separate refined product in the scenario package indices.
+  Thorium: No identified separate refined product in the scenario package indices.
+  Uranium: Yellowcake and fuel/enrichment products mix contained-U and compound/product conventions; not assigned an unverified mass factor. RELICS uranium extraction remains available.
+  Promethium: No identified separate refined product in the scenario package indices.
+
+coverage_limits:
+  - Selected compounds are an explicit subset, not all chemicals containing each element. See each product list and the unselected-product inventory.
+  - Mixed rare-earth oxides (La-Ce, Pr-Nd, Sm-Eu-Gd and Tb-Dy) lack verified elemental splits. Their direct use is outside the quantified subset; selected separated oxides downstream are counted.
+  - Generic alloys are measured separately in product mass; embedded elemental metal is not inferred.
+  - Components, ores, concentrates, scraps and wastes are outside the selected commodity boundary.
+  - Absence from the selected products is a coverage limitation, not proof of zero material use.

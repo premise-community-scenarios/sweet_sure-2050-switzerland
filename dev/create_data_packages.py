@@ -250,22 +250,40 @@ def run_build(args, plan, key):
                 from dev.premise_compat import preserve_pathways_mappings
                 from dev.stem_heat_pumps import swiss_stem_heat_pumps
                 from dev.stem_wood_coproducts import wood_coproduct_inventories
+                from dev.stem_vehicle_energy import swiss_vehicle_energy
+                from dev.stem_electric_boilers import swiss_electric_boilers
+                from dev.stem_stationary_energy import swiss_stationary_energy
             except ModuleNotFoundError:
                 from stem_efficiency import absolute_stem_efficiencies
                 from premise_compat import preserve_pathways_mappings
                 from stem_heat_pumps import swiss_stem_heat_pumps
                 from stem_wood_coproducts import wood_coproduct_inventories
-            with absolute_stem_efficiencies(
-                args.source_db, args.output_dir / f"{name}.efficiencies.json"
-            ), swiss_stem_heat_pumps(
-                plan["resources"]["scenario_data"]["path"],
-                scenario,
-                args.output_dir / f"{name}.heat_pumps.json",
-            ), wood_coproduct_inventories(
-                plan["resources"]["scenario_data"]["path"],
-                scenario,
-                args.output_dir / f"{name}.wood_coproducts.json",
-            ), preserve_pathways_mappings():
+                from stem_vehicle_energy import swiss_vehicle_energy
+                from stem_electric_boilers import swiss_electric_boilers
+                from stem_stationary_energy import swiss_stationary_energy
+            with (
+                absolute_stem_efficiencies(
+                    args.source_db, args.output_dir / f"{name}.efficiencies.json"
+                ),
+                swiss_stem_heat_pumps(
+                    plan["resources"]["scenario_data"]["path"],
+                    scenario,
+                    args.output_dir / f"{name}.heat_pumps.json",
+                ),
+                wood_coproduct_inventories(
+                    plan["resources"]["scenario_data"]["path"],
+                    scenario,
+                    args.output_dir / f"{name}.wood_coproducts.json",
+                ),
+                swiss_vehicle_energy(args.output_dir / f"{name}.vehicle_energy.json"),
+                swiss_electric_boilers(
+                    plan["resources"]["scenario_data"]["path"],
+                    scenario,
+                    args.output_dir / f"{name}.electric_boilers.json",
+                ),
+                preserve_pathways_mappings(),
+                swiss_stationary_energy(),
+            ):
                 builder.create_datapackage(
                     name=name,
                     contributors=[{"name": "Romain", "email": "r_s at me.com"}],
@@ -291,6 +309,15 @@ def run_build(args, plan, key):
                 ),
                 "wood_coproduct_adapter_sha256": file_hash(
                     Path(__file__).with_name("stem_wood_coproducts.py")
+                ),
+                "electric_boiler_adapter_sha256": file_hash(
+                    Path(__file__).with_name("stem_electric_boilers.py")
+                ),
+                "vehicle_energy_adapter_sha256": file_hash(
+                    Path(__file__).with_name("stem_vehicle_energy.py")
+                ),
+                "stationary_energy_adapter_sha256": file_hash(
+                    Path(__file__).with_name("stem_stationary_energy.py")
                 ),
                 "generated_at": datetime.now(timezone.utc).isoformat(),
                 "package": str(archive),
