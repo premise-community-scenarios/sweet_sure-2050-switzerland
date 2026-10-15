@@ -14,7 +14,9 @@ os.environ.setdefault(
 )
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument(
-    "--results", type=Path, default=ROOT / "results/sps_updated/refined_metals"
+    "--results",
+    type=Path,
+    default=ROOT / "results/sps_battery_corrected/refined_metals",
 )
 parser.add_argument("--url", default="http://127.0.0.1:8050")
 args = parser.parse_args()

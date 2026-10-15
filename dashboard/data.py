@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_RESULTS = ROOT / "results/sps_updated/refined_metals"
+DEFAULT_RESULTS = ROOT / "results/sps_battery_corrected/refined_metals"
 INDICATORS = {
     "climate change": ("Climate change", "kg CO2-eq.", 1e9, "Mt CO₂-eq."),
     "land occupation": ("Land occupation", "square meter-year", 1e6, "km²·year"),

@@ -16,6 +16,29 @@ def render(base):
     numerical = json.loads((out / "numerical_summary.json").read_text())
     equipment = json.loads((out / "equipment_review_summary.json").read_text())
     solver = json.loads((out / "solver_backend_provenance.json").read_text())
+    battery_path = base / "battery_audit/battery_summary.json"
+    battery_section = ""
+    if battery_path.exists():
+        battery = json.loads(battery_path.read_text())
+        assert battery["passed"], "Exported battery checks failed"
+        battery_section = (
+            "<section><h2>Battery allocation and capacity markets</h2>"
+            f"<p>All {battery['checks']:,} vehicle allocation checks, "
+            f"{battery['density_checks']:,} NMC532 density checks and "
+            f"{battery['charger_storage_checks']:,} charger storage checks pass. "
+            "The independent vehicle expectation is capacity kWh × (1 + replacements) "
+            "÷ (lifetime km × grid kWh/km × 3.6). It is compared with the actual "
+            "capacity-market input in each exported per-MJ activity.</p>"
+            "<p>Fixed-range cars, trucks and buses scale capacity with electricity use, "
+            "preserving their capacity-per-MJ ratio. Fixed-capacity motorcycles and "
+            "trolleybuses use scenario electricity intensity. Physical battery mass "
+            "also depends on chemistry shares and mass per kWh in the capacity markets. "
+            "The NMC532 check covers manufacture and disposal coefficients; the two "
+            "canonical high-power chargers contain no stationary storage input.</p>"
+            "<p><a href='../battery_audit/battery_capacity_per_MJ.csv'>Vehicle back-calculations</a> · "
+            "<a href='../battery_audit/battery_market_checks.csv'>Capacity-market and charger checks</a> · "
+            "<a href='../battery_audit/battery_summary.json'>Battery audit provenance</a></p></section>"
+        )
     audit_log = base / "independent_audit.log"
     conditioning_warnings = (
         audit_log.read_text().count("UmfpackWarning: (almost) singular matrix!")
@@ -262,6 +285,11 @@ body{{font:16px/1.55 system-ui,sans-serif;max-width:1240px;margin:35px auto;padd
 <section class="qualified"><h2>Aggregate electricity equipment gaps</h2><p>These percentages refer only to each sector's aggregate “other electricity” use, not all sectoral energy. The Swiss 2020 end-use shares are held constant to 2050. Electricity supply remains included for the entire demand, including the shares with no added end-use equipment.</p><div class="scroll">{table(aggregate_coverage)}</div><p>Identified components are partial inventories. In particular, the residential additions cover documented electrical parts, without inferring motor, heater or structural metal masses from undifferentiated appliance inventories. Missing equipment quantities remain unresolved.</p></section>
 <section><h2>Equipment coverage register</h2><p>A gap is not zero equipment demand. “Some identified components” does not imply complete functional coverage. Source technology and service intensity remain separate questions from correct matrix arithmetic.</p><div class="scroll">{table(coverage[["pathway", "status", "basis"]])}</div></section>
 <section><h2>Reproducible evidence</h2><ul>{"".join(f'<li><a href="{name}">{name}</a></li>' for name in links if (out / name).exists())}<li><a href="equipment_branches.parquet">Equipment branch back-calculations</a></li><li><a href="old_new_attribution.parquet">Endpoint old/new attribution</a></li><li><a href="coefficient_sensitivities.parquet">All coefficient sensitivities</a></li></ul><p>Source specifications and URLs are embedded in the frozen workbook and package sidecars; generated inventories and results remain local. The dashboard uses the validated combined results and carries this boundary and the coverage register in its metadata.</p></section></html>"""
+    body = body.replace(
+        "<section><h2>Motor and magnet coefficients",
+        battery_section + "<section><h2>Motor and magnet coefficients",
+        1,
+    )
     (out / "audit_report.html").write_text(body)
     print(out / "audit_report.html")
 

@@ -4,7 +4,7 @@ An entirely local Dash app for validated Pathways indicator results.
 Every chart uses years on the X axis. The app reads the existing results and
 does not recalculate inventories or indicators.
 
-The default batch is `results/sps_updated/refined_metals`: four SPS base scenarios,
+The default batch is `results/sps_battery_corrected/refined_metals`: four SPS base scenarios,
 seven years (2020–2050), 16 EF 3.1 headline categories, all 65 RELICS indicators,
 60 refined-element inputs and five separate alloy-mass indicators (146 total).
 To regenerate it, follow [the indicator workflow](../dev/INDICATORS.md).
@@ -35,12 +35,20 @@ the product list, factors, sources and coverage gaps. These quantities can overl
 across indicators and must not be summed. Their location filter identifies the
 consuming activity at the counted delivery, not the mining or refining origin.
 
-The [current equipment and metal audit](../results/sps_updated/metal_audit/audit_report.html)
+The [current equipment and metal audit](../results/sps_battery_corrected/metal_audit/audit_report.html)
 checks sampled consumers, all system totals, exported equipment coefficients and
 the changes from the previous batch. Updated vehicle inventories now set the
 purchased-energy denominator and lifetime equipment allocation, including truck
 operating electricity. Dedicated boilers and partial aggregate electricity
 component mixes are included.
+
+This batch uses premise `b4ea884e`: corrected truck battery resizing through
+cached inventories, fixed-range electric bus sizing, NMC532 energy-density
+mapping, chargers without stationary battery storage, and the restored rail
+hydrogen-tank supplier. A separate check compares exported capacity per MJ with
+vehicle capacity, replacements, lifetime and electricity use. Physical battery
+mass follows the upstream capacity markets. The previous `results/sps_updated/`
+batch is retained for comparison.
 
 The boundary includes energy-specific equipment and its upstream manufacture.
 Vehicle bodies, chassis, roads and general buildings are excluded. Quantities
@@ -82,7 +90,7 @@ PLAYWRIGHT_BROWSERS_PATH=.venv-dashboard/browsers .venv-dashboard/bin/python -m 
 
 The numerical checks compare all 4,088 plotted annual totals with the validated
 indicator totals. Browser screenshots and the interaction report are saved under
-`results/sps_updated/refined_metals/dashboard_preview/`. The browser script accepts
+`results/sps_battery_corrected/refined_metals/dashboard_preview/`. The browser script accepts
 `--results` for the artifact directory and `--url` for another running app.
 
 Built with [Dash callbacks](https://dash.plotly.com/basic-callbacks),

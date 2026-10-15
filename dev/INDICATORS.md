@@ -1,5 +1,81 @@
 # SWEET-SURE indicators with Pathways
 
+## Current batch: corrected battery allocation
+
+The dashboard uses `results/sps_battery_corrected/refined_metals`, built from
+premise [`b4ea884e`](https://github.com/polca/premise/commit/b4ea884e). It retains
+the 146-indicator scope and energy-equipment boundary described below, with
+the subsequent truck battery-cache fix, fixed-range bus sizing, NMC532 density
+mapping, removal of stationary storage from chargers, and restored rail
+hydrogen-tank supplier. The earlier `results/sps_updated/` batch and its audit
+remain available; the historical counts and comparisons below refer to that batch.
+
+The SWEET per-MJ vehicle blocks have been synchronized with those premise
+inventories. The capacity-market coefficient is checked independently as
+`capacity kWh × (1 + replacements) / (lifetime km × grid kWh/km × 3.6)`.
+Fixed-range cars, trucks and buses preserve this ratio as capacity and energy
+use change together. Fixed-capacity motorcycles and trolleybuses use their
+scenario electricity intensity; motorcycles include the documented replacement
+pack. Battery mass per MJ also
+depends on the evolving chemistry shares and mass per kWh in the capacity markets.
+
+Run the current batch from an isolated checkout of the recorded premise revision:
+
+```bash
+git -C ../premise worktree add ../premise-sps-battery-corrected b4ea884e
+PYTHONPATH=../premise-sps-battery-corrected conda run -n premise python \
+  dev/audit_vehicle_energy.py --premise ../premise-sps-battery-corrected \
+  --output results/sps_battery_corrected/vehicle_audit
+conda run -n premise python dev/build_all_data_packages.py \
+  --premise-root ../premise-sps-battery-corrected \
+  --output-dir results/sps_battery_corrected/build \
+  --batch-scenarios SPS1_bas0 SPS2_bas0 SPS3_bas0 SPS4_bas0 \
+  --workers 2 --prune-checkpoints
+conda run -n premise python dev/audit_battery_package.py \
+  --premise ../premise-sps-battery-corrected \
+  --packages results/sps_battery_corrected/build/packages \
+  --output results/sps_battery_corrected/battery_audit
+conda run -n pathways python dev/run_indicator_batch.py \
+  results/sps_battery_corrected/build \
+  --output-dir results/sps_battery_corrected/indicators \
+  --method-set ef31-relics --workers 2
+conda run -n pathways python dev/run_refined_metals.py \
+  --base-results results/sps_battery_corrected/indicators \
+  --packages results/sps_battery_corrected/build/packages \
+  --output results/sps_battery_corrected/refined_metals \
+  --equipment-coverage results/sps_battery_corrected/vehicle_audit/equipment_coverage.csv
+conda run -n pathways python dev/audit_metal_quantities.py \
+  --results results/sps_battery_corrected/refined_metals \
+  --base-results results/sps_battery_corrected/indicators \
+  --packages results/sps_battery_corrected/build/packages \
+  --output results/sps_battery_corrected/metal_audit
+conda run -n pathways python dev/audit_metal_solver_precision.py \
+  --base results/sps_battery_corrected --output results/sps_battery_corrected/metal_audit
+conda run -n pathways python dev/review_energy_equipment.py \
+  --base results/sps_battery_corrected --previous results/sps_updated \
+  --output results/sps_battery_corrected/metal_audit
+conda run -n pathways python dev/report_energy_equipment_review.py \
+  --base results/sps_battery_corrected
+.venv-dashboard/bin/python -m dashboard.app
+```
+
+Use a fresh output directory if inputs or code differ from the frozen batch.
+The battery audit reads actual exported matrix entries; its expected quantities
+do not call premise's sizing or per-MJ normalization code. It rejects the old
+truck and bus results while accepting the old car and motorcycle allocations.
+
+The regenerated exports pass 196 vehicle-allocation checks, 112 NMC532 density
+checks and 56 charger checks across all four scenarios and seven years. The
+dashboard's 12 numerical tests verify all 4,088 plotted annual totals; its
+desktop/mobile browser checks also pass. The premise revision passed the full
+ecoinvent 3.12 build test in
+[CI run 38752435689](https://github.com/polca/premise/actions/runs/38752435689),
+in addition to the fast regression suite.
+The independent metal audit covers 301 sampled/targeted consumers, 183,820
+consumer–material comparisons, 1,820 system totals and 58,695 regional results,
+with no numerical discrepancies at the existing strict tolerances. Equipment
+coverage gaps and technology proxies remain documented in the audit report.
+
 ## SPS base scenarios: EF 3.1 and RELICS
 
 The current workflow builds `SPS1_bas0`, `SPS2_bas0`, `SPS3_bas0` and `SPS4_bas0`
