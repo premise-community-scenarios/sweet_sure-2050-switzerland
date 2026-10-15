@@ -155,6 +155,31 @@ def attribution(old, new, old_root, new_root, old_q, new_q):
     return result
 
 
+def linked_supplier(inv, parent, identity):
+    """Resolve source metadata through actual inputs after import/regionalization.
+
+    Brightway normalizes some product capitalization. Location can also change;
+    require one matching positive input to the consuming activity rather than
+    selecting a similarly named but unconnected global inventory.
+    """
+    name, product, _, unit = identity
+    expected = tuple(value.strip().casefold() for value in (name, product, unit))
+    matches = []
+    for supplier, coefficient in children(inv, parent):
+        node = inv.nodes.loc[supplier]
+        actual = tuple(
+            node[field].strip().casefold()
+            for field in ("name", "reference product", "unit")
+        )
+        if coefficient > 0 and actual == expected:
+            matches.append((supplier, coefficient))
+    if len(matches) != 1:
+        raise ValueError(
+            f"Expected one connected supplier for {identity}; found {len(matches)}"
+        )
+    return matches[0]
+
+
 def chemical_checks(results, output):
     config = yaml.safe_load((results / "refined_metal_inputs.yaml").read_text())
     methods = [
@@ -452,8 +477,8 @@ def run(base, previous, output):
             for boiler in [p for p in boilers if p["year"] == year]:
                 root, q = roots["EXT - 0 - " + boiler["pathway"]]
                 h = boiler["hardware"]
-                i = inv.identity[(h[0], h[1], h[3], h[2])]
-                units = next(c for j, c in children(inv, root) if j == i) * q
+                i, coefficient = linked_supplier(inv, root, h)
+                units = coefficient * q
                 scenarios = []
                 for life in boiler["lifetime_range"]:
                     scenarios.append(
@@ -466,7 +491,7 @@ def run(base, previous, output):
                     if label == "unmodelled":
                         continue
                     original = boiler["material_suppliers"][label]
-                    original_id = inv.identity[tuple(original[j] for j in [0, 1, 3, 2])]
+                    original_id, _ = linked_supplier(inv, i, original)
                     targets = []
                     if label in ("stainless", "low_alloy"):
                         targets = [
@@ -486,7 +511,12 @@ def run(base, previous, output):
                             inv.nodes.name.eq(target) & inv.nodes.unit.eq("kilogram")
                         ]
                         chosen = None
-                        for loc in [original[2], "RER", "GLO", "RoW"]:
+                        for loc in [
+                            inv.nodes.loc[original_id, "location"],
+                            "RER",
+                            "GLO",
+                            "RoW",
+                        ]:
                             ids = candidates[candidates.location.eq(loc)].index
                             if len(ids) == 1:
                                 chosen = ids[0]

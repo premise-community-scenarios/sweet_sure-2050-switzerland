@@ -10,7 +10,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "dev"))
 pytest.importorskip("scikits.umfpack")
-from review_energy_equipment import attribution, heat_equipment_paths
+from review_energy_equipment import attribution, heat_equipment_paths, linked_supplier
 
 
 def inventory(coefficient, upstream, extra):
@@ -74,3 +74,27 @@ def test_heat_screen_distinguishes_end_use_hardware_from_grid_infrastructure():
     assert len(rows) == 1
     assert rows[0]["equipment"] == "gas boiler"
     assert rows[0]["input_per_MJ"] == pytest.approx(0.02)
+
+
+def test_boiler_sensitivity_follows_connected_normalized_supplier():
+    # The exported product is normalized and regionalized; an unconnected
+    # original-location activity must not supply the sensitivity coefficient.
+    matrix = csr_matrix([[1, 0, 0], [-0.02, 1, 0], [0, 0, 1]], dtype=float)
+    nodes = pd.DataFrame(
+        [
+            ["electricity use", "energy", "megajoule", "CH"],
+            ["boiler equipment", "osby model", "unit", "CH"],
+            ["boiler equipment", "Osby model", "unit", "RER"],
+        ],
+        columns=["name", "reference product", "unit", "location"],
+    )
+    inv = SimpleNamespace(nodes=nodes, A=matrix, columns=matrix.tocsc())
+    source = ["boiler equipment", "Osby model", "RER", "unit"]
+    assert linked_supplier(inv, 0, source) == (1, 0.02)
+    with pytest.raises(ValueError, match="found 0"):
+        linked_supplier(inv, 0, [*source[:3], "kilogram"])
+    matrix = matrix.tolil()
+    matrix[2, 0] = -0.01
+    inv.columns = matrix.tocsc()
+    with pytest.raises(ValueError, match="found 2"):
+        linked_supplier(inv, 0, source)

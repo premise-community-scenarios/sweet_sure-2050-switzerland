@@ -312,10 +312,45 @@ The independent audit still constructs its own product boundary and uses UMFPACK
 strict flags are rechecked on independently loaded matrices with SuperLU and the
 same tested residual arithmetic. Numba is required in the Pathways environment.
 
-The Edges calculations and downstream metal audit are in progress. The dashboard
-remains on the previous batch until these pass. Numerical agreement alone does
-not establish physical validity or equipment completeness; all remaining proxies
-stay in the coverage register.
+The updated batch is complete: 146 indicators, 1,238,664 result rows and 4,088
+independently verified annual totals. The separate metal audit passed all
+183,820 consumer–material comparisons (both forward and adjoint calculations),
+1,820 system totals and 58,695 regional comparisons, with no strict precision
+flags. Its 301 sampled and targeted consumer cases include 104 reconciled
+supply-chain traces. The largest consumer-result difference was 1.5e-7 kg;
+no tolerances were relaxed. The independent solver's three near-singularity
+warnings for SPS3/2050 remain in the audit log and report.
+
+The coefficient review passed 168 chemical factors, 2,828 raw STEM demands,
+112 boiler stock/energy checks, 32 heat-pump energy balances and 52,520 old/new
+attribution checks. No boiler utilization exceeded the review threshold.
+Boiler sensitivities follow actual connected inputs, accounting for imported
+product-name normalization and regionalization, and reject ambiguous suppliers.
+The heat-provider screen retains 51 unresolved paths across the eight endpoint
+scenario-year cases; these are coverage findings, not numerical failures.
+
+The [local report](../results/sps_updated/metal_audit/audit_report.html) includes
+worked per-MJ equipment calculations, system-level old/new attribution and
+unapplied sensitivities across all materials. For SPS1/2050, approximately 84%
+of the lithium increase comes from foreground equipment coefficients, with most
+of the remainder from added suppliers. Mercury, tin and gold are particularly
+sensitive to aggregate equipment assumptions. The CFL lighting proxy has no
+projected LED transition; aggregate sensitivities scale modelled components
+only and do not bound missing equipment. Industry, services and residential
+"other electricity" retain respectively 8.6%, 24.8% and 60.9% of energy with no
+added equipment. Even the other shares have partial component coverage.
+
+The dashboard now defaults to `results/sps_updated/refined_metals`. Its 12 tests
+passed against the new batch, and browser checks passed for filters, units,
+downloads and desktop/mobile layouts. Numerical agreement alone does not
+establish physical validity or equipment completeness; all remaining proxies
+stay in the coverage register. Primary/secondary shares remain outside this work.
+
+After validation, 18.6 GB of regenerable caches and duplicate package exports
+were removed. Extracted package contents were checked byte-for-byte against the
+retained archives before deletion. Accepted and rejected package archives,
+final results, frozen scientific inputs, source snapshots, baseline comparisons
+and audit evidence remain local; `cleanup_manifest.json` records the cleanup.
 
 ### Independent metal-quantity audit, 12 October 2026
 
