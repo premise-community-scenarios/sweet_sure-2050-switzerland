@@ -28,6 +28,13 @@ their hashes; use `--retry-failed` to retry a failed build. `--batch-scenarios`
 defines the complete batch, whereas `--scenarios` selects workers within an
 existing batch. Use a new output directory when changing inputs or method sets.
 
+Pathways must include the numeric-matrix reader fix in commit
+[`a491976`](https://github.com/polca/pathways/commit/a491976). Current
+premise exports append optional temporal metadata and can mix short production
+rows with extended input rows. The reader selects the 11 numeric LCA columns
+and the explicit flip field; temporal metadata does not change this annual
+static calculation. Matrix-reader cache version 3 invalidates older parsed caches.
+
 The selected 81 indicators are the **16 EF v3.1 headline categories**, including
 long-term emissions, and **all 65 RELICS resource-extraction indicators**. EF
 climate/toxicity subdivisions and the separate `no LT` methods are excluded.
@@ -89,9 +96,18 @@ shunting diesel is retained as a separate auxiliary and routed through Swiss
 SPS supply. Its relevance to passenger-rail and tram proxies is unresolved;
 the review quantifies its upstream metal effect separately. The one-MJ reference
 is the named final-energy carrier, not the sum of that carrier and auxiliaries.
-The wrapper implementation is in premise commit
-[`9220e93`](https://github.com/polca/premise/commit/9220e93) on `trals`; use that
-commit or a descendant containing `premise.vehicle_energy_use` when rebuilding.
+An omitted zero-supply fuel market may leave a background supplier in an unused
+wrapper. The vehicle audit permits this only after proving that the wrapper is
+unreachable from every positive final-energy demand, traversing signed and
+substitution links too. It records each such inactive route; zero direct demand
+alone is insufficient, and the one-MJ and equipment checks still apply.
+The integrated premise checkout is commit
+[`9b3dea4`](https://github.com/polca/premise/commit/9b3dea4) on
+`sweet-energy-equipment`. It combines the vehicle wrappers with master’s reviewed
+metal-intensity units, component-scope preservation and observation-year checks.
+The wrapper-only commit `9220e93` lacks those metals fixes and must not be used
+alone for this workflow. Pass `--premise-root /path/to/checkout` to freeze an
+isolated checkout without changing the active sibling workspace.
 
 `update_vehicle_energy_inventories.py` rebuilds both the SWEET workbook and
 premise's `lci-final-energy.xlsx`. Each retained exchange is divided by purchased
@@ -117,6 +133,12 @@ Passenger-BEV validation treats the inherited 10–35 kWh/100 km band as a
 plausibility warning: future Mini vehicles can fall below it after IAM scaling.
 Positive finite electricity, kWh input units and a positive vehicle-km reference
 remain mandatory; no inventory is clipped to the heuristic range.
+The independent NOx audit checks the exact class-by-region set declared in
+premise's REMIND mapping: six gasoline EURO-6 classes in 13 regions, across all
+seven years. The additional Large SUV and Lower medium source classes are not
+regionalized by that mapping and are disclosed separately. Expected emissions
+come from the updated source workbook and retain their distance basis through
+the GAINS adjustment.
 
 ```bash
 conda run -n premise python dev/update_vehicle_energy_inventories.py --write
@@ -236,6 +258,29 @@ them. `audit_stationary_energy_package.py`
 checks these locations and coefficients in every exported year. This fixes
 Swiss supply routing without claiming that the remaining technology proxies
 represent complete physical equipment inventories.
+
+### Package validation and rejected trial, 15 October 2026
+
+The first updated trial passed its numerical and wrapper checks but was rejected
+on physical grounds: the old premise branch reduced the shared magnet’s
+neodymium-oxide coefficient from 0.3148 to about 0.0000016 kg/kg. It also applied
+vehicle-level lithium observations to motor inventories. The trial is quarantined
+under `results/sps_updated/rejected_20261015_motor_magnet/` and is not an accepted
+result. Audit-only revisions in that directory retain the original package bytes
+and record the configured GAINS classes and inactive-wrapper reachability proof.
+
+A fresh build uses the integrated premise checkout above. Preparation rejects
+known unsafe motor conversion and preservation rules before any calculations.
+`audit_motor_magnet_package.py` independently reads the original Brightway source
+and compares all five motor/magnet activities across all seven output years:
+shared-magnet Nd/B inputs, motor magnet masses, and direct motor lithium inputs.
+A failure stops package collection and downstream indicator calculation. Source
+coefficients and their hash are retained in the frozen batch inputs.
+
+The fresh build and full downstream audit are in progress. The dashboard remains
+on the previous batch until the updated results pass all required checks.
+Numerical agreement alone does not establish physical validity or equipment
+completeness; all remaining proxies stay in the coverage register.
 
 ### Independent metal-quantity audit, 12 October 2026
 

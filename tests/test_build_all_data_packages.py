@@ -113,6 +113,8 @@ def test_workers_isolate_caches_and_retry_only_failed_scenario(tmp_path, monkeyp
                     ".aggregate_electric_validation.json",
                     ".stationary_routing_checks.csv",
                     ".stationary_routing_validation.json",
+                    ".motor_magnet_checks.csv",
+                    ".motor_magnet_validation.json",
                 ]:
                     batch.write_json(
                         cwd / f"{stem}{suffix}",

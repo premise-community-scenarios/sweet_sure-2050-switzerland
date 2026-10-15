@@ -332,9 +332,10 @@ def main():
     parser.add_argument(
         "--output", type=Path, default=ROOT / "results/sps_updated/vehicle_audit"
     )
+    parser.add_argument("--premise", type=Path, default=ROOT.parent / "premise")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    checks, comparisons, coverage = audit()
+    checks, comparisons, coverage = audit(premise=args.premise)
     for name, records in [
         ("equipment_round_trips", checks),
         ("cross_workbook_checks", comparisons),

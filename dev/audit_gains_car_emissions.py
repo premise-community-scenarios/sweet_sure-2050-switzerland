@@ -12,6 +12,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import yaml
+import premise
 
 from premise.car_energy import fuel_balance
 from premise.data_collection import get_gains_IAM_data
@@ -110,10 +112,28 @@ def audit(baseline, corrected, vehicle_workbook=None):
         if vehicle_workbook
         else extract_cars(baseline, regions)
     )
-    if not vehicle_workbook:
-        assert len(source) == 78, (
-            f"Expected 78 gasoline EURO-6 inventories, got {len(source)}"
+    configured_names = None
+    if vehicle_workbook:
+        mapping = yaml.safe_load(
+            (
+                Path(premise.__file__).parent
+                / "iam_variables_mapping/transport_passenger_cars.yaml"
+            ).read_text()
         )
+        configured_names = {
+            name
+            for spec in mapping.values()
+            if "remind" in spec.get("iam_aliases", {})
+            for name in spec.get("ecoinvent_aliases", {}).get("fltr", [])
+            if isinstance(name, str)
+            and name.startswith("transport, passenger car, gasoline, ")
+            and name.endswith(", EURO-6")
+        }
+        assert configured_names and configured_names <= source.keys()
+    if not vehicle_workbook:
+        assert (
+            len(source) == 78
+        ), f"Expected 78 gasoline EURO-6 inventories, got {len(source)}"
     hbefa_kg_per_mj = (
         load_car_exhaust_pollutants()["gasoline"]["6.2"]["Nitrogen oxides"] / 1000
     )
@@ -124,7 +144,9 @@ def audit(baseline, corrected, vehicle_workbook=None):
         year = int(member.parent.name)
         cars = extract_cars(member.parent, regions)
         if vehicle_workbook:
-            assert {key[0] for key in cars} == source.keys()
+            assert {(key[0], key[2]) for key in cars} == {
+                (name, region) for name in configured_names for region in regions
+            }, "Missing or unexpected configured regional car inventories"
         else:
             assert cars.keys() == source.keys()
         updater = object.__new__(Emissions)
@@ -203,10 +225,16 @@ def audit(baseline, corrected, vehicle_workbook=None):
     return {
         "baseline_2020": str(baseline.resolve()),
         "corrected_matrices": str(corrected.resolve()),
-        "scope": "All selected IAM-region gasoline EURO-6 inventories in seven years; every NOx compartment checked against source inventory and GAINS. Refreshed HBEFA hot/cold emissions retain their distance basis and are not scaled with fuel energy; the inherited hot-reference screen is diagnostic only."
-        if vehicle_workbook
-        else "Legacy 78-inventory fuel-proportional NOx audit against frozen 2020 matrices and GAINS.",
+        "scope": (
+            "All selected IAM-region gasoline EURO-6 inventories in seven years; every NOx compartment checked against source inventory and GAINS. Refreshed HBEFA hot/cold emissions retain their distance basis and are not scaled with fuel energy; the inherited hot-reference screen is diagnostic only."
+            if vehicle_workbook
+            else "Legacy 78-inventory fuel-proportional NOx audit against frozen 2020 matrices and GAINS."
+        ),
         "vehicle_workbook": str(vehicle_workbook) if vehicle_workbook else None,
+        "configured_regional_classes": sorted(configured_names or []),
+        "source_classes_outside_regional_fleet": (
+            sorted(set(source) - configured_names) if configured_names else []
+        ),
         "years": per_year,
         "activity_year_checks": len(results),
         "compartment_checks": sum(row["nox_compartments_checked"] for row in per_year),

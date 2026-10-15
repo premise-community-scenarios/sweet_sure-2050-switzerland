@@ -12,12 +12,35 @@ import pandas as pd
 import yaml
 
 
+def reachable_activities(matrix, roots):
+    """Conservative reachability, including signed inputs and substitution."""
+    links = (
+        matrix[
+            matrix["index of activity"].ne(matrix["index of product"])
+            & matrix.value.ne(0)
+        ]
+        .groupby("index of activity")["index of product"]
+        .agg(list)
+        .to_dict()
+    )
+    reached, pending = set(), list(roots)
+    while pending:
+        current = pending.pop()
+        if current in reached:
+            continue
+        reached.add(current)
+        pending.extend(i for i in links.get(current, []) if i not in reached)
+    return reached
+
+
 def audit(package):
     evidence = json.loads(package.with_suffix(".vehicle_energy.json").read_text())
     records = []
+    inactive_routes = []
     emissions_checks = routing_checks = transport_endpoint_checks = 0
     with ZipFile(package) as archive:
         mapping = yaml.safe_load(archive.read("mapping/mapping.yaml"))
+        demand = pd.read_csv(archive.open("scenario_data/scenario_data.csv"))
         for year in sorted({r["year"] for r in evidence}):
             (member,) = [
                 n for n in archive.namelist() if n.endswith(f"/{year}/A_matrix.csv")
@@ -27,6 +50,49 @@ def audit(package):
                 archive.open(member.replace("A_matrix.csv", "A_matrix_index.csv")),
                 sep=";",
             )
+            active_roots = []
+            selected = demand[demand.year.eq(year) & demand.region.eq("CH")]
+            for row in selected[
+                selected.variables.str.startswith("EXT - 0 - FE_")
+                & selected.value.gt(0)
+            ].to_dict("records"):
+                assert row["unit"] == "PJ/yr."
+                for dataset in mapping[row["variables"]]["dataset"]:
+                    matches = nodes[
+                        nodes.name.eq(dataset["name"])
+                        & nodes["reference product"].eq(dataset["reference product"])
+                        & nodes.unit.eq(dataset["unit"])
+                        & nodes.location.eq("CH")
+                    ]
+                    assert len(matches) == 1
+                    active_roots.append(matches["index"].item())
+            assert active_roots
+            reached = None
+
+            def check_route(inputs, root, wrapper, carrier):
+                nonlocal reached
+                if (
+                    inputs.name.str.contains("SPS", regex=False).all()
+                    and inputs.location.eq("CH").all()
+                ):
+                    return
+                if reached is None:
+                    reached = reachable_activities(a, active_roots)
+                assert (
+                    root not in reached
+                ), f"Active energy use bypasses Swiss scenario supply: {wrapper}/{year}"
+                inactive_routes.append(
+                    {
+                        "year": year,
+                        "wrapper": wrapper,
+                        "carrier": carrier,
+                        "reason": "No path from any positive final-energy demand, including signed and substitution links",
+                        "suppliers": inputs[
+                            ["name", "reference product", "location", "unit"]
+                        ].to_dict("records"),
+                    }
+                )
+
             for variable, spec in mapping.items():
                 if not variable.endswith(("FE_tram", "FE_trolleybus")) and not any(
                     token in variable
@@ -126,9 +192,7 @@ def audit(package):
                         & inputs.unit.eq("kilowatt hour")
                     ]
                     assert np.isclose(electricity.value.sum() * 3.6, 1, rtol=2e-6)
-                    assert electricity.name.str.contains(
-                        "SPS", regex=False
-                    ).all(), record["wrapper"]
+                    check_route(electricity, idx, record["wrapper"], "electricity")
                 elif record["wrapper"].startswith(("hydrogen", "diesel", "petrol")):
                     carrier = record["wrapper"].split(",", 1)[0]
                     fuel_inputs = inputs[
@@ -137,10 +201,7 @@ def audit(package):
                         & ~inputs["reference product"].str.contains("tank")
                     ]
                     assert not fuel_inputs.empty, record["wrapper"]
-                    assert fuel_inputs.name.str.contains(
-                        "SPS", regex=False
-                    ).all(), record["wrapper"]
-                    assert fuel_inputs.location.eq("CH").all(), record["wrapper"]
+                    check_route(fuel_inputs, idx, record["wrapper"], carrier)
                     lhv = {"hydrogen": 120, "diesel": 43, "petrol": 42.6}[carrier]
                     assert np.isclose(
                         fuel_inputs.value.sum() * lhv, 1, rtol=2e-6
@@ -153,10 +214,9 @@ def audit(package):
                     inputs["reference product"].eq("diesel")
                     & inputs.unit.eq("kilogram")
                 ]
-                assert auxiliary_diesel.name.str.contains(
-                    "SPS", regex=False
-                ).all(), record["wrapper"]
-                assert auxiliary_diesel.location.eq("CH").all(), record["wrapper"]
+                check_route(
+                    auxiliary_diesel, idx, record["wrapper"], "auxiliary diesel"
+                )
                 # Compare final, post-GAINS biosphere amounts, not an earlier
                 # copied metadata record. Fuel-carbon accounting has its own
                 # SPS market basis; all other source emissions retain distance.
@@ -234,6 +294,7 @@ def audit(package):
         "CNG routing checks": routing_checks,
         "Swiss transport endpoints": transport_endpoint_checks,
         "wrappers": frame.wrapper.nunique(),
+        "inactive non-SPS routes": inactive_routes,
         "years": sorted(frame.year.unique().tolist()),
     }
     package.with_suffix(".vehicle_validation.json").write_text(

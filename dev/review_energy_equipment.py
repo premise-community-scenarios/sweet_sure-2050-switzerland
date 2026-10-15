@@ -223,7 +223,9 @@ def boiler_source_checks(base, output):
             ):
                 variable, year = record["capacity_variable"], record["year"]
                 source_formulas = [
-                    str(f).lower() for f in formulas[variable] if str(f).startswith("=")
+                    str(getattr(f, "text", f)).lower()
+                    for f in formulas[variable]
+                    if str(getattr(f, "text", f)).startswith("=")
                 ]
                 assert source_formulas and all(
                     '"var_cap"' in f for f in source_formulas
@@ -247,6 +249,7 @@ def boiler_source_checks(base, output):
                         "raw_capacity_GW": capacity,
                         "raw_energy_PJ": energy,
                         "capacity_source": "VAR_CAP installed stock; not capacity additions",
+                        "capacity_source_formulas": json.dumps(source_formulas),
                         "equivalent_purchased_electricity_full_load_hours": hours,
                         "utilization_review_flag": hours > 8760 * 1.01,
                         "passed": passed,

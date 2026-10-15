@@ -59,6 +59,7 @@ SCRIPTS = [
     "audit_pathways_package.py",
     "validate_package_coverage.py",
     "audit_gains_car_emissions.py",
+    "audit_motor_magnet_package.py",
 ]
 PREMISE_ROOT = ROOT.parent / "premise"
 TESTED_RUN = ROOT / "dev/smoke_sps1_ei312_20260928/mapping_fixed_run"
@@ -75,7 +76,7 @@ def write_json(path, value):
     temporary.replace(path)
 
 
-def prepare(output, batch_scenarios=None):
+def prepare(output, batch_scenarios=None, premise_root=PREMISE_ROOT):
     state_path = output / "progress.json"
     if state_path.exists():
         state = json.loads(state_path.read_text())
@@ -89,6 +90,19 @@ def prepare(output, batch_scenarios=None):
             if file_hash(resource["path"]) != resource["sha256"]:
                 raise ValueError("Frozen batch inputs changed; refusing to resume")
         return state
+    try:
+        from dev.audit_motor_magnet_package import (
+            check_premise_source,
+            source_reference,
+        )
+    except ModuleNotFoundError:
+        from audit_motor_magnet_package import check_premise_source, source_reference
+
+    premise_root = Path(premise_root).resolve()
+    check_premise_source(premise_root)
+    premise_commit = subprocess.check_output(
+        ["git", "-C", str(premise_root), "rev-parse", "HEAD"], text=True
+    ).strip()
     selection = ["--scenarios", *batch_scenarios] if batch_scenarios else []
     plan = build_plan(parse_args(["--output-dir", str(output), *selection]))
     if any((output / name).exists() for name in ["inputs", "software", "packages"]):
@@ -108,9 +122,20 @@ def prepare(output, batch_scenarios=None):
     for name in SCRIPTS:
         shutil.copy2(ROOT / "dev" / name, software / "dev" / name)
     shutil.copytree(
-        PREMISE_ROOT / "premise",
+        premise_root / "premise",
         software / "premise",
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+    )
+    if (
+        premise_commit
+        != subprocess.check_output(
+            ["git", "-C", str(premise_root), "rev-parse", "HEAD"], text=True
+        ).strip()
+    ):
+        raise RuntimeError("Premise checkout changed while freezing; use a fresh batch")
+    write_json(
+        inputs / "motor_magnet_reference.json",
+        source_reference(plan["project"], plan["source_db"]),
     )
     baseline = inputs / "nox_baseline_2020"
     baseline.mkdir()
@@ -144,9 +169,11 @@ def prepare(output, batch_scenarios=None):
         "status": "prepared",
         "plan": frozen_plan,
         "python": sys.executable,
-        "premise_commit": subprocess.check_output(
-            ["git", "-C", str(PREMISE_ROOT), "rev-parse", "HEAD"], text=True
-        ).strip(),
+        "premise_commit": premise_commit,
+        "premise_source": str(premise_root),
+        "motor_magnet_reference_sha256": file_hash(
+            inputs / "motor_magnet_reference.json"
+        ),
         "software_hashes": source_hashes,
         "scenarios": {
             name: {"status": "pending", "attempts": 0} for name in plan["scenarios"]
@@ -157,6 +184,12 @@ def prepare(output, batch_scenarios=None):
 
 
 def verify_completed(output, state):
+    if (
+        state.get("motor_magnet_reference_sha256")
+        and file_hash(output / "inputs/motor_magnet_reference.json")
+        != state["motor_magnet_reference_sha256"]
+    ):
+        raise ValueError("Motor/magnet source reference changed")
     for scenario, entry in state["scenarios"].items():
         if entry["status"] == "complete":
             path = Path(entry["package"])
@@ -455,6 +488,15 @@ def run_batch(
                 update(scenario, status="validating", reused_tested_package=reused)
                 execute("validate_stem_build.py", [package], "validation.log")
                 execute(
+                    "audit_motor_magnet_package.py",
+                    [
+                        package,
+                        "--reference",
+                        output / "inputs/motor_magnet_reference.json",
+                    ],
+                    "motor_magnet_validation.log",
+                )
+                execute(
                     "audit_vehicle_energy_package.py",
                     [package],
                     "vehicle_validation.log",
@@ -537,6 +579,8 @@ def run_batch(
                     ".aggregate_electric_validation.json",
                     ".stationary_routing_checks.csv",
                     ".stationary_routing_validation.json",
+                    ".motor_magnet_checks.csv",
+                    ".motor_magnet_validation.json",
                 ]:
                     shutil.copy2(
                         package.with_suffix(suffix), destination.with_suffix(suffix)
@@ -593,6 +637,12 @@ def main():
     )
     parser.add_argument("--workers", type=int, choices=range(1, 5), default=3)
     parser.add_argument("--prepare-only", action="store_true")
+    parser.add_argument(
+        "--premise-root",
+        type=Path,
+        default=PREMISE_ROOT,
+        help="Premise checkout to freeze, including vehicle wrappers and metals scope/unit fixes.",
+    )
     parser.add_argument("--retry-failed", action="store_true")
     parser.add_argument(
         "--batch-scenarios",
@@ -617,7 +667,7 @@ def main():
             fcntl.flock(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             raise SystemExit("This batch already has a running coordinator")
-        state = prepare(output, args.batch_scenarios)
+        state = prepare(output, args.batch_scenarios, args.premise_root)
         if args.prepare_only:
             print(f"Prepared {len(state['scenarios'])} scenarios in {output}")
             return 0

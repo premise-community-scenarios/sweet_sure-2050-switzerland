@@ -15,6 +15,7 @@ __pycache__/
 /dev/smoke_sps1_ei312_20260928/
 /export/
 /unlinked.log
+/edges.log
 **/export/logs/
 /publication/**/unlinked.log
 
