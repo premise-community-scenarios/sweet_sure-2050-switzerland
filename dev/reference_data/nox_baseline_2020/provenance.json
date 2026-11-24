@@ -1,0 +1,11 @@
+{
+  "purpose": "Independent 2020 reference matrices required by the batch NOx validation",
+  "source": "results/data_packages_ei312_20261002/inputs/nox_baseline_2020",
+  "preserved_on": "2026-10-11",
+  "sha256": {
+    "A_matrix.csv": "bcb48fe9f3bd4f4a17d140714be407f2ab9ec3e8f80034e114ae60f76353d4cc",
+    "A_matrix_index.csv": "4236edf1f281a3c784ff22ff3b271f11f84f83c7c88a39c469ee57e4d3d8a2c0",
+    "B_matrix.csv": "97742ec9187e2f31034d3aa613b558ea535de7205b9318beeb1f5d6c0b34ea71",
+    "B_matrix_index.csv": "7b20f30d2578f17b0fa2c48f635e84f315455f76d5d8e7a62b92c76579d1f8a5"
+  }
+}

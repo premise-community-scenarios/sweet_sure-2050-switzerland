@@ -1,0 +1,86 @@
+{
+  "mapping_sha256": "e9cc4fae8f22b1bdf116721544d2abcc3492d447c5fd485d1a9431b44a0fa57e",
+  "base_summary_sha256": "67431652148bf43454f46b89223f48c8672c1bb84f4af48f8e70e7ff4654aa0b",
+  "packages": {
+    "remind-SSP2-PkBudg1000-stem-SPS1_bas0.zip": "9ed5afe4026c48093a3d1fb33776178005af8278f7f5eb430e88076cf4dec68e",
+    "remind-SSP2-PkBudg1000-stem-SPS2_bas0.zip": "96266292657585f5c86cb7adfd07b1900d5b784101173cf60c5519f1f33534f1",
+    "remind-SSP2-PkBudg1000-stem-SPS3_bas0.zip": "4ef21f09b8622da0bc0ea8a97a0aef57d9e1fac81cfdea22cbed18e36402b5c8",
+    "remind-SSP2-PkBudg1000-stem-SPS4_bas0.zip": "c0129330e742bbe1182eead44afd5e33f89c4d78a8bdeb34adbbed9e68c47e13"
+  },
+  "base_demands_sha256": {
+    "scenarios/SPS1_bas0/results_remind-SSP2-PkBudg1000-stem-SPS1_bas0_demands.csv": "76b1c43dd3c2ad25850c74841f006be05fc0fc887cd0694dcfac9cd8ee4c8701",
+    "scenarios/SPS2_bas0/results_remind-SSP2-PkBudg1000-stem-SPS2_bas0_demands.csv": "e9eaa0fe3b16f1ec8c55d65824a0d3fb5feb891623218406ff317994e2edb125",
+    "scenarios/SPS3_bas0/results_remind-SSP2-PkBudg1000-stem-SPS3_bas0_demands.csv": "d0130c43815c2ec6b354a1b1d14ab4cc57859e36dcd142741cf8db928ce39ede",
+    "scenarios/SPS4_bas0/results_remind-SSP2-PkBudg1000-stem-SPS4_bas0_demands.csv": "b509a520737cc206de541707c4be3bf672236412899df21a2ad506cf9f2355c8"
+  },
+  "base_manifests_sha256": {
+    "scenarios/SPS1_bas0/results_remind-SSP2-PkBudg1000-stem-SPS1_bas0.manifest.json": "1dd05f997180ac33ae7e49a1d082b433238e26773736cbf0b5330fa78a5da895",
+    "scenarios/SPS2_bas0/results_remind-SSP2-PkBudg1000-stem-SPS2_bas0.manifest.json": "092a4bbb00b8cfc536b408729ada2930d3a1bda2af210ed6863ccdc105f8a826",
+    "scenarios/SPS3_bas0/results_remind-SSP2-PkBudg1000-stem-SPS3_bas0.manifest.json": "8485e6d816578379d5ec5168ea4262f5fd68820e589b8b536c9f01f0f07350de",
+    "scenarios/SPS4_bas0/results_remind-SSP2-PkBudg1000-stem-SPS4_bas0.manifest.json": "479e46d8ef25890328013f9bb15018f5a432aca53d33be36b635a7eb15823319"
+  },
+  "software": {
+    "versions": {
+      "edges": "1.2.5",
+      "pathways": "1.0.0",
+      "bw2calc": "2.4.0",
+      "bw2data": "4.4.4",
+      "numpy": "1.24.4",
+      "scipy": "1.15.2",
+      "pandas": "2.2.3",
+      "clipspy": "1.0.6",
+      "numba": "0.61.2"
+    },
+    "source_roots": {
+      "edges": "/Users/romain/GitHub/edges/edges",
+      "pathways": "/Users/romain/GitHub/pathways/pathways"
+    },
+    "python_sources_sha256": {
+      "edges/__init__.py": "987a4d1ff630941468f99ecdf68cec0f5a4542d3408478e5209caeef800e802e",
+      "edges/analysis.py": "4acaa9e8cf9940fca5a6eb1c83be0a04f98dc3e94c84c199f03d00d0fb1979c4",
+      "edges/costs.py": "a690e11712da308383ea02715475c6f9163c0a2c26c99135a249b5fe4137d437",
+      "edges/edgelcia.py": "6e39cad8b7a55dc84ae03cc18fbc2e68f2c8ee35e76d657699e94087c8ac26d3",
+      "edges/filesystem_constants.py": "b2e0d8251e8777e877fc7303bd35c574aa4ea17cbfe0af4c227a9fd9e97a88ad",
+      "edges/flow_matching.py": "7342f731dc14180b46af55b816aef6fa2bdbe6a3a9051c2b564ae49e12118c0b",
+      "edges/georesolver.py": "0b95604c5d5927053beca3cfe69159726d2348d0cee0d2d6b8b8cac5df3ff11a",
+      "edges/logging_config.py": "cd92f12ac87ba27d2ff47686069e39ca7a93ac4b836b7c0f80cbd3a209e8ba6d",
+      "edges/matching_signatures.py": "ace52f71f5daff7115b11550ded3f8d1fad16c040dfe438be4271508daea77e6",
+      "edges/matrix_builders.py": "bd797cd2929f21e5d691891326c0f873c695ac57b15a772ac25d6c680d204423",
+      "edges/rete/__init__.py": "3dd7c1b45d3605142f2925ee7bdf3cc514e9d701d1bcb4b3fce4d1bc4557f308",
+      "edges/rete/adapter.py": "e458d2dea26f5fab9df4896daafc705ffe31441cd639d63195019637442fad3b",
+      "edges/rete/engine.py": "ef488efe5496bb7e8d22bfdc651174ef6aebddb158602f84e79f985c84e94926",
+      "edges/rete/facts.py": "cccb6a592aa11996879678c22d498281698582f33686fe7a62789bb07b109c50",
+      "edges/rete/location_adapter.py": "d36ed711000212ce52d88936c0846aa86eb06dd81c9575a261ecd649f1d7bc3e",
+      "edges/rete/rules.py": "ab01cb117c8367ef7763711f1de8193e9c14846e4eaeea1c6b27764d09c0bb4e",
+      "edges/rete/templates.py": "a4e95a0762c06fb431bf8f4c5d830c9ac7a080072acf4345ef87fe50acf22ac8",
+      "edges/supply_chain.py": "43e02d7ff20f91b01ae1cb2e6a39f580333c1d565849d07b76f5969530803835",
+      "edges/uncertainty.py": "6021a23f5b362a769bdb94770bc28672e2e6aa6efbd401c4fb6514af989c31ca",
+      "edges/utils.py": "bc8d10c666c15aa5c13a34b024cda2663782ae508a7f61ae446d07a1f2edbbd0",
+      "pathways/.ipynb_checkpoints/lca-checkpoint.py": "c945f49089610c6e61e59034d0f08231563bf2826d51d5f5fdd0ac7290cf9af8",
+      "pathways/__init__.py": "fd52822ef3e2d55ba8a1f363809bf25348efda03acea0e8056d7d3b675c4a12c",
+      "pathways/data_validation.py": "c78a2e085204d5f6a296fa0614ac562c35dcfc7146d75c35d52524fcaf2f93ac",
+      "pathways/edges_matrix.py": "0491fbd904aa0fd4026902e95348130b4f00912e5fcce652713f2b5c4404d66b",
+      "pathways/filesystem_constants.py": "4621ca94e4998d989e4c9686c3fed0557f3f877e3309049b9363b97c87b67fd8",
+      "pathways/jacobi_gmres_multi_lca.py": "c93bf4d7ca6b7f5a601af2123a974974b069bbe80b27222a8e3f2586a2892151",
+      "pathways/lca.py": "1e3aa1141caf432c6ff5e416988545adb969084deac077b166a5cbcec5c96191",
+      "pathways/lcia.py": "42f8b6d44bce1225785ca27ad291beaa2b94e9a65dc7c85fd596943a88776159",
+      "pathways/logging_steup.py": "0e45ff32c0afb73480a16f7b0ee5b7c6ff2d4f851bc0d8b94adc8375be5da4df",
+      "pathways/pathways.py": "739e8cb9c0263f1f17264c45b7f1cfaac5dd3f9304d32d7ff26ea6009cfd51d0",
+      "pathways/stats.py": "d90f7d69ebf3df9f332e12da8d7352e89f02e5b1ed3b96b8a43673b03959d817",
+      "pathways/subshares.py": "653c0774051cf82e7da6e8d66fa3206f13e4b40e93f42f01306dfbd605f4fb9b",
+      "pathways/utils.py": "8622ae3c2f9cf24df9a21c27aaa09344cfeedee6b9db94d522417f76b8be3a90"
+    },
+    "scripts_sha256": {
+      "run_refined_metals.py": "d034a10a192907e0c94622bda2970eddc1aa3b56f83e479668786ed82a082cbd",
+      "refined_metal_edges.py": "f0231a0f22469289b214bca236f8672cd2dcc2d5020597c856dc515a224539c4",
+      "refined_metal_methods.py": "ead557c6bcae91dd40e3231c12d4dbd258d13b4151aa95ec426b80a59dfc857b",
+      "verify_indicator_totals.py": "6bb61c58cded3c4bc105c1a8321606e222981e696c2aa397dfe9b35e2c03df35",
+      "refine_inventory_solution.py": "84da9a8a42560e7d083059c347d667804add9f1a0659a16bc8bf49e7c9583fdd"
+    }
+  },
+  "equipment_coverage_sha256": "23389ed10a31f019075f2f5fb3b74de3e7852661fcc241c1b08973a9752a2bbb",
+  "factor_evidence_sha256": {
+    "/private/tmp/sweet-sps-regeneration-20261015/results/sps_base/refined_metals/product_documentation.json": "bfca4db83ba7500fec8db0e46f38c04ffb17cfb3c5b35e9d7faf82f4a5272968",
+    "/private/tmp/sweet-sps-regeneration-20261015/results/sps_base/refined_metals/candidate_products.json": "66ec58be70b195729acc823519e511a022b504c69abb61872f956b88f7d41fe0"
+  }
+}

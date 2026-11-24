@@ -1,0 +1,850 @@
+{
+  "finished_at": "2026-10-15T18:21:07.723062+00:00",
+  "scenarios": 4,
+  "years": [
+    2020,
+    2025,
+    2030,
+    2035,
+    2040,
+    2045,
+    2050
+  ],
+  "indicators": 146,
+  "variables": [
+    "EXT - 0 - FE_bus_diesel",
+    "EXT - 0 - FE_bus_electricity",
+    "EXT - 0 - FE_bus_gas",
+    "EXT - 0 - FE_bus_hydrogen",
+    "EXT - 0 - FE_cars_diesel",
+    "EXT - 0 - FE_cars_electricity",
+    "EXT - 0 - FE_cars_gas",
+    "EXT - 0 - FE_cars_gasoline",
+    "EXT - 0 - FE_cars_hydrogen",
+    "EXT - 0 - FE_coach_diesel",
+    "EXT - 0 - FE_coach_electricity",
+    "EXT - 0 - FE_coach_gas",
+    "EXT - 0 - FE_coach_hydrogen",
+    "EXT - 0 - FE_freight_rail_electricity",
+    "EXT - 0 - FE_freight_rail_hydrogen",
+    "EXT - 0 - FE_heavy_duty_truck_diesel",
+    "EXT - 0 - FE_heavy_duty_truck_electricity",
+    "EXT - 0 - FE_heavy_duty_truck_gas",
+    "EXT - 0 - FE_heavy_duty_truck_gasoline",
+    "EXT - 0 - FE_heavy_duty_truck_hydrogen",
+    "EXT - 0 - FE_industry_heat_CHP_fuel_cell",
+    "EXT - 0 - FE_industry_heat_CHP_gas",
+    "EXT - 0 - FE_industry_heat_CHP_gas_CCS",
+    "EXT - 0 - FE_industry_heat_CHP_hydrogen",
+    "EXT - 0 - FE_industry_heat_CHP_oil",
+    "EXT - 0 - FE_industry_heat_CHP_waste_non_renew",
+    "EXT - 0 - FE_industry_heat_CHP_waste_non_renew_CCS",
+    "EXT - 0 - FE_industry_heat_CHP_wood",
+    "EXT - 0 - FE_industry_heat_CHP_wood_CCS",
+    "EXT - 0 - FE_industry_heat_DH",
+    "EXT - 0 - FE_industry_process_FE_other_electric",
+    "EXT - 0 - FE_industry_process_biomethane",
+    "EXT - 0 - FE_industry_process_coal",
+    "EXT - 0 - FE_industry_process_electric_boiler",
+    "EXT - 0 - FE_industry_process_heat_pump",
+    "EXT - 0 - FE_industry_process_heavy_fuel_oil",
+    "EXT - 0 - FE_industry_process_hydrogen",
+    "EXT - 0 - FE_industry_process_light_fuel_oil",
+    "EXT - 0 - FE_industry_process_natural_gas",
+    "EXT - 0 - FE_industry_process_pellet",
+    "EXT - 0 - FE_industry_process_solar",
+    "EXT - 0 - FE_industry_process_waste_non_renew",
+    "EXT - 0 - FE_industry_process_waste_renew",
+    "EXT - 0 - FE_industry_process_wood",
+    "EXT - 0 - FE_light_duty_truck_diesel",
+    "EXT - 0 - FE_light_duty_truck_electricity",
+    "EXT - 0 - FE_light_duty_truck_gas",
+    "EXT - 0 - FE_light_duty_truck_gasoline",
+    "EXT - 0 - FE_light_duty_truck_hydrogen",
+    "EXT - 0 - FE_motorcycle_electric",
+    "EXT - 0 - FE_motorcycle_gasoline",
+    "EXT - 0 - FE_motorcycle_hydrogen",
+    "EXT - 0 - FE_other_transport_diesel",
+    "EXT - 0 - FE_other_transport_electric",
+    "EXT - 0 - FE_other_transport_gasoline",
+    "EXT - 0 - FE_other_transport_hydrogen",
+    "EXT - 0 - FE_passenger_rail_electricity",
+    "EXT - 0 - FE_passenger_rail_hydrogen",
+    "EXT - 0 - FE_residential_FE_other_electric",
+    "EXT - 0 - FE_residential_space_heating_CHP_fuel_cell",
+    "EXT - 0 - FE_residential_space_heating_CHP_gas",
+    "EXT - 0 - FE_residential_space_heating_CHP_wood",
+    "EXT - 0 - FE_residential_space_heating_DH",
+    "EXT - 0 - FE_residential_space_heating_coal",
+    "EXT - 0 - FE_residential_space_heating_electric_boiler",
+    "EXT - 0 - FE_residential_space_heating_gas",
+    "EXT - 0 - FE_residential_space_heating_heat_pump",
+    "EXT - 0 - FE_residential_space_heating_heat_pump_gas",
+    "EXT - 0 - FE_residential_space_heating_hydrogen",
+    "EXT - 0 - FE_residential_space_heating_light_fuel_oil",
+    "EXT - 0 - FE_residential_space_heating_pellet",
+    "EXT - 0 - FE_residential_space_heating_solar",
+    "EXT - 0 - FE_residential_space_heating_wood",
+    "EXT - 0 - FE_residential_water_heating_coal",
+    "EXT - 0 - FE_residential_water_heating_electric_boiler",
+    "EXT - 0 - FE_residential_water_heating_gas",
+    "EXT - 0 - FE_residential_water_heating_heat_pump",
+    "EXT - 0 - FE_residential_water_heating_heat_pump_gas",
+    "EXT - 0 - FE_residential_water_heating_hydrogen",
+    "EXT - 0 - FE_residential_water_heating_light_fuel_oil",
+    "EXT - 0 - FE_residential_water_heating_pellet",
+    "EXT - 0 - FE_residential_water_heating_solar",
+    "EXT - 0 - FE_residential_water_heating_wood",
+    "EXT - 0 - FE_services_CHP_biogas",
+    "EXT - 0 - FE_services_CHP_fuel_cell",
+    "EXT - 0 - FE_services_CHP_gas",
+    "EXT - 0 - FE_services_CHP_hydrogen",
+    "EXT - 0 - FE_services_CHP_wood",
+    "EXT - 0 - FE_services_DH",
+    "EXT - 0 - FE_services_biomethane",
+    "EXT - 0 - FE_services_electric_boiler",
+    "EXT - 0 - FE_services_heat_pump",
+    "EXT - 0 - FE_services_hydrogen",
+    "EXT - 0 - FE_services_light_fuel_oil",
+    "EXT - 0 - FE_services_natural_gas",
+    "EXT - 0 - FE_services_other_electric",
+    "EXT - 0 - FE_services_pellet",
+    "EXT - 0 - FE_services_solar",
+    "EXT - 0 - FE_services_wood",
+    "EXT - 0 - FE_tram",
+    "EXT - 0 - FE_trolleybus"
+  ],
+  "scenario_names": [
+    "SSP2-PkBudg1000 - SPS1_bas0",
+    "SSP2-PkBudg1000 - SPS2_bas0",
+    "SSP2-PkBudg1000 - SPS3_bas0",
+    "SSP2-PkBudg1000 - SPS4_bas0"
+  ],
+  "method_registry": "method_registry.json",
+  "dense": true,
+  "rows": 1238664,
+  "independent_checks": 4088,
+  "unlinked_variables": 0,
+  "nonfinite_results": 0,
+  "packages": [
+    {
+      "scenario": "SPS1_bas0",
+      "rows": 171801,
+      "validation": {
+        "supplier_checks": 707,
+        "unlinked_variables": 0,
+        "active_variable_years": 536,
+        "year_indicator_combinations": 567,
+        "zero_year_indicator_combinations": 30,
+        "nonfinite_results": 0,
+        "aggregation_preserves_totals": true
+      },
+      "independent_checks": 567,
+      "max_relative_difference": 3.97756222584591e-15,
+      "python_warnings": 53,
+      "logging_warnings": 0,
+      "inventory_findings_by_rule": [
+        {
+          "severity": "warning",
+          "rule": "LEGACY.CO2_EMISSIONS_POSSIBLY_INCORRECT",
+          "count": 532
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.ELECTRICITY_EFFICIENCY_POSSIBLY_INCORRECT",
+          "count": 37
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.FUEL_CARBON_ORIGIN_UNRESOLVED",
+          "count": 340
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METALS_MATERIAL_RULE_COMPONENT_SCOPE_UNVERIFIED",
+          "count": 7
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METALS_MATERIAL_RULE_YEAR_OUTSIDE_SUPPORT",
+          "count": 7
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MARKET_PRESERVED_TRANSPORT_MISSING",
+          "count": 156
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MARKET_PRESERVED_YEAR_OUTSIDE_SUPPORT",
+          "count": 412
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MATERIAL_PROVIDER_UNAVAILABLE",
+          "count": 22
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_RESOURCE_CORRECTION_PRESERVED",
+          "count": 892
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.TRANSPORT_EMISSION_SCOPE_UNAVAILABLE",
+          "count": 546
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.TRANSPORT_HOT_EMISSION_DIAGNOSTIC",
+          "count": 1829
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.VEHICLE_FUEL_CARBON_UNAVAILABLE",
+          "count": 735
+        }
+      ],
+      "inventory_warning_count": 5515
+    },
+    {
+      "scenario": "SPS2_bas0",
+      "rows": 171801,
+      "validation": {
+        "supplier_checks": 707,
+        "unlinked_variables": 0,
+        "active_variable_years": 560,
+        "year_indicator_combinations": 567,
+        "zero_year_indicator_combinations": 30,
+        "nonfinite_results": 0,
+        "aggregation_preserves_totals": true
+      },
+      "independent_checks": 567,
+      "max_relative_difference": 4.193763427221e-15,
+      "python_warnings": 53,
+      "logging_warnings": 0,
+      "inventory_findings_by_rule": [
+        {
+          "severity": "warning",
+          "rule": "LEGACY.CO2_EMISSIONS_POSSIBLY_INCORRECT",
+          "count": 532
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.ELECTRICITY_EFFICIENCY_POSSIBLY_INCORRECT",
+          "count": 37
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.FUEL_CARBON_ORIGIN_UNRESOLVED",
+          "count": 340
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METALS_MATERIAL_RULE_COMPONENT_SCOPE_UNVERIFIED",
+          "count": 7
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METALS_MATERIAL_RULE_YEAR_OUTSIDE_SUPPORT",
+          "count": 7
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MARKET_PRESERVED_TRANSPORT_MISSING",
+          "count": 156
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MARKET_PRESERVED_YEAR_OUTSIDE_SUPPORT",
+          "count": 412
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MATERIAL_PROVIDER_UNAVAILABLE",
+          "count": 22
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_RESOURCE_CORRECTION_PRESERVED",
+          "count": 892
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.TRANSPORT_EMISSION_SCOPE_UNAVAILABLE",
+          "count": 546
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.TRANSPORT_HOT_EMISSION_DIAGNOSTIC",
+          "count": 1829
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.VEHICLE_FUEL_CARBON_UNAVAILABLE",
+          "count": 735
+        }
+      ],
+      "inventory_warning_count": 5515
+    },
+    {
+      "scenario": "SPS3_bas0",
+      "rows": 171801,
+      "validation": {
+        "supplier_checks": 707,
+        "unlinked_variables": 0,
+        "active_variable_years": 533,
+        "year_indicator_combinations": 567,
+        "zero_year_indicator_combinations": 30,
+        "nonfinite_results": 0,
+        "aggregation_preserves_totals": true
+      },
+      "independent_checks": 567,
+      "max_relative_difference": 3.5252883044466587e-15,
+      "python_warnings": 53,
+      "logging_warnings": 0,
+      "inventory_findings_by_rule": [
+        {
+          "severity": "warning",
+          "rule": "LEGACY.CO2_EMISSIONS_POSSIBLY_INCORRECT",
+          "count": 532
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.ELECTRICITY_EFFICIENCY_POSSIBLY_INCORRECT",
+          "count": 37
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.FUEL_CARBON_ORIGIN_UNRESOLVED",
+          "count": 340
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METALS_MATERIAL_RULE_COMPONENT_SCOPE_UNVERIFIED",
+          "count": 7
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METALS_MATERIAL_RULE_YEAR_OUTSIDE_SUPPORT",
+          "count": 7
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MARKET_PRESERVED_TRANSPORT_MISSING",
+          "count": 156
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MARKET_PRESERVED_YEAR_OUTSIDE_SUPPORT",
+          "count": 412
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MATERIAL_PROVIDER_UNAVAILABLE",
+          "count": 22
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_RESOURCE_CORRECTION_PRESERVED",
+          "count": 892
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.TRANSPORT_EMISSION_SCOPE_UNAVAILABLE",
+          "count": 546
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.TRANSPORT_HOT_EMISSION_DIAGNOSTIC",
+          "count": 1829
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.VEHICLE_FUEL_CARBON_UNAVAILABLE",
+          "count": 735
+        }
+      ],
+      "inventory_warning_count": 5515
+    },
+    {
+      "scenario": "SPS4_bas0",
+      "rows": 171801,
+      "validation": {
+        "supplier_checks": 707,
+        "unlinked_variables": 0,
+        "active_variable_years": 525,
+        "year_indicator_combinations": 567,
+        "zero_year_indicator_combinations": 30,
+        "nonfinite_results": 0,
+        "aggregation_preserves_totals": true
+      },
+      "independent_checks": 567,
+      "max_relative_difference": 3.775504517938635e-15,
+      "python_warnings": 53,
+      "logging_warnings": 0,
+      "inventory_findings_by_rule": [
+        {
+          "severity": "warning",
+          "rule": "LEGACY.CO2_EMISSIONS_POSSIBLY_INCORRECT",
+          "count": 532
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.ELECTRICITY_EFFICIENCY_POSSIBLY_INCORRECT",
+          "count": 37
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.FUEL_CARBON_ORIGIN_UNRESOLVED",
+          "count": 340
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METALS_MATERIAL_RULE_COMPONENT_SCOPE_UNVERIFIED",
+          "count": 7
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METALS_MATERIAL_RULE_YEAR_OUTSIDE_SUPPORT",
+          "count": 7
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MARKET_PRESERVED_TRANSPORT_MISSING",
+          "count": 156
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MARKET_PRESERVED_YEAR_OUTSIDE_SUPPORT",
+          "count": 412
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_MATERIAL_PROVIDER_UNAVAILABLE",
+          "count": 22
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.METAL_RESOURCE_CORRECTION_PRESERVED",
+          "count": 892
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.TRANSPORT_EMISSION_SCOPE_UNAVAILABLE",
+          "count": 546
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.TRANSPORT_HOT_EMISSION_DIAGNOSTIC",
+          "count": 1829
+        },
+        {
+          "severity": "warning",
+          "rule": "LEGACY.VEHICLE_FUEL_CARBON_UNAVAILABLE",
+          "count": 735
+        }
+      ],
+      "inventory_warning_count": 5515
+    }
+  ],
+  "inventory_warning_count": 22060,
+  "outputs_sha256": {
+    "df_final.parquet": "22a363a8192649e75fa1f32843a020f6db360f37a2e57182058d89fe7e3e0913",
+    "df_final.csv": "fba9c8f05631e5668c5142d1aa43221ca8125cffa82921e3537f854e20f9d119",
+    "indicator_totals.csv": "6d9cab5afbd174a1705aa01bd731bac4b63e7b53235743a991fd10411f692a61",
+    "method_registry.json": "a902dbdaefbb43ee5f42711fd20f33e728b614b34e7de17af29d7afa3a0b5209",
+    "refined_metal_results.parquet": "5d61c0adf62090660ea8aa3ebbb4a6a86af7e5f608b8ae4dd599a4d1df8be3e6",
+    "supply_routes.csv": "7de28a66f2f8f8bd274cdd13231caf2b071f0ff369fd9a252d1939868aa12999",
+    "independent_checks.csv": "76474ac8721d17b48c08511b736ce165ef52fd4ff876846fa32a2fd9afc5bcb9",
+    "product_coverage.json": "b7def75fb5ab5847c11853de7b4679ec02333bedee5e92cf48e0ad16fd91fbc4",
+    "equipment_coverage.csv": "23389ed10a31f019075f2f5fb3b74de3e7852661fcc241c1b08973a9752a2bbb",
+    "provenance.json": "a360183b8e4c6fb7023b5d22b136bb469e9ddb23df6b1cf94e7357d0fa1991da"
+  },
+  "base_results": "/Users/romain/GitHub/sweet_sure-2050-switzerland/results/sps_battery_corrected/indicators",
+  "base_results_sha256": {
+    "df_final.parquet": "3045ca6b3eee3abd882e0f4db54abbed359d80ebbca4ec2af34288903d461a2d",
+    "df_final.csv": "c048ac14aabb0937db0d1920fc2fb021d4bfcbeef10e58d4e035fd2f0fad25ef",
+    "df_final.xlsx": "fd0921e757ef8ac87f7dc80ca3aab8b6c1f6ac5ddca82dbf052f27477fd7842c",
+    "indicator_totals.csv": "4194bd3e289ec9a8fcac4284841b764f48f99b45ada6da06faa389cdd5f29f62",
+    "method_registry.json": "d1243c39cbf14ee357551c8f79eeac5de39a70bf1e1e22e5999538ec3609ef34"
+  },
+  "refined_metal_validation": {
+    "checks": 1820,
+    "demand_checks": 183820,
+    "max_relative_difference": 4.326376284913543e-15,
+    "unmatched_eligible_edges": 0,
+    "source_inventory_flags": [
+      {
+        "scenario": "SPS1_bas0",
+        "year": 2020,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS1_bas0",
+        "year": 2025,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS1_bas0",
+        "year": 2030,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS1_bas0",
+        "year": 2035,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS1_bas0",
+        "year": 2040,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS1_bas0",
+        "year": 2045,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS1_bas0",
+        "year": 2050,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS2_bas0",
+        "year": 2020,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS2_bas0",
+        "year": 2025,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS2_bas0",
+        "year": 2030,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS2_bas0",
+        "year": 2035,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS2_bas0",
+        "year": 2040,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS2_bas0",
+        "year": 2045,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS2_bas0",
+        "year": 2050,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS3_bas0",
+        "year": 2020,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS3_bas0",
+        "year": 2025,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS3_bas0",
+        "year": 2030,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS3_bas0",
+        "year": 2035,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS3_bas0",
+        "year": 2040,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS3_bas0",
+        "year": 2045,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS3_bas0",
+        "year": 2050,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS4_bas0",
+        "year": 2020,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS4_bas0",
+        "year": 2025,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS4_bas0",
+        "year": 2030,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS4_bas0",
+        "year": 2035,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS4_bas0",
+        "year": 2040,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS4_bas0",
+        "year": 2045,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      },
+      {
+        "scenario": "SPS4_bas0",
+        "year": 2050,
+        "indicator": "Refined-metal inputs - Lithium",
+        "name": "hydrometallurgical recycling, for LiS battery",
+        "reference product": "lithium carbonate",
+        "unit": "kilogram",
+        "location": "GLO",
+        "position": 26885,
+        "diagonal": -1.0,
+        "signed_activity_scale": 0.0,
+        "characterized_deliveries": 0.0
+      }
+    ],
+    "base_values_preserved_exactly": true,
+    "families": {
+      "Alloy inputs": 5,
+      "Refined-metal inputs": 60
+    }
+  },
+  "scenario_summaries_scope": "The inherited scenario summaries describe the 81 original EF 3.1 and RELICS indicators. New per-year validation records are in scenarios/<scenario>/<year>_validation.json."
+}
